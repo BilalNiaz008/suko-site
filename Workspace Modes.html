@@ -1,0 +1,2509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<script>
+  // Apply theme before first paint to avoid a flash of the wrong colors.
+  (function () {
+    try {
+      var saved = localStorage.getItem('suko-theme');
+      var dark = saved ? saved === 'dark'
+                       : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (dark) document.documentElement.classList.add('dark');
+    } catch (e) {}
+  })();
+</script>
+<link rel="icon" type="image/png" href="assets/suko-mark-512.png" />
+<link rel="apple-touch-icon" href="assets/suko-mark-512.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>suko — One-Click Workspace Switcher for Windows 10 &amp; 11</title>
+<meta name="description" content="Switch your whole Windows desktop with one keystroke. suko builds Work, Gaming, Study and Focus modes that close your old apps, open the right ones, arrange windows and tune your system. One-time price, no subscription." />
+<meta name="keywords" content="Windows workspace switcher, desktop context switcher, one-click focus mode for Windows, window layout manager, workspace modes, Windows productivity app, hotkey app launcher, multi-monitor window layout" />
+<meta name="author" content="suko" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="theme-color" content="#0a0814" />
+<link rel="canonical" href="https://suko.app/" />
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="suko" />
+<meta property="og:title" content="suko — One-Click Workspace Switcher for Windows" />
+<meta property="og:description" content="One keystroke closes your old apps, opens the right ones, arranges windows and tunes your system. Set up Work, Gaming, Study and Focus modes on Windows 10 &amp; 11." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://suko.app/" />
+<meta property="og:image" content="https://suko.app/assets/suko-mark-512.png" />
+<meta property="og:image:alt" content="suko — one-click workspace switcher for Windows" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="suko — One-Click Workspace Switcher for Windows" />
+<meta name="twitter:description" content="Switch your whole Windows desktop with one keystroke. Work, Gaming, Study and Focus modes that open the right apps, arrange windows and tune your system." />
+<meta name="twitter:image" content="https://suko.app/assets/suko-mark-512.png" />
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "suko",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Windows 10, Windows 11",
+  "description": "One-click workspace switcher for Windows. Build modes for Work, Gaming, Study and Focus — one keystroke closes your last apps, opens the right ones, arranges windows and tunes your system.",
+  "url": "https://suko.app/",
+  "offers": { "@type": "Offer", "price": "10", "priceCurrency": "USD" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How is suko different from Windows virtual desktops?", "acceptedAnswer": { "@type": "Answer", "text": "Virtual desktops hand you extra blank screens to drag windows onto — you still open, arrange and close everything by hand. suko does that work for you: one keystroke closes your current apps, launches the right ones, snaps them into a saved layout, and sets volume, brightness and Do Not Disturb. It is a workspace switcher, not just another empty desktop." } },
+    { "@type": "Question", "name": "Is suko really Windows-only?", "acceptedAnswer": { "@type": "Answer", "text": "For now, yes. suko leans on Windows-specific APIs — FancyZones-style window tiling, Discord update.exe wiring and PowerShell launch hooks — that have no Mac or Linux equivalent. macOS and Linux are on the roadmap, but without committed dates yet." } },
+    { "@type": "Question", "name": "What exactly is a mode in suko?", "acceptedAnswer": { "@type": "Answer", "text": "A mode is a named bundle of everything a context needs: the apps to open (with launch arguments, browser URLs and terminal commands), the window layout to apply, the system settings to set (volume, brightness, Do Not Disturb) and a hotkey to trigger it. Switching modes closes the old apps before the new ones load." } },
+    { "@type": "Question", "name": "Do I need to be a developer to use suko?", "acceptedAnswer": { "@type": "Answer", "text": "Not at all. Most people build their modes entirely in the visual app — click to add apps, drag windows where you want them, pick a hotkey, done. The CLI is there if you love the keyboard or want to script things, but it is completely optional." } },
+    { "@type": "Question", "name": "Does suko work with multiple monitors?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Layouts are captured per monitor, so each mode restores every window to the exact screen and position you saved. Run two displays for Study and a single screen for Gaming — each mode remembers its own arrangement." } },
+    { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — within 30 days of purchase, no questions asked. Email refund@suko.app with your license key and Paddle issues the refund directly." } },
+    { "@type": "Question", "name": "Does suko work offline?", "acceptedAnswer": { "@type": "Answer", "text": "After the first online activation, your license validates locally on a 7-day rolling grace period. Switching modes never needs an internet connection." } }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+        colors: {
+          ink: {
+            950: '#07060d',
+            900: '#0b0a14',
+            800: '#11101c',
+            700: '#181628',
+          },
+          accent: {
+            DEFAULT: '#8b5cf6',
+            cyan:    '#22d3ee',
+            violet:  '#a78bfa',
+          },
+        },
+        boxShadow: {
+          'glow': '0 0 0 1px rgba(167,139,250,.18), 0 30px 80px -20px rgba(124,58,237,.45)',
+          'glow-sm': '0 0 0 1px rgba(167,139,250,.18), 0 10px 30px -10px rgba(124,58,237,.4)',
+        },
+        borderRadius: { '2xl': '1rem', '3xl': '1.5rem' },
+        keyframes: {
+          floaty: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-6px)' } },
+          shimmer:{ '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+          caret:  { '0%,49%': { opacity: 1 }, '50%,100%': { opacity: 0 } },
+          glow:   { '0%,100%': { opacity: .55 }, '50%': { opacity: 1 } },
+        },
+        animation: {
+          floaty: 'floaty 6s ease-in-out infinite',
+          shimmer:'shimmer 8s linear infinite',
+          caret:  'caret 1s steps(1) infinite',
+          glow:   'glow 3s ease-in-out infinite',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-feature-settings: "ss01","cv11"; -webkit-font-smoothing: antialiased; }
+
+  /* Page background */
+  .bg-page {
+    background:
+      radial-gradient(1100px 600px at 80% -10%, rgba(139,92,246,.22), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(34,211,238,.10), transparent 60%),
+      linear-gradient(180deg, #0a0814 0%, #07060d 60%, #050409 100%);
+  }
+  html:not(.dark) .bg-page {
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(139,92,246,.18), transparent 60%),
+      radial-gradient(700px 400px at -10% 10%, rgba(34,211,238,.10), transparent 60%),
+      linear-gradient(180deg, #f8f7ff 0%, #f3f1fb 60%, #efeef6 100%);
+  }
+
+  /* Grid backdrop */
+  .grid-noise {
+    background-image:
+      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center, black 35%, transparent 75%);
+  }
+  html:not(.dark) .grid-noise {
+    background-image:
+      linear-gradient(rgba(15,15,30,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,15,30,.06) 1px, transparent 1px);
+  }
+
+  .hairline { border-color: rgba(255,255,255,.08); }
+  html:not(.dark) .hairline { border-color: rgba(15,15,30,.08); }
+
+  /* Reveal-on-scroll */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* Buttons */
+  .btn-primary {
+    background: linear-gradient(180deg, #a78bfa, #7c3aed);
+    box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 12px 30px -10px rgba(124,58,237,.65);
+  }
+  .btn-primary:hover { filter: brightness(1.06); }
+
+  .ring-soft { box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+  html:not(.dark) .ring-soft { box-shadow: inset 0 0 0 1px rgba(15,15,30,.08); }
+
+  /* Pill demo */
+  .pill { transition: all .35s cubic-bezier(.2,.7,.2,1); }
+
+  .gradient-text {
+    background: linear-gradient(180deg, #fff 0%, #b9b3d6 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  html:not(.dark) .gradient-text {
+    background: linear-gradient(180deg, #1b1730 0%, #4a4471 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  .glass {
+    background: linear-gradient(180deg, rgba(20,18,38,.65), rgba(12,10,24,.65));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  html:not(.dark) .glass {
+    background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.5));
+  }
+
+  /* Terminal */
+  .terminal {
+    background: #0a0915;
+    background-image:
+      radial-gradient(500px 200px at 80% 0%, rgba(139,92,246,.18), transparent 60%);
+  }
+  .term-line { white-space: pre; }
+
+  /* ── Mobile responsiveness guards ── */
+  html { overflow-x: hidden; }
+  /* Keyboard mock: keys are flex-proportional, so drop the fixed px floor
+     whenever the Hotkeys panel is single-column (below lg) and let the row
+     repack to fit the panel width at any size. */
+  @media (max-width: 1023px) {
+    #hotkeys .key { min-width: 0 !important; }
+  }
+  /* CLI terminal lines use white-space:pre and won't wrap — let the panel
+     body scroll horizontally on small screens instead of the whole page. */
+  .terminal .term-body { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Window mock */
+  .win-bar { background: linear-gradient(180deg, #1c1a2c, #14121f); }
+  html:not(.dark) .win-bar { background: linear-gradient(180deg, #efeef5, #e3e1ee); }
+
+  .app-tile {
+    transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s ease, background .35s ease;
+  }
+
+  .progress-rail { background: linear-gradient(90deg, transparent, #8b5cf6, transparent); background-size: 200% 100%; }
+
+  /* Accordion */
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] .chev { transform: rotate(45deg); }
+
+  /* Marquee */
+  .marquee { mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent); }
+
+  /* Selection */
+  ::selection { background: rgba(167,139,250,.35); color: #fff; }
+
+<style id="theme-light-solid">
+  /* ===================  SOLID PREMIUM LIGHT THEME  =================== */
+  /* Surfaces */
+  html:not(.dark) body { color: rgba(20,19,43,.90); }
+  html:not(.dark) .bg-page {
+    background:
+      radial-gradient(1100px 560px at 82% -12%, rgba(124,58,237,.06), transparent 60%),
+      radial-gradient(820px 460px at -8% 4%, rgba(34,211,238,.045), transparent 60%),
+      linear-gradient(180deg, #f6f5fa 0%, #f0eff6 58%, #ecebf3 100%);
+    background-color: #f1f0f6;
+  }
+  html:not(.dark) .glass {
+    background: #ffffff;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    box-shadow: 0 1px 2px rgba(20,19,43,.05);
+  }
+  html:not(.dark) .hairline { border-color: rgba(20,19,43,.09); }
+  html:not(.dark) .ring-soft { box-shadow: inset 0 0 0 1px rgba(20,19,43,.08); }
+  html:not(.dark) .grid-noise {
+    background-image:
+      linear-gradient(rgba(20,19,43,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20,19,43,.05) 1px, transparent 1px);
+  }
+  html:not(.dark) .gradient-text {
+    background: linear-gradient(180deg, #17142e 0%, #46426c 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  html:not(.dark) .shadow-glow {
+    box-shadow: 0 1px 0 rgba(20,19,43,.04), 0 26px 60px -26px rgba(20,19,43,.22), 0 0 0 1px rgba(20,19,43,.05);
+  }
+  html:not(.dark) .shadow-glow-sm {
+    box-shadow: 0 10px 26px -16px rgba(20,19,43,.18), 0 0 0 1px rgba(20,19,43,.05);
+  }
+  html:not(.dark) .win-bar { background: linear-gradient(180deg, #f3f2f8, #e9e7f1); }
+  html:not(.dark) ::selection { background: rgba(124,58,237,.18); color: #17142e; }
+  html:not(.dark) .hover\:text-white:hover { color: rgba(20,19,43,.92); }
+
+  /* ---- generated white-token remaps (39) ---- */
+  html:not(.dark) .bg-white\/10 { background-color: rgba(20,19,43,0.065); }
+  html:not(.dark) .bg-white\/20 { background-color: rgba(20,19,43,0.1); }
+  html:not(.dark) .bg-white\/25 { background-color: rgba(20,19,43,0.12); }
+  html:not(.dark) .bg-white\/30 { background-color: rgba(20,19,43,0.14); }
+  html:not(.dark) .bg-white\/5 { background-color: rgba(20,19,43,0.045); }
+  html:not(.dark) .bg-white\/8 { background-color: rgba(20,19,43,0.055); }
+  html:not(.dark) .bg-white\/\[\.02\] { background-color: rgba(20,19,43,0.025); }
+  html:not(.dark) .bg-white\/\[\.03\] { background-color: rgba(20,19,43,0.035); }
+  html:not(.dark) .bg-white\/\[\.04\] { background-color: rgba(20,19,43,0.045); }
+  html:not(.dark) .border-white\/10 { border-color: rgba(20,19,43,0.1); }
+  html:not(.dark) .border-white\/30 { border-color: rgba(20,19,43,0.18); }
+  html:not(.dark) .border-white\/8 { border-color: rgba(20,19,43,0.08); }
+  html:not(.dark) .divide-white\/5 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(20,19,43,0.07); }
+  html:not(.dark) .from-white\/\[\.02\] { --tw-gradient-from: rgba(20,19,43,0.025) var(--tw-gradient-from-position); --tw-gradient-to: rgba(20,19,43,0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+  html:not(.dark) .from-white\/\[\.03\] { --tw-gradient-from: rgba(20,19,43,0.035) var(--tw-gradient-from-position); --tw-gradient-to: rgba(20,19,43,0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+  html:not(.dark) .hover\:bg-white\/10:hover { background-color: rgba(20,19,43,0.065); }
+  html:not(.dark) .hover\:bg-white\/5:hover { background-color: rgba(20,19,43,0.045); }
+  html:not(.dark) .hover\:bg-white\/\[\.02\]:hover { background-color: rgba(20,19,43,0.025); }
+  html:not(.dark) .hover\:bg-white\/\[\.03\]:hover { background-color: rgba(20,19,43,0.035); }
+  html:not(.dark) .hover\:text-white\/70:hover { color: rgba(20,19,43,0.66); }
+  html:not(.dark) .hover\:text-white\/80:hover { color: rgba(20,19,43,0.78); }
+  html:not(.dark) .placeholder-white\/30::placeholder { color: rgba(20,19,43,0.42); }
+  html:not(.dark) .ring-white\/10 { --tw-ring-color: rgba(20,19,43,0.09); }
+  html:not(.dark) .ring-white\/20 { --tw-ring-color: rgba(20,19,43,0.13); }
+  html:not(.dark) .text-white\/20 { color: rgba(20,19,43,0.34); }
+  html:not(.dark) .text-white\/30 { color: rgba(20,19,43,0.4); }
+  html:not(.dark) .text-white\/35 { color: rgba(20,19,43,0.44); }
+  html:not(.dark) .text-white\/40 { color: rgba(20,19,43,0.47); }
+  html:not(.dark) .text-white\/45 { color: rgba(20,19,43,0.5); }
+  html:not(.dark) .text-white\/50 { color: rgba(20,19,43,0.52); }
+  html:not(.dark) .text-white\/55 { color: rgba(20,19,43,0.55); }
+  html:not(.dark) .text-white\/60 { color: rgba(20,19,43,0.58); }
+  html:not(.dark) .text-white\/65 { color: rgba(20,19,43,0.62); }
+  html:not(.dark) .text-white\/70 { color: rgba(20,19,43,0.66); }
+  html:not(.dark) .text-white\/75 { color: rgba(20,19,43,0.72); }
+  html:not(.dark) .text-white\/80 { color: rgba(20,19,43,0.78); }
+  html:not(.dark) .text-white\/85 { color: rgba(20,19,43,0.85); }
+  html:not(.dark) .text-white\/90 { color: rgba(20,19,43,0.9); }
+  html:not(.dark) .text-white\/95 { color: rgba(20,19,43,0.95); }
+
+  /* ===================  DARK ISLANDS (product window screenshots)  =================== */
+  html:not(.dark) .mock-dark.glass, html:not(.dark) .mock-dark .glass {
+    background: linear-gradient(180deg, #15132a, #100e1f);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  html:not(.dark) .mock-dark .win-bar { background: linear-gradient(180deg,#1c1a2c,#14121f); }
+  html:not(.dark) .mock-dark.hairline, html:not(.dark) .mock-dark .hairline { border-color: rgba(255,255,255,.08); }
+  html:not(.dark) .mock-dark .ring-soft { box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+  html:not(.dark) .mock-dark .grid-noise {
+    background-image:
+      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  }
+  html:not(.dark) .mock-dark.shadow-glow, html:not(.dark) .mock-dark .shadow-glow {
+    box-shadow: 0 0 0 1px rgba(167,139,250,.18), 0 30px 80px -24px rgba(124,58,237,.40);
+  }
+  html:not(.dark) .mock-dark .hover\:text-white:hover { color: #fff; }
+  html:not(.dark) .mock-dark .bg-white\/10, html:not(.dark) .mock-dark.bg-white\/10 { background-color: rgba(255,255,255,0.1); }
+  html:not(.dark) .mock-dark .bg-white\/20, html:not(.dark) .mock-dark.bg-white\/20 { background-color: rgba(255,255,255,0.2); }
+  html:not(.dark) .mock-dark .bg-white\/25, html:not(.dark) .mock-dark.bg-white\/25 { background-color: rgba(255,255,255,0.25); }
+  html:not(.dark) .mock-dark .bg-white\/30, html:not(.dark) .mock-dark.bg-white\/30 { background-color: rgba(255,255,255,0.3); }
+  html:not(.dark) .mock-dark .bg-white\/5, html:not(.dark) .mock-dark.bg-white\/5 { background-color: rgba(255,255,255,0.05); }
+  html:not(.dark) .mock-dark .bg-white\/8, html:not(.dark) .mock-dark.bg-white\/8 { background-color: rgba(255,255,255,0.08); }
+  html:not(.dark) .mock-dark .bg-white\/90, html:not(.dark) .mock-dark.bg-white\/90 { background-color: rgba(255,255,255,0.9); }
+  html:not(.dark) .mock-dark .bg-white\/95, html:not(.dark) .mock-dark.bg-white\/95 { background-color: rgba(255,255,255,0.95); }
+  html:not(.dark) .mock-dark .bg-white\/\[\.02\], html:not(.dark) .mock-dark.bg-white\/\[\.02\] { background-color: rgba(255,255,255,0.02); }
+  html:not(.dark) .mock-dark .bg-white\/\[\.03\], html:not(.dark) .mock-dark.bg-white\/\[\.03\] { background-color: rgba(255,255,255,0.03); }
+  html:not(.dark) .mock-dark .bg-white\/\[\.04\], html:not(.dark) .mock-dark.bg-white\/\[\.04\] { background-color: rgba(255,255,255,0.04); }
+  html:not(.dark) .mock-dark .border-white\/10, html:not(.dark) .mock-dark.border-white\/10 { border-color: rgba(255,255,255,0.1); }
+  html:not(.dark) .mock-dark .border-white\/30, html:not(.dark) .mock-dark.border-white\/30 { border-color: rgba(255,255,255,0.3); }
+  html:not(.dark) .mock-dark .border-white\/8, html:not(.dark) .mock-dark.border-white\/8 { border-color: rgba(255,255,255,0.08); }
+  html:not(.dark) .mock-dark .divide-white\/5 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(255,255,255,0.05); }
+  html:not(.dark) .mock-dark .from-white\/\[\.02\], html:not(.dark) .mock-dark.from-white\/\[\.02\] { --tw-gradient-from: rgba(255,255,255,0.02) var(--tw-gradient-from-position); --tw-gradient-to: rgba(255,255,255,0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+  html:not(.dark) .mock-dark .from-white\/\[\.03\], html:not(.dark) .mock-dark.from-white\/\[\.03\] { --tw-gradient-from: rgba(255,255,255,0.03) var(--tw-gradient-from-position); --tw-gradient-to: rgba(255,255,255,0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+  html:not(.dark) .mock-dark .hover\:bg-white\/10:hover, html:not(.dark) .mock-dark.hover\:bg-white\/10:hover { background-color: rgba(255,255,255,0.1); }
+  html:not(.dark) .mock-dark .hover\:bg-white\/5:hover, html:not(.dark) .mock-dark.hover\:bg-white\/5:hover { background-color: rgba(255,255,255,0.05); }
+  html:not(.dark) .mock-dark .hover\:bg-white\/\[\.02\]:hover, html:not(.dark) .mock-dark.hover\:bg-white\/\[\.02\]:hover { background-color: rgba(255,255,255,0.02); }
+  html:not(.dark) .mock-dark .hover\:bg-white\/\[\.03\]:hover, html:not(.dark) .mock-dark.hover\:bg-white\/\[\.03\]:hover { background-color: rgba(255,255,255,0.03); }
+  html:not(.dark) .mock-dark .hover\:text-white\/70:hover, html:not(.dark) .mock-dark.hover\:text-white\/70:hover { color: rgba(255,255,255,0.7); }
+  html:not(.dark) .mock-dark .hover\:text-white\/80:hover, html:not(.dark) .mock-dark.hover\:text-white\/80:hover { color: rgba(255,255,255,0.8); }
+  html:not(.dark) .mock-dark .placeholder-white\/30::placeholder { color: rgba(255,255,255,0.3); }
+  html:not(.dark) .mock-dark .ring-white\/10, html:not(.dark) .mock-dark.ring-white\/10 { --tw-ring-color: rgba(255,255,255,0.1); }
+  html:not(.dark) .mock-dark .ring-white\/20, html:not(.dark) .mock-dark.ring-white\/20 { --tw-ring-color: rgba(255,255,255,0.2); }
+  html:not(.dark) .mock-dark .ring-white\/30, html:not(.dark) .mock-dark.ring-white\/30 { --tw-ring-color: rgba(255,255,255,0.3); }
+  html:not(.dark) .mock-dark .text-white\/20, html:not(.dark) .mock-dark.text-white\/20 { color: rgba(255,255,255,0.2); }
+  html:not(.dark) .mock-dark .text-white\/30, html:not(.dark) .mock-dark.text-white\/30 { color: rgba(255,255,255,0.3); }
+  html:not(.dark) .mock-dark .text-white\/35, html:not(.dark) .mock-dark.text-white\/35 { color: rgba(255,255,255,0.35); }
+  html:not(.dark) .mock-dark .text-white\/40, html:not(.dark) .mock-dark.text-white\/40 { color: rgba(255,255,255,0.4); }
+  html:not(.dark) .mock-dark .text-white\/45, html:not(.dark) .mock-dark.text-white\/45 { color: rgba(255,255,255,0.45); }
+  html:not(.dark) .mock-dark .text-white\/50, html:not(.dark) .mock-dark.text-white\/50 { color: rgba(255,255,255,0.5); }
+  html:not(.dark) .mock-dark .text-white\/55, html:not(.dark) .mock-dark.text-white\/55 { color: rgba(255,255,255,0.55); }
+  html:not(.dark) .mock-dark .text-white\/60, html:not(.dark) .mock-dark.text-white\/60 { color: rgba(255,255,255,0.6); }
+  html:not(.dark) .mock-dark .text-white\/65, html:not(.dark) .mock-dark.text-white\/65 { color: rgba(255,255,255,0.65); }
+  html:not(.dark) .mock-dark .text-white\/70, html:not(.dark) .mock-dark.text-white\/70 { color: rgba(255,255,255,0.7); }
+  html:not(.dark) .mock-dark .text-white\/75, html:not(.dark) .mock-dark.text-white\/75 { color: rgba(255,255,255,0.75); }
+  html:not(.dark) .mock-dark .text-white\/80, html:not(.dark) .mock-dark.text-white\/80 { color: rgba(255,255,255,0.8); }
+  html:not(.dark) .mock-dark .text-white\/85, html:not(.dark) .mock-dark.text-white\/85 { color: rgba(255,255,255,0.85); }
+  html:not(.dark) .mock-dark .text-white\/90, html:not(.dark) .mock-dark.text-white\/90 { color: rgba(255,255,255,0.9); }
+  html:not(.dark) .mock-dark .text-white\/95, html:not(.dark) .mock-dark.text-white\/95 { color: rgba(255,255,255,0.95); }
+
+  /* ===================  FEEDBACK FORM — light inputs  =================== */
+  html:not(.dark) #feedback input[type="text"],
+  html:not(.dark) #feedback input[type="email"],
+  html:not(.dark) #feedback textarea {
+    background-color: #ffffff !important;
+    color: rgba(20,19,43,.92);
+    border-color: rgba(20,19,43,.12);
+  }
+  html:not(.dark) #feedback input::placeholder,
+  html:not(.dark) #feedback textarea::placeholder { color: rgba(20,19,43,.40); }
+  html:not(.dark) #feedback input:focus,
+  html:not(.dark) #feedback textarea:focus { background-color:#ffffff !important; border-color: rgba(124,58,237,.45); }
+  html:not(.dark) #feedback input[type="checkbox"] { background-color: #fff !important; border-color: rgba(20,19,43,.18); }
+  html:not(.dark) #feedback input[type="checkbox"]:checked { background-color: #7c3aed !important; border-color:#8b5cf6; }
+
+  /* Privacy section — force crisp, high-contrast intro in light theme */
+  html:not(.dark) #privacy h2.gradient-text {
+    background: none;
+    -webkit-text-fill-color: #17142e;
+    color: #17142e;
+  }
+</style>
+</head>
+<body class="bg-page text-white/90 font-sans antialiased min-h-screen selection:bg-violet-500/40">
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sukoBlue" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#5b8def"/><stop offset="1" stop-color="#3b5bdb"/>
+      </linearGradient>
+      <linearGradient id="sukoPink" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#f24aa0"/><stop offset="1" stop-color="#e0247e"/>
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="24" fill="#f1f0f6"/>
+    <g transform="translate(26,24)">
+      <rect x="6" y="0" width="56" height="20" rx="10" fill="url(#sukoBlue)"/>
+      <rect x="0" y="16" width="56" height="20" rx="10" fill="url(#sukoPink)" transform="rotate(-8 28 26)"/>
+      <circle cx="24" cy="26" r="6" fill="#fbb6d6"/>
+      <rect x="6" y="32" width="56" height="20" rx="10" fill="url(#sukoBlue)"/>
+    </g>
+  </svg>
+</template>
+
+<div id="app">
+
+  <!-- ─────────────────────────  HEADER  ───────────────────────── -->
+  <header class="fixed top-0 inset-x-0 z-50">
+    <div :class="['transition-all duration-300', scrolled ? 'py-2' : 'py-4']">
+      <div class="mx-auto max-w-7xl px-5">
+        <div :class="['flex items-center justify-between rounded-2xl border hairline px-3 sm:px-5 py-2.5 transition',
+                       scrolled ? 'glass shadow-glow-sm' : 'bg-transparent']">
+          <a href="#top" class="flex items-center gap-1.5 group">
+            <img src="assets/suko-mark-512.png" alt="suko" width="40" height="40" class="h-10 w-10" style="filter: drop-shadow(0 2px 8px rgba(79,124,240,.35))" />
+            <span class="text-[15px] font-semibold tracking-tight">suko</span>
+            <span class="hidden sm:inline-block text-[10px] uppercase tracking-[0.18em] text-white/40 dark:text-white/40 ml-1 border hairline rounded px-1.5 py-0.5">v1.0</span>
+          </a>
+
+          <nav class="hidden md:flex items-center gap-1 text-sm">
+            <a v-for="n in nav" :key="n.id" :href="'#'+n.id" @click.prevent="goSection(n.id)"
+               :class="['px-3 py-1.5 rounded-lg transition',
+                        activeSection === n.id ? 'bg-[rgba(124,58,237,0.12)] text-[#6d28d9] ring-1 ring-[rgba(124,58,237,0.28)] font-medium dark:bg-[rgba(139,92,246,0.22)] dark:text-violet-100' : 'text-white/65 hover:text-white hover:bg-white/5']">{{ n.label }}</a>
+          </nav>
+
+          <div class="flex items-center gap-2">
+            <button @click="toggleTheme" class="h-9 w-9 grid place-items-center rounded-lg text-white/70 hover:text-white border hairline hover:bg-white/5 transition" :aria-label="isDark ? 'Switch to light theme' : 'Switch to dark theme'" :title="isDark ? 'Light theme' : 'Dark theme'">
+              <svg v-if="isDark" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M21.5 12h-2.4M4.9 12H2.5M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7M18.4 18.4l-1.7-1.7M7.3 7.3 5.6 5.6" stroke-linecap="round"/></svg>
+              <svg v-else class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" stroke-linejoin="round"/></svg>
+            </button>
+            <a href="#download" @click.prevent="goSection('download')" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-white/80 hover:text-white border hairline hover:bg-white/5 transition">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+              Download
+            </a>
+            <button @click="openCheckout" class="btn-primary inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium text-white">
+              Buy License
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+            </button>
+            <button @click="mobileOpen = !mobileOpen" class="md:hidden h-9 w-9 -mr-1 grid place-items-center rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition" :aria-expanded="mobileOpen" aria-label="Menu">
+              <svg v-if="!mobileOpen" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+              <svg v-else class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <transition
+          enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0 -translate-y-2" enter-to-class="opacity-100 translate-y-0"
+          leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 -translate-y-2">
+          <div v-if="mobileOpen" class="md:hidden mt-2 rounded-2xl border hairline glass shadow-glow-sm p-2">
+            <a v-for="n in nav" :key="'m-'+n.id" :href="'#'+n.id" @click.prevent="goSection(n.id)"
+               :class="['flex items-center justify-between px-4 py-3 rounded-xl text-[15px] transition',
+                        activeSection === n.id ? 'bg-[rgba(124,58,237,0.12)] text-[#6d28d9] font-medium dark:bg-[rgba(139,92,246,0.22)] dark:text-violet-100' : 'text-white/70 hover:text-white hover:bg-white/5']">
+              {{ n.label }}
+              <svg v-if="activeSection === n.id" class="h-4 w-4 text-[#6d28d9] dark:text-violet-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+            </a>
+            <a href="#download" @click.prevent="goSection('download')" class="mt-1 flex items-center gap-2 px-4 py-3 rounded-xl text-[15px] text-white/70 hover:text-white hover:bg-white/5 transition border-t hairline">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+              Download
+            </a>
+            <button @click="toggleTheme" class="mt-1 w-full flex items-center justify-between px-4 py-3 rounded-xl text-[15px] text-white/70 hover:text-white hover:bg-white/5 transition border-t hairline">
+              <span>{{ isDark ? 'Light theme' : 'Dark theme' }}</span>
+              <svg v-if="isDark" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M21.5 12h-2.4M4.9 12H2.5M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7M18.4 18.4l-1.7-1.7M7.3 7.3 5.6 5.6" stroke-linecap="round"/></svg>
+              <svg v-else class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </transition>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="pt-24">
+
+    <!-- ─────────────────────────  HERO  ───────────────────────── -->
+    <section class="relative overflow-hidden">
+      <div class="absolute inset-0 grid-noise pointer-events-none"></div>
+      <div class="absolute -top-32 left-1/2 -translate-x-1/2 h-[520px] w-[920px] rounded-full bg-violet-600/30 blur-[120px] pointer-events-none"></div>
+
+      <div class="relative mx-auto max-w-7xl px-5 pt-2 pb-12 sm:pb-16">
+        <!-- announce -->
+        <div class="flex justify-center mb-8 reveal">
+          <a href="#changelog" class="group inline-flex items-center gap-2 rounded-full border hairline glass px-3 py-1.5 text-xs text-white/70 hover:text-white transition">
+            <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            v1.0 just shipped — Windows 10 &amp; 11 supported
+            <svg class="h-3 w-3 opacity-60 group-hover:translate-x-0.5 transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+          </a>
+        </div>
+
+        <h1 class="reveal mx-auto max-w-4xl text-center text-5xl sm:text-7xl md:text-[88px] leading-[0.98] font-bold tracking-tight gradient-text">
+          One click,<br/>New mode.
+        </h1>
+        <p class="reveal mx-auto mt-4 max-w-3xl text-center text-lg text-white/55 leading-relaxed">
+          suko is the one-click workspace switcher for Windows. Build a mode for every context — Work, Gaming, Study, Focus — and a single keystroke closes your last set of apps, opens the next, arranges your windows, and tunes your system.
+        </p>
+
+        <!-- CTA -->
+        <div class="reveal mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a href="#download" @click.prevent="goSection('download')" class="btn-primary inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+            Download Free
+          </a>
+          <button @click="openCheckout" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium text-white/85 border hairline hover:bg-white/5 transition">
+            Buy License
+            <span class="text-white/55 font-normal">· ${{ price }}</span>
+          </button>
+        </div>
+
+        <!-- Pill switcher -->
+        <div class="reveal mt-12 flex justify-center px-2">
+          <div class="inline-flex max-w-full flex-wrap justify-center gap-1 rounded-2xl sm:rounded-full border hairline glass p-1.5 shadow-glow-sm" role="group" aria-label="Preview a workspace mode">
+            <button v-for="(m, i) in modes" :key="m.id" @click="setMode(i)"
+                    class="pill relative px-4 sm:px-5 py-2 text-sm rounded-full inline-flex items-center gap-2"
+                    :class="active === i ? 'text-white' : 'text-white/55 hover:text-white/80'">
+              <span v-if="active === i"
+                    class="absolute inset-0 rounded-full"
+                    :style="{ background: m.gradient, boxShadow: '0 8px 24px -8px '+m.shadow }"></span>
+              <span class="relative inline-flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full"
+                      :style="{ background: active === i ? '#fff' : m.dot }"></span>
+                {{ m.label }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Desktop morphing visual -->
+        <div class="reveal mt-10">
+          <div class="mock-dark mx-auto max-w-5xl rounded-3xl border hairline glass overflow-hidden shadow-glow" role="img" aria-label="Preview of the suko desktop rearranging its apps, window layout and system settings for the selected mode">
+            <!-- Window bar -->
+            <div class="win-bar flex items-center justify-between px-4 py-2.5 border-b hairline">
+              <div class="flex items-center gap-2">
+                <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                <span class="ml-3 text-[11px] font-mono text-white/45">desktop · {{ currentMode.id }}.mode</span>
+              </div>
+              <div class="text-[11px] font-mono text-white/40 flex items-center gap-3">
+                <span>Ctrl ⇧ {{ currentMode.hotkey }}</span>
+                <span class="inline-flex items-center gap-1">
+                  <span class="h-1.5 w-1.5 rounded-full" :style="{ background: currentMode.dot }"></span>
+                  active
+                </span>
+              </div>
+            </div>
+
+            <!-- Desktop area -->
+            <div class="relative h-[360px] sm:h-[420px] p-3 sm:p-4 bg-black/30">
+              <div class="absolute inset-0 grid-noise opacity-50 pointer-events-none"></div>
+              <div class="absolute inset-0 pointer-events-none"
+                   :style="{ background: 'radial-gradient(600px 280px at 50% 0%, '+currentMode.glow+', transparent 60%)' }"></div>
+
+              <div class="relative h-full grid gap-3"
+                   :style="{ gridTemplateColumns: currentMode.cols, gridTemplateRows: currentMode.rows }">
+                <div v-for="(tile, idx) in currentMode.tiles" :key="currentMode.id + '-' + idx"
+                     class="app-tile rounded-xl border hairline relative overflow-hidden"
+                     :style="{ gridColumn: tile.c, gridRow: tile.r, background: tile.bg }">
+                  <!-- brand glow -->
+                  <div class="absolute -top-8 -right-8 h-24 w-24 rounded-full pointer-events-none z-0"
+                       :style="{ background: 'radial-gradient(circle, '+brandColor(tile.app)+'40, transparent 70%)' }"></div>
+                  <!-- brand watermark -->
+                  <div class="absolute bottom-2 right-2 h-12 w-12 opacity-[0.10] pointer-events-none z-0" v-html="brandLogo(tile.app)"></div>
+                  <!-- chrome -->
+                  <div class="absolute top-0 inset-x-0 h-7 px-2 border-b hairline flex items-center gap-2 bg-black/25 backdrop-blur-sm z-10">
+                    <span class="h-[18px] w-[18px] rounded-[5px] overflow-hidden shrink-0 ring-1 ring-white/10 bg-black/40 grid place-items-center"
+                          :style="{ boxShadow: '0 0 0 1px '+brandColor(tile.app)+'30' }" v-html="brandLogo(tile.app)"></span>
+                    <span class="text-[10px] font-mono text-white/80 truncate">{{ tile.app }}</span>
+                    <span v-if="tile.tag" class="ml-auto text-[9px] font-mono uppercase tracking-wider" :style="{ color: brandColor(tile.app) }">{{ tile.tag }}</span>
+                  </div>
+                  <!-- app UI -->
+                  <div class="absolute inset-0 pt-7 overflow-hidden z-[1]" v-html="tileUI(tile.kind, tile.note)"></div>
+                  <!-- caption -->
+                  <div class="absolute bottom-1.5 left-2.5 right-2.5 text-[9px] text-white/40 font-mono truncate pointer-events-none z-[2]">{{ tile.note }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Taskbar -->
+            <div class="win-bar flex items-center justify-between border-t hairline px-3 py-1.5">
+              <div class="flex items-center gap-1.5">
+                <!-- System tray (start / search / task view) -->
+                <button class="h-6 w-6 rounded grid place-items-center border hairline bg-white/[.04] hover:bg-white/10 transition" title="Start">
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="currentColor" style="color:#60a5fa"><path d="M3 5l8-1.2v8.4H3V5Zm0 14v-7.8h8V20.2L3 19Zm9-15.4L21 2.5v9.7h-9V3.6Zm0 16.8v-9.7h9V21.5L12 20.4Z"/></svg>
+                </button>
+                <button class="h-6 w-6 rounded grid place-items-center border hairline bg-white/[.04] hover:bg-white/10 transition" title="Search">
+                  <svg class="h-3 w-3 text-white/65" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.5-3.5"/></svg>
+                </button>
+                <button class="h-6 w-6 rounded grid place-items-center border hairline bg-white/[.04] hover:bg-white/10 transition" title="Task view">
+                  <svg class="h-3 w-3 text-white/65" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="5" rx="1"/><rect x="14" y="15" width="7" height="5" rx="1"/></svg>
+                </button>
+                <span class="mx-1 h-4 w-px bg-white/10"></span>
+                <!-- Per-mode app icons -->
+                <button v-for="(t, i) in currentMode.tiles" :key="'task-'+currentMode.id+'-'+i"
+                        class="h-6 w-6 rounded grid place-items-center border hairline relative overflow-hidden transition hover:brightness-125 bg-black/30 p-0.5"
+                        :title="t.app">
+                  <span class="h-full w-full" v-html="brandLogo(t.app)"></span>
+                  <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-2 rounded-full" :style="{ background: currentMode.dot }"></span>
+                </button>
+              </div>
+              <div class="flex items-center gap-2.5 text-[10px] font-mono text-white/45">
+                <span class="hidden sm:inline">{{ currentMode.tiles.length }} apps · layout {{ currentMode.layout }} · DND {{ currentMode.dnd ? 'on' : 'off' }}</span>
+                <!-- System tray icons -->
+                <div class="flex items-center gap-1.5">
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" :class="currentMode.dnd ? 'text-rose-300' : 'text-white/55'" :title="currentMode.dnd ? 'Do Not Disturb' : 'Notifications on'">
+                    <path v-if="currentMode.dnd" d="M12 22a3 3 0 0 0 2.83-2H9.17A3 3 0 0 0 12 22ZM4 4l16 16M19 17H6V11a6 6 0 0 1 8-5.6"/>
+                    <path v-else d="M6 8a6 6 0 0 1 12 0v5l1.5 3h-15L6 13V8ZM9 19a3 3 0 0 0 6 0"/>
+                  </svg>
+                  <svg class="h-3 w-3 text-white/55" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 8.8a14 14 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8 15a6 6 0 0 1 8 0"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/>
+                  </svg>
+                  <svg class="h-3 w-3 text-white/55" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 13c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>
+                  </svg>
+                  <span class="text-white/65 tabular-nums">{{ clockHM }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="reveal mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div v-for="s in stats" :key="s.label"
+               class="group relative overflow-hidden rounded-2xl border hairline glass p-5 sm:p-6 transition hover:-translate-y-0.5">
+            <div class="absolute -top-10 -right-10 h-28 w-28 rounded-full pointer-events-none opacity-60 transition group-hover:opacity-100"
+                 :style="{ background: 'radial-gradient(circle, '+s.color+'33, transparent 70%)' }"></div>
+            <div class="relative flex items-center gap-2.5">
+              <span class="grid h-9 w-9 place-items-center rounded-xl border hairline shrink-0"
+                    :style="{ color: s.color, background: s.color+'14' }" v-html="s.icon"></span>
+              <div class="text-3xl sm:text-4xl font-semibold tracking-tight leading-none" :style="{ color: s.color }">{{ s.value }}</div>
+            </div>
+            <div class="relative mt-4">
+              <div class="text-sm font-medium text-white/90">{{ s.label }}</div>
+              <div class="text-xs text-white/45 mt-0.5">{{ s.sub }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  WHY SUKO  ───────────────────────── -->
+    <section id="why-suko" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-3xl px-5 text-center">
+        <h2 class="reveal mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+          Your computer should know what you're doing.
+        </h2>
+        <p class="reveal mt-6 text-white/60 text-lg leading-relaxed">
+          Most people use one desktop for everything. Work meetings live next to games. Study notes compete with social apps. Notifications appear at the worst possible moments. Every switch between tasks costs attention, energy, and time.
+        </p>
+        <p class="reveal mt-5 text-white/60 text-lg leading-relaxed">
+          <span class="text-white/85 font-medium">suko changes that.</span> Create dedicated workspaces for every activity and move between them instantly. Everything opens exactly where you left it, so you can focus on what matters instead of managing windows.
+        </p>
+      </div>
+
+      <div class="reveal mx-auto mt-14 max-w-5xl px-5 grid gap-4 sm:grid-cols-3">
+        <div v-for="c in whyCards" :key="c.t"
+             class="group relative overflow-hidden rounded-3xl border hairline glass p-7 text-left transition hover:-translate-y-0.5">
+          <div class="absolute -top-12 -right-12 h-32 w-32 rounded-full pointer-events-none opacity-60 transition group-hover:opacity-100"
+               :style="{ background: 'radial-gradient(circle, '+c.color+'30, transparent 70%)' }"></div>
+          <span class="relative grid h-11 w-11 place-items-center rounded-2xl border hairline"
+                :style="{ color: c.color, background: c.color+'14' }" v-html="c.icon"></span>
+          <h3 class="relative mt-5 text-lg font-semibold tracking-tight">{{ c.t }}</h3>
+          <div class="relative mt-3 space-y-2 text-sm">
+            <p class="flex items-start gap-2 text-white/45">
+              <span class="mt-[3px] text-white/30">✕</span><span>{{ c.before }}</span>
+            </p>
+            <p class="flex items-start gap-2 text-white/80">
+              <svg class="mt-[2px] h-3.5 w-3.5 shrink-0" :style="{ color: c.color }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
+              <span>{{ c.after }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  PROBLEM / PROMISE  ───────────────────────── -->
+    <section id="why" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="max-w-2xl reveal">
+          <span class="text-[11px] uppercase tracking-[0.18em] text-violet-300/80">The problem</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+            You switch tasks all day. Your PC makes you pay for it.
+          </h2>
+          <p class="mt-4 text-white/55 text-lg">
+            Every time you change gears, you rebuild your whole desktop by hand. Here's how that actually feels.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-4 md:grid-cols-3">
+          <div v-for="(p, i) in problems" :key="p.t" class="reveal rounded-3xl border hairline glass p-7 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full"
+                 :style="{ background: 'radial-gradient(circle, '+p.glow+', transparent 70%)' }"></div>
+            <div class="relative">
+              <div class="text-[11px] font-mono text-white/40">0{{ i+1 }} / 03</div>
+              <h3 class="mt-2 text-xl font-semibold tracking-tight">{{ p.t }}</h3>
+              <p class="mt-2 text-sm text-white/55 leading-relaxed">{{ p.d }}</p>
+              <div class="mt-6 flex items-center gap-2 text-xs font-mono text-violet-300/90">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 13 4 4L19 7"/></svg>
+                {{ p.fix }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  FEATURES GRID  ───────────────────────── -->
+    <section id="features" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="flex items-end justify-between flex-wrap gap-6">
+          <div class="max-w-2xl reveal">
+            <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">Features</span>
+            <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+              Built for people who switch contexts all day.
+            </h2>
+          </div>
+          <p class="reveal max-w-md text-white/55">
+            Every task requires a different setup. Work needs one set of tools. Gaming needs another. Deep focus demands something else entirely.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div v-for="(f, i) in features" :key="f.t"
+               class="reveal group rounded-3xl border hairline glass p-7 relative overflow-hidden hover:border-violet-400/30 transition">
+            <div class="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition"
+                 style="background: linear-gradient(90deg, transparent, rgba(167,139,250,.6), transparent)"></div>
+            <div class="flex items-center justify-between">
+              <div class="h-11 w-11 rounded-xl border hairline flex items-center justify-center bg-white/[.03]"
+                   :style="{ color: f.tone }">
+                <span v-html="f.icon"></span>
+              </div>
+              <span class="text-[10px] font-mono text-white/30">#{{ String(i+1).padStart(2,'0') }}</span>
+            </div>
+            <h3 class="mt-5 text-lg font-semibold tracking-tight">{{ f.t }}</h3>
+            <p class="mt-2 text-sm text-white/55 leading-relaxed">{{ f.d }}</p>
+            <div v-if="f.chip" class="mt-5 inline-flex items-center gap-1.5 text-[11px] font-mono text-white/55 border hairline rounded-full px-2.5 py-1">
+              <span class="h-1 w-1 rounded-full bg-violet-400"></span>{{ f.chip }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  HOW IT WORKS  ───────────────────────── -->
+    <section id="how-it-works" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="max-w-2xl reveal">
+          <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">How it works</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+            Set it up once. Switch forever.
+          </h2>
+          <p class="mt-4 text-white/55 text-lg">
+            No manual setup. No searching for windows. No wasted time.
+          </p>
+        </div>
+
+        <div class="reveal mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div v-for="(s, i) in howItWorks" :key="s.t" class="rounded-3xl border hairline glass p-7 relative overflow-hidden">
+            <div class="text-[11px] font-mono text-white/40">0{{ i+1 }} / 04</div>
+            <h3 class="mt-3 text-xl font-semibold tracking-tight">{{ s.t }}</h3>
+            <p class="mt-2 text-sm text-white/55 leading-relaxed">{{ s.d }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  LIVE DEMO  ───────────────────────── -->
+    <section id="demo" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-5 min-w-0 reveal">
+            <span class="text-[11px] uppercase tracking-[0.18em] text-violet-300/80">Live demo</span>
+            <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+              Watch a mode switch.
+            </h2>
+            <p class="mt-4 text-white/55 text-lg leading-relaxed">
+              Hit a mode and watch your desktop rebuild itself — apps, windows, and settings — in about two seconds.
+            </p>
+
+            <div class="mt-7 inline-flex rounded-xl border hairline glass p-1">
+              <button v-for="(m, i) in modes" :key="'sw-'+m.id" @click="runDemo(i)"
+                      class="px-3.5 py-1.5 text-sm rounded-lg transition"
+                      :class="demoMode === i ? 'bg-white/10 text-[#16142b] dark:text-white' : 'text-white/55 hover:text-white/80'">
+                {{ m.label }}
+              </button>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-3 max-w-sm">
+              <div class="rounded-xl border hairline p-3 glass">
+                <div class="text-[10px] font-mono text-white/40 uppercase tracking-wider">Elapsed</div>
+                <div class="text-xl font-semibold mt-1 font-mono">{{ elapsed.toFixed(1) }}s</div>
+              </div>
+              <div class="rounded-xl border hairline p-3 glass">
+                <div class="text-[10px] font-mono text-white/40 uppercase tracking-wider">Steps</div>
+                <div class="text-xl font-semibold mt-1 font-mono">{{ doneSteps }} / {{ demoSteps.length }}</div>
+              </div>
+            </div>
+
+            <button @click="runDemo(demoMode)" class="mt-5 inline-flex items-center gap-2 text-sm text-violet-300 hover:text-violet-200 transition">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5"/></svg>
+              Replay
+            </button>
+          </div>
+
+          <div class="lg:col-span-7 min-w-0 reveal">
+            <div class="mock-dark rounded-3xl border hairline glass overflow-hidden shadow-glow">
+              <div class="win-bar flex items-center justify-between px-4 py-2.5 border-b hairline">
+                <div class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="ml-3 text-[11px] font-mono text-white/45">mode.switch( {{ modes[demoMode].label.toLowerCase() }} )</span>
+                </div>
+                <span class="text-[11px] font-mono text-white/40">stream://progress</span>
+              </div>
+
+              <div class="p-6 sm:p-8 bg-[#0a0915]">
+                <!-- From → To banner -->
+                <div class="mb-5 flex items-center justify-between flex-wrap gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border hairline">
+                      <span class="h-2 w-2 rounded-full" :style="{ background: modes[demoFrom].dot }"></span>
+                      <span class="text-sm text-white/85">{{ modes[demoFrom].label }}</span>
+                      <span class="text-[10px] font-mono text-white/40">closing</span>
+                    </div>
+                    <svg class="h-4 w-4 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-violet-400/30 bg-violet-500/10">
+                      <span class="h-2 w-2 rounded-full" :style="{ background: modes[demoMode].dot, boxShadow: '0 0 10px '+modes[demoMode].dot }"></span>
+                      <span class="text-sm text-white/95">{{ modes[demoMode].label }}</span>
+                      <span class="text-[10px] font-mono text-violet-200/80">opening</span>
+                    </div>
+                  </div>
+                  <div class="text-[10px] font-mono text-white/40">close → open · atomic</div>
+                </div>
+
+                <!-- Two phases -->
+                <div v-for="phaseDef in ['close','open']" :key="'ph-'+phaseDef" class="mb-4">
+                  <div class="flex items-center gap-2 mb-2 px-1">
+                    <span class="text-[10px] font-mono uppercase tracking-[0.18em]"
+                          :class="phaseDef==='close' ? 'text-rose-300/80' : 'text-violet-300/80'">
+                      {{ phaseDef==='close' ? '1 · Close previous' : '2 · Open next' }}
+                    </span>
+                    <span class="flex-1 h-px" :class="phaseDef==='close' ? 'bg-gradient-to-r from-rose-400/30 via-rose-400/10 to-transparent' : 'bg-gradient-to-r from-violet-400/30 via-violet-400/10 to-transparent'"></span>
+                    <span class="text-[10px] font-mono"
+                          :class="phaseGate(phaseDef) === 'done' ? 'text-emerald-300/80' : phaseGate(phaseDef) === 'active' ? (phaseDef==='close' ? 'text-rose-300' : 'text-violet-300') : 'text-white/30'">
+                      {{ phaseGate(phaseDef) === 'done' ? '✓ complete' : phaseGate(phaseDef) === 'active' ? 'running' : 'pending' }}
+                    </span>
+                  </div>
+
+                  <div class="space-y-2">
+                    <div v-for="(s, i) in stepsForPhase(phaseDef)" :key="'d-'+phaseDef+'-'+i"
+                         class="flex items-start gap-4 rounded-2xl border p-3.5 transition"
+                         :class="[
+                           stepStateGlobal(s.absIdx) === 'pending' ? 'opacity-50 border-white/8' :
+                           stepStateGlobal(s.absIdx) === 'active' ? (phaseDef==='close' ? 'bg-rose-500/[.04] border-rose-400/30' : 'bg-violet-500/[.04] border-violet-400/30') :
+                           (phaseDef==='close' ? 'border-rose-400/15 bg-white/[.02]' : 'border-violet-400/15 bg-white/[.02]')
+                         ]">
+                      <div class="mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center shrink-0"
+                           :class="[
+                             stepStateGlobal(s.absIdx) === 'pending' ? 'bg-white/5 text-white/30 border hairline' :
+                             stepStateGlobal(s.absIdx) === 'active' ? (phaseDef==='close' ? 'bg-rose-500/25 text-white border border-rose-400/60' : 'bg-violet-500/30 text-white border border-violet-400/60') :
+                             (phaseDef==='close' ? 'bg-rose-500/15 text-rose-200 border border-rose-400/30' : 'bg-violet-500/15 text-violet-200 border border-violet-400/30')
+                           ]">
+                        <svg v-if="stepStateGlobal(s.absIdx) === 'done'" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 13 4 4L19 7"/></svg>
+                        <svg v-else-if="stepStateGlobal(s.absIdx) === 'active'" class="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-3-6.7"/></svg>
+                        <span v-else class="h-1.5 w-1.5 rounded-full bg-white/30"></span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-3">
+                          <div class="text-sm font-medium">{{ s.label }}</div>
+                          <div class="text-[10px] font-mono text-white/40 shrink-0">{{ s.at }}</div>
+                        </div>
+                        <div class="mt-1 text-xs text-white/50 font-mono truncate">{{ s.detail }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- progress rail -->
+                <div class="mt-6 flex items-center gap-3">
+                  <div class="flex-1 h-1 rounded-full bg-white/5 overflow-hidden">
+                    <div class="h-full progress-rail animate-shimmer"
+                         :style="{ width: ((demoIdx+1)/demoSteps.length*100).toFixed(0)+'%' }"></div>
+                  </div>
+                  <div class="text-[11px] font-mono text-white/40">
+                    {{ Math.round((demoIdx+1)/demoSteps.length*100) }}%
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  HOTKEYS  ───────────────────────── -->
+    <section id="hotkeys" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-5 min-w-0 order-1 lg:order-2 reveal">
+            <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">Global hotkeys</span>
+            <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+              The fastest path<br/>between contexts.
+            </h2>
+            <p class="mt-4 text-white/55 text-lg leading-relaxed">
+              Bind any mode to a system-wide chord. They fire from full-screen games, RDP sessions,
+              even from inside another fullscreen app. No focus stealing, no setup.
+            </p>
+
+            <!-- Binding list -->
+            <ul class="mt-7 space-y-2.5">
+              <li v-for="(b, i) in bindings" :key="'b-'+i"
+                  @click="firePress(i)"
+                  class="group flex items-center gap-4 rounded-2xl border hairline glass p-3.5 cursor-pointer transition"
+                  :class="hkActive === i ? 'border-violet-400/40 bg-white/[.04]' : 'hover:bg-white/[.02]'">
+                <span class="h-2 w-2 rounded-full shrink-0" :style="{ background: b.dot, boxShadow: hkActive===i ? '0 0 10px '+b.dot : 'none' }"></span>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-white/90">{{ b.label }}</div>
+                  <div class="text-[11px] font-mono text-white/45 truncate">{{ b.action }}</div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <kbd v-for="k in b.combo" :key="b.label+'-'+k"
+                       class="px-1.5 min-w-[22px] h-6 rounded-md text-[10px] font-mono inline-flex items-center justify-center border hairline"
+                       :class="hkActive===i ? 'bg-violet-500/20 border-violet-400/40 text-white' : 'bg-white/5 text-white/70'">{{ k }}</kbd>
+                </div>
+              </li>
+            </ul>
+
+            <button @click="addingBinding = !addingBinding"
+                    class="mt-4 inline-flex items-center gap-2 text-sm text-violet-300 hover:text-violet-200 transition">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              {{ addingBinding ? 'Press any chord…' : 'Bind a new chord' }}
+            </button>
+          </div>
+
+          <!-- keyboard + event feed -->
+          <div class="lg:col-span-7 min-w-0 order-2 lg:order-1 reveal">
+            <div class="mock-dark rounded-3xl border hairline glass overflow-hidden shadow-glow">
+              <div class="win-bar flex items-center justify-between px-4 py-2.5 border-b hairline">
+                <div class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="ml-3 text-[11px] font-mono text-white/45">mode.hotkeys · listening</span>
+                </div>
+                <span class="text-[11px] font-mono text-emerald-300/90 flex items-center gap-1.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  global hook active
+                </span>
+              </div>
+
+              <div class="p-5 sm:p-6 bg-[#0a0915]">
+                <!-- Keyboard -->
+                <div class="rounded-2xl border hairline p-3 sm:p-4 bg-gradient-to-b from-white/[.03] to-transparent overflow-x-auto">
+                  <div class="flex flex-col gap-1.5 min-w-[440px]">
+                    <div v-for="(row, ri) in keyboard" :key="'r-'+ri" class="flex gap-1.5">
+                      <div v-for="(k, ki) in row" :key="'k-'+ri+'-'+ki"
+                           class="key relative overflow-hidden rounded-md border flex items-end justify-start px-1.5 pb-1 text-[9px] font-mono select-none transition"
+                           :style="{ flex: k.w, minWidth: (k.w*22)+'px', height: '34px',
+                                     background: isKeyHot(k.code) ? 'linear-gradient(180deg,#3a2a6d,#22184a)' : 'rgba(255,255,255,.02)' }"
+                           :class="[
+                             isKeyHot(k.code) ? 'border-violet-400/70 text-white shadow-[0_0_18px_rgba(167,139,250,.55)]' : 'border-white/10 text-white/55',
+                             k.code === pressed ? 'translate-y-[1px] brightness-125' : ''
+                           ]">
+                        <span class="relative">{{ k.l }}</span>
+                        <span v-if="isKeyHot(k.code)" class="absolute top-1 right-1 h-1 w-1 rounded-full bg-violet-300"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Visualized chord -->
+                  <div class="mt-4 flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center gap-1.5">
+                      <kbd v-for="k in bindings[hkActive].combo" :key="'big-'+k"
+                           class="px-2 min-w-[34px] h-8 rounded-lg text-xs font-mono inline-flex items-center justify-center border border-violet-400/40 bg-violet-500/15 text-white">{{ k }}</kbd>
+                      <svg class="h-4 w-4 text-white/40 mx-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+                      <span class="px-2.5 h-8 inline-flex items-center rounded-lg text-xs border hairline text-white/85">
+                        switch <span class="font-mono ml-1.5" :style="{ color: bindings[hkActive].dot }">{{ bindings[hkActive].label.toLowerCase() }}</span>
+                      </span>
+                    </div>
+                    <span class="text-[10px] font-mono text-white/40">no app capture · works from anywhere</span>
+                  </div>
+                </div>
+
+                <!-- Close → Open transition strip -->
+                <div class="mt-5 rounded-2xl border hairline overflow-hidden">
+                  <div class="flex items-center justify-between px-4 py-2 border-b hairline bg-white/[.02]">
+                    <span class="text-[10px] font-mono uppercase tracking-[0.14em] text-white/45">transition pipeline</span>
+                    <span class="text-[10px] font-mono text-white/35">{{ phaseLabel }}</span>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-white/5">
+                    <!-- CLOSING -->
+                    <div class="p-4">
+                      <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-mono text-white/40 uppercase tracking-wider">1. Closing</span>
+                        <svg v-if="phase==='closing'" class="h-3 w-3 animate-spin text-rose-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-3-6.7"/></svg>
+                        <svg v-else-if="phase==='opening' || phase==='done'" class="h-3 w-3 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 13 4 4L19 7"/></svg>
+                      </div>
+                      <div class="mt-2 flex items-center gap-2">
+                        <span class="h-2 w-2 rounded-full shrink-0" :style="{ background: bindings[hkFrom].dot }"></span>
+                        <span class="text-sm text-white/85">{{ bindings[hkFrom].label }}</span>
+                        <span class="text-[10px] font-mono text-white/40">· saved snapshot</span>
+                      </div>
+                      <div class="mt-2 flex flex-wrap gap-1">
+                        <span v-for="(app, i) in modes[hkFrom].tiles" :key="'from-'+i"
+                              class="text-[10px] font-mono px-1.5 py-0.5 rounded border hairline transition"
+                              :class="phase==='closing' && i <= closeStep ? 'text-rose-200/70 line-through opacity-50' : (phase==='opening' || phase==='done') ? 'text-rose-200/70 line-through opacity-40' : 'text-white/65'">
+                          {{ app.app }}
+                        </span>
+                      </div>
+                    </div>
+                    <!-- OPENING -->
+                    <div class="p-4">
+                      <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-mono text-white/40 uppercase tracking-wider">2. Opening</span>
+                        <svg v-if="phase==='opening'" class="h-3 w-3 animate-spin text-violet-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-3-6.7"/></svg>
+                        <svg v-else-if="phase==='done'" class="h-3 w-3 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 13 4 4L19 7"/></svg>
+                      </div>
+                      <div class="mt-2 flex items-center gap-2">
+                        <span class="h-2 w-2 rounded-full shrink-0" :style="{ background: bindings[hkActive].dot }"></span>
+                        <span class="text-sm text-white/85">{{ bindings[hkActive].label }}</span>
+                        <span class="text-[10px] font-mono text-white/40">· layout {{ modes[hkActive].layout }}</span>
+                      </div>
+                      <div class="mt-2 flex flex-wrap gap-1">
+                        <span v-for="(app, i) in modes[hkActive].tiles" :key="'to-'+i"
+                              class="text-[10px] font-mono px-1.5 py-0.5 rounded border transition"
+                              :class="((phase==='opening' && i <= openStep) || phase==='done') ? 'text-violet-200 border-violet-400/30 bg-violet-500/10' : 'text-white/30 border-white/10'">
+                          {{ app.app }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Event feed -->
+                <div class="mt-5 rounded-2xl border hairline overflow-hidden">
+                  <div class="flex items-center justify-between px-4 py-2 border-b hairline bg-white/[.02]">
+                    <span class="text-[10px] font-mono uppercase tracking-[0.14em] text-white/45">press log</span>
+                    <span class="text-[10px] font-mono text-white/35">{{ events.length }} events</span>
+                  </div>
+                  <div class="divide-y divide-white/5">
+                    <div v-for="(e, i) in events" :key="'e-'+e.id"
+                         class="flex items-center gap-3 px-4 py-2.5 text-[12px] font-mono transition"
+                         :class="i === 0 ? 'bg-violet-500/[.05]' : ''">
+                      <span class="text-white/35 w-20 shrink-0">{{ e.time }}</span>
+                      <div class="flex items-center gap-1 shrink-0">
+                        <kbd v-for="k in e.combo" :key="e.id+'-'+k"
+                             class="px-1.5 h-5 rounded text-[9px] inline-flex items-center justify-center border hairline bg-white/5 text-white/75">{{ k }}</kbd>
+                      </div>
+                      <svg class="h-3 w-3 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+                      <span class="flex items-center gap-1.5 truncate min-w-0">
+                        <span class="inline-flex items-center gap-1 text-rose-200/70">
+                          <span class="h-1.5 w-1.5 rounded-full" :style="{ background: e.fromDot }"></span>
+                          closed {{ e.from.toLowerCase() }}
+                        </span>
+                        <svg class="h-3 w-3 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+                        <span class="inline-flex items-center gap-1 text-violet-200">
+                          <span class="h-1.5 w-1.5 rounded-full" :style="{ background: e.dot }"></span>
+                          opened {{ e.label.toLowerCase() }}
+                        </span>
+                      </span>
+                      <span class="ml-auto text-white/35 shrink-0">{{ e.dur }}</span>
+                    </div>
+                    <div v-if="events.length === 0" class="px-4 py-6 text-center text-[12px] text-white/40 font-mono">
+                      Listening for hotkeys…
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  CLI SHOWCASE  ───────────────────────── -->
+    <section id="cli" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-7 min-w-0 order-2 lg:order-2 reveal">
+            <div class="mock-dark terminal rounded-3xl border hairline overflow-hidden shadow-glow">
+              <div class="win-bar flex items-center justify-between px-4 py-2.5 border-b hairline">
+                <div class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="ml-3 text-[11px] font-mono text-white/45 hidden sm:inline">pwsh — suko</span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0 flex-wrap justify-end">
+                  <button v-for="(c, i) in cliCmds" :key="'tab-'+i" @click="setCli(i)"
+                          class="text-[11px] font-mono px-1.5 sm:px-2 py-1 rounded transition"
+                          :class="cliIdx === i ? 'bg-white/10 text-white' : 'text-white/45 hover:text-white/70'">
+                    {{ c.tab }}
+                  </button>
+                </div>
+              </div>
+
+              <div class="term-body p-6 sm:p-8 font-mono text-[13px] leading-[1.7] min-h-[440px]">
+                <div class="flex items-center gap-2 text-white/60">
+                  <span class="text-emerald-400">PS</span>
+                  <span class="text-cyan-300">C:\Users\you</span>
+                  <span class="text-white/40">&gt;</span>
+                  <span class="text-white">{{ cliTyped }}</span>
+                  <span class="inline-block w-2 h-4 bg-violet-400 align-middle animate-caret"></span>
+                </div>
+
+                <div class="mt-4 space-y-0.5">
+                  <div v-for="(ln, i) in cliVisible" :key="'cl-'+i" class="term-line"
+                       v-html="ln"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 min-w-0 order-1 lg:order-1 reveal lg:sticky lg:top-28">
+            <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">CLI</span>
+            <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+              For when your hands<br/>own the keyboard.
+            </h2>
+            <p class="mt-4 text-white/55 text-lg leading-relaxed">
+              The full GUI is here. So is the CLI. <span class="font-mono text-white/80">mode list</span>,
+              <span class="font-mono text-white/80">status</span>,
+              <span class="font-mono text-white/80">preview</span>,
+              <span class="font-mono text-white/80">create</span>,
+              <span class="font-mono text-white/80">history</span>,
+              <span class="font-mono text-white/80">stats</span> — script your modes from anywhere.
+            </p>
+
+            <ul class="mt-7 space-y-3">
+              <li v-for="c in cliCmds" :key="'p-'+c.tab" class="flex items-center gap-3 text-sm">
+                <span class="font-mono text-violet-300/90 w-40 shrink-0">mode {{ c.tab }}</span>
+                <span class="text-white/55">{{ c.tagline }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  PRIVACY  ───────────────────────── -->
+    <section id="privacy" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="max-w-2xl reveal">
+          <span class="text-[11px] uppercase tracking-[0.18em] font-semibold text-cyan-700 dark:text-cyan-300/80">Privacy</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+            Privacy first.
+          </h2>
+          <p class="mt-4 text-white/90 text-lg">
+            Your data stays on your computer. suko works locally and keeps your information where it belongs — on your machine. We don't collect analytics, we don't track behavior, and we never upload your workspace data. The only network request is license verification during activation. That's it.
+          </p>
+        </div>
+
+        <!-- Data ledger -->
+        <div class="reveal mt-12 grid gap-4 lg:grid-cols-2">
+          <!-- Stays on device -->
+          <div class="rounded-3xl border hairline glass p-7 relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 h-40 w-40 rounded-full"
+                 style="background: radial-gradient(circle, rgba(34,211,238,.16), transparent 70%)"></div>
+            <div class="relative">
+              <div class="flex items-center gap-2.5">
+                <div class="h-9 w-9 rounded-xl border hairline flex items-center justify-center text-cyan-600 dark:text-cyan-300 bg-white/[.03]">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4v6c0 5-3.8 8-9 9-5.2-1-9-4-9-9V7Z"/><path d="m9 12 2 2 4-4"/></svg>
+                </div>
+                <div>
+                  <h3 class="text-base font-semibold tracking-tight">Stays on your device</h3>
+                  <p class="text-[11px] font-mono text-cyan-700/80 dark:text-cyan-300/70">never uploaded</p>
+                </div>
+              </div>
+              <ul class="mt-6 space-y-2.5">
+                <li v-for="item in privacyStays" :key="item" class="flex items-center gap-3 text-sm text-white/70">
+                  <svg class="h-4 w-4 shrink-0 text-cyan-600 dark:text-cyan-400/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Leaves device -->
+          <div class="rounded-3xl border hairline glass p-7 relative overflow-hidden">
+            <div class="relative">
+              <div class="flex items-center gap-2.5">
+                <div class="h-9 w-9 rounded-xl border hairline flex items-center justify-center text-violet-300 bg-white/[.03]">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+                </div>
+                <div>
+                  <h3 class="text-base font-semibold tracking-tight">Leaves your device</h3>
+                  <p class="text-[11px] font-mono text-white/40">network calls, in full</p>
+                </div>
+              </div>
+              <ul class="mt-6 space-y-3">
+                <li class="flex items-start gap-3 rounded-2xl border hairline bg-white/[.02] px-4 py-3">
+                  <span class="mt-0.5 h-5 w-5 shrink-0 rounded-md bg-violet-500/15 text-violet-300 grid place-items-center text-[11px] font-mono">1</span>
+                  <div>
+                    <div class="text-sm font-medium text-white/85">License check</div>
+                    <div class="text-xs text-white/45 leading-relaxed">A single validation request on activation. Sends your license key — nothing about your modes, apps, or files.</div>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 rounded-2xl border hairline bg-white/[.02] px-4 py-3 opacity-70">
+                  <span class="mt-0.5 h-5 w-5 shrink-0 rounded-md bg-white/[.06] text-white/45 grid place-items-center text-[11px] font-mono">~</span>
+                  <div>
+                    <div class="text-sm font-medium text-white/70">Diagnostics <span class="text-[10px] font-mono text-white/40">opt-in only</span></div>
+                    <div class="text-xs text-white/45 leading-relaxed">Off by default. If you turn it on, reports are anonymous — OS, GPU, and the last few log lines. No personal data.</div>
+                  </div>
+                </li>
+              </ul>
+              <p class="mt-4 text-[11px] font-mono text-white/35 flex items-center gap-2">
+                <svg class="h-3.5 w-3.5 text-cyan-600/80 dark:text-cyan-400/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4v6c0 5-3.8 8-9 9-5.2-1-9-4-9-9V7Z"/></svg>
+                That's the entire list. There is no third call.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guarantees grid -->
+        <div class="reveal mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div v-for="(p, i) in privacyPoints" :key="p.t" class="rounded-3xl border hairline glass p-6 relative overflow-hidden">
+            <div class="h-10 w-10 rounded-xl border hairline flex items-center justify-center text-cyan-600 dark:text-cyan-300 bg-white/[.03]" v-html="p.icon"></div>
+            <h3 class="mt-4 text-base font-semibold tracking-tight">{{ p.t }}</h3>
+            <p class="mt-1.5 text-sm text-white/55 leading-relaxed">{{ p.d }}</p>
+          </div>
+        </div>
+
+        <div class="reveal mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+          <a href="privacy.html" class="inline-flex items-center gap-2 text-cyan-700 hover:text-cyan-800 dark:text-cyan-300/90 dark:hover:text-cyan-200 transition font-medium">
+            Read the full privacy policy
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+          </a>
+          <span class="text-white/35 text-[13px]">Plain language. No surprises. Last updated June 2026.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  PRICING  ───────────────────────── -->
+    <section id="pricing" class="relative py-16 sm:py-24">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[440px] w-[760px] rounded-full bg-violet-600/20 blur-[140px]"></div>
+      </div>
+      <div class="relative mx-auto max-w-7xl px-5">
+        <div class="text-center max-w-2xl mx-auto reveal">
+          <span class="text-[11px] uppercase tracking-[0.18em] text-violet-300/80">Pricing</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+            One price. Yours forever.
+          </h2>
+          <p class="mt-4 text-white/55 text-lg">No subscription. No seat math. No upsells.</p>
+        </div>
+
+        <div class="reveal mt-12 mx-auto max-w-lg">
+          <div class="relative rounded-3xl border border-violet-400/20 glass p-1 shadow-glow">
+            <div class="rounded-[1.4rem] p-8 sm:p-10 bg-gradient-to-b from-white/[.02] to-transparent">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-sm font-medium text-violet-300">Lifetime License</div>
+                  <h3 class="mt-1 text-2xl font-semibold tracking-tight">suko</h3>
+                </div>
+                <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full border border-violet-400/30 text-violet-200 bg-violet-500/10">
+                  Most popular
+                </span>
+              </div>
+
+              <div class="mt-7 flex items-baseline gap-2">
+                <span class="text-6xl font-bold tracking-tight gradient-text">${{ price }}</span>
+                <span class="text-white/40">USD · one-time</span>
+              </div>
+              <p class="mt-2 text-sm text-white/45">Buy once. Use it forever. Get every update free.</p>
+
+              <button @click="openCheckout"
+                      class="btn-primary mt-7 w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-medium">
+                Buy now with Paddle
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+              </button>
+              <p class="mt-3 text-center text-[11px] text-white/40 font-mono">Secure checkout · Cards, PayPal, Apple/Google Pay</p>
+              <p class="mt-2 text-center text-xs text-white/50">Not sure yet? Try it free first — and there's a 30-day refund if it's not for you.</p>
+
+              <ul class="mt-7 space-y-2.5 text-sm">
+                <li v-for="b in benefits" :key="b" class="flex items-start gap-3">
+                  <span class="mt-1 h-4 w-4 rounded-full bg-violet-500/15 border border-violet-400/30 flex items-center justify-center shrink-0">
+                    <svg class="h-2.5 w-2.5 text-violet-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 13 4 4L19 7"/></svg>
+                  </span>
+                  <span class="text-white/75">{{ b }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <p class="mt-5 text-center text-xs text-white/40">
+            Need a team license or a PO? <a href="mailto:hello@suko.app" class="text-violet-300 hover:underline">Email us</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  HOW LICENSING WORKS  ───────────────────────── -->
+    <section id="licensing" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="max-w-2xl reveal">
+          <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">Licensing</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+            Buy. Activate. Forget about it.
+          </h2>
+          <p class="mt-4 text-white/55 text-lg">Four steps between checkout and your first hotkey.</p>
+        </div>
+
+        <ol class="mt-12 grid gap-4 md:grid-cols-4 relative">
+          <div class="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-violet-400/40 to-transparent"></div>
+          <li v-for="(s, i) in steps" :key="s.t" class="reveal relative rounded-3xl border hairline glass p-6">
+            <div class="relative z-10 flex items-center gap-3">
+              <div class="h-10 w-10 rounded-xl border hairline flex items-center justify-center bg-white/[.03] text-violet-300" v-html="s.icon"></div>
+              <span class="text-[11px] font-mono text-white/35">STEP 0{{ i+1 }}</span>
+            </div>
+            <h3 class="mt-4 text-lg font-semibold tracking-tight">{{ s.t }}</h3>
+            <p class="mt-1.5 text-sm text-white/55 leading-relaxed">{{ s.d }}</p>
+          </li>
+        </ol>
+
+        <div class="reveal mt-10 rounded-2xl border hairline glass p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+          <div class="h-12 w-12 rounded-xl bg-violet-500/10 border border-violet-400/30 flex items-center justify-center text-violet-300 shrink-0">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0Z"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <div class="flex-1">
+            <div class="text-sm font-semibold">Works offline for 7 days at a stretch.</div>
+            <p class="text-sm text-white/55 mt-0.5">License validates online once, then runs offline with a rolling grace period. Hop on a plane — your modes still work. 30-day refund, no questions asked.</p>
+          </div>
+          <a href="#faq" class="text-sm text-violet-300 hover:text-violet-200 shrink-0">Read FAQ →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  FAQ  ───────────────────────── -->
+    <section id="faq" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-3xl px-5">
+        <div class="text-center max-w-2xl mx-auto reveal">
+          <span class="text-[11px] uppercase tracking-[0.18em] text-violet-300/80">FAQ</span>
+          <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+            Honest answers.
+          </h2>
+        </div>
+
+        <div class="mt-12 space-y-3">
+          <details v-for="(q, i) in faqs" :key="'faq-'+i"
+                   class="reveal group rounded-2xl border hairline glass overflow-hidden">
+            <summary class="px-5 sm:px-6 py-5 flex items-center justify-between gap-6 hover:bg-white/[.02] transition">
+              <span class="text-base font-medium text-white/90">{{ q.q }}</span>
+              <span class="chev inline-flex h-7 w-7 items-center justify-center rounded-full border hairline text-white/60 transition-transform shrink-0">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              </span>
+            </summary>
+            <div class="px-5 sm:px-6 pb-6 text-sm text-white/60 leading-relaxed border-t hairline pt-4">
+              {{ q.a }}
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  FEEDBACK  ───────────────────────── -->
+    <section id="feedback" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          <!-- Left: pitch + side info -->
+          <div class="lg:col-span-5 min-w-0 reveal lg:sticky lg:top-28">
+            <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">Feedback</span>
+            <h2 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+              Found something broken?<br/>Have an idea?
+            </h2>
+            <p class="mt-4 text-white/55 text-lg leading-relaxed">
+              We read every message ourselves. Bug reports help us improve the product, and many of our best features start as user suggestions.
+            </p>
+
+          </div>
+
+          <!-- Right: the form -->
+          <div class="lg:col-span-7 min-w-0 reveal">
+            <form @submit.prevent="submitFeedback"
+                  class="rounded-3xl border hairline glass overflow-hidden shadow-glow">
+              <!-- header / tabs -->
+              <div class="win-bar flex items-center justify-between px-4 py-2.5 border-b hairline">
+                <div class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="ml-3 text-[11px] font-mono text-white/45">feedback.new</span>
+                </div>
+                <span class="text-[11px] font-mono text-emerald-300/90 flex items-center gap-1.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  encrypted
+                </span>
+              </div>
+
+              <div class="p-6 sm:p-8">
+                <!-- Success state -->
+                <div v-if="fb.submitted" class="text-center py-10">
+                  <div class="mx-auto h-14 w-14 rounded-2xl bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
+                    <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+                  </div>
+                  <h3 class="mt-4 text-xl font-semibold tracking-tight">Got it. Thank you.</h3>
+                  <p class="mt-2 text-sm text-white/55 max-w-sm mx-auto">
+                    Ticket <span class="font-mono text-violet-300">#{{ fb.ticket }}</span> is in the queue. We'll email
+                    <span class="text-white/80">{{ fb.email }}</span> when there's an update.
+                  </p>
+                  <button type="button" @click="resetFeedback"
+                          class="mt-6 inline-flex items-center gap-2 text-sm text-violet-300 hover:text-violet-200 transition">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5"/></svg>
+                    Send another
+                  </button>
+                </div>
+
+                <!-- Form -->
+                <div v-else>
+                  <!-- What kind of feedback? -->
+                  <span class="text-[11px] uppercase tracking-[0.14em] text-white/45">What's this about?</span>
+                  <div class="mt-1.5 grid grid-cols-3 gap-2 p-1 rounded-xl border hairline bg-white/[.02]">
+                    <button v-for="t in fbTypes" :key="t.id" type="button"
+                            @click="fb.type = t.id"
+                            class="relative rounded-lg px-3 py-2.5 text-sm transition flex items-center justify-center gap-2"
+                            :class="fb.type === t.id ? 'text-white' : 'text-white/55 hover:text-white/80'">
+                      <span v-if="fb.type === t.id"
+                            class="absolute inset-0 rounded-lg"
+                            :style="{ background: t.gradient, boxShadow: '0 6px 16px -6px '+t.shadow }"></span>
+                      <span class="relative flex items-center gap-2">
+                        <span v-html="t.icon"></span>
+                        <span class="hidden sm:inline">{{ t.label }}</span>
+                        <span class="sm:hidden">{{ t.short }}</span>
+                      </span>
+                    </button>
+                  </div>
+
+                  <!-- Email -->
+                  <label class="block mt-6">
+                    <span class="text-[11px] uppercase tracking-[0.14em] text-white/45">Your email</span>
+                    <input v-model="fb.email" type="email" placeholder="you@domain.com"
+                           class="mt-1.5 w-full bg-black/30 rounded-xl border hairline px-4 py-3 text-[14px] text-white placeholder-white/30 outline-none focus:border-violet-400/50 focus:bg-black/40 transition" />
+                    <div v-if="fb.errors.email" class="mt-1.5 text-[11px] text-rose-300 font-mono">{{ fb.errors.email }}</div>
+                  </label>
+
+                  <!-- Title -->
+                  <label class="block mt-5">
+                    <span class="text-[11px] uppercase tracking-[0.14em] text-white/45">Subject</span>
+                    <input v-model="fb.title" type="text" maxlength="100"
+                           :placeholder="fbPlaceholders[fb.type].title"
+                           class="mt-1.5 w-full bg-black/30 rounded-xl border hairline px-4 py-3 text-[15px] text-white placeholder-white/30 outline-none focus:border-violet-400/50 focus:bg-black/40 transition" />
+                    <div v-if="fb.errors.title" class="mt-1.5 text-[11px] text-rose-300 font-mono">{{ fb.errors.title }}</div>
+                  </label>
+
+                  <!-- Description -->
+                  <label class="block mt-5">
+                    <span class="text-[11px] uppercase tracking-[0.14em] text-white/45">Details</span>
+                    <textarea v-model="fb.body" rows="5" maxlength="2000"
+                              :placeholder="fbPlaceholders[fb.type].body"
+                              class="mt-1.5 w-full bg-black/30 rounded-xl border hairline px-4 py-3 text-[14px] text-white placeholder-white/30 outline-none focus:border-violet-400/50 focus:bg-black/40 transition resize-y leading-relaxed"></textarea>
+                    <div v-if="fb.errors.body" class="mt-1.5 text-[11px] text-rose-300 font-mono">{{ fb.errors.body }}</div>
+                  </label>
+
+                  <!-- Submit -->
+                  <div class="mt-6 flex items-center justify-between gap-3">
+                    <p class="text-[11px] text-white/40 leading-relaxed max-w-[18rem]">
+                      We'll only email you about this report.
+                    </p>
+                    <button type="submit" :disabled="fb.sending"
+                            class="btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed shrink-0">
+                      <svg v-if="fb.sending" class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-3-6.7"/></svg>
+                      <svg v-else class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+                      {{ fb.sending ? 'Sending…' : 'Send feedback' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  DOWNLOAD CTA  ───────────────────────── -->
+    <section id="download" class="relative py-16 sm:py-24">
+      <div class="mx-auto max-w-5xl px-5">
+        <div class="reveal relative rounded-3xl border hairline glass overflow-hidden">
+          <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute -top-20 -right-10 h-72 w-72 rounded-full bg-violet-600/30 blur-[100px]"></div>
+            <div class="absolute -bottom-20 -left-10 h-72 w-72 rounded-full bg-cyan-500/15 blur-[100px]"></div>
+            <div class="absolute inset-0 grid-noise opacity-40"></div>
+          </div>
+          <div class="relative px-6 sm:px-12 py-14 sm:py-20 text-center">
+            <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">Get started</span>
+            <h2 class="mt-3 text-4xl sm:text-6xl font-semibold tracking-tight gradient-text max-w-3xl mx-auto leading-[1.05]">
+              Switch faster. Focus longer.
+            </h2>
+            <p class="mt-5 text-white/60 max-w-xl mx-auto">
+              Stop rebuilding your desktop every time you change tasks. Create dedicated workspaces, launch everything instantly, and keep your attention where it belongs. Start using suko today.
+            </p>
+            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+              <a href="#" class="btn-primary inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-medium">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5l8-1.2v8.4H3V5Zm0 14v-7.8h8V20.2L3 19Zm9-15.4L21 2.5v9.7h-9V3.6Zm0 16.8v-9.7h9V21.5L12 20.4Z"/></svg>
+                Download for Windows
+              </a>
+              <button @click="openCheckout" class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-white/85 border hairline hover:bg-white/5 transition">
+                Buy Lifetime License
+              </button>
+            </div>
+            <div class="mt-6 flex items-center justify-center gap-3 text-[11px] font-mono text-white/40">
+              <span>v1.0.3</span><span>·</span><span>Windows 10/11</span><span>·</span><span>x64 · ARM64</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  FOOTER  ───────────────────────── -->
+    <footer class="relative pt-20 pb-12 border-t hairline">
+      <div class="mx-auto max-w-7xl px-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          <div class="lg:col-span-5">
+            <div class="flex items-center gap-2.5">
+              <img src="assets/suko-mark-512.png" alt="suko" width="32" height="32" class="h-8 w-8" />
+              <span class="text-base font-semibold tracking-tight">suko</span>
+            </div>
+            <p class="mt-4 text-sm text-white/45 max-w-xs">One keystroke between contexts. Made by a small team for people who run their own desktop.</p>
+
+            <div class="mt-6 inline-flex items-center gap-2 rounded-lg border hairline px-3 py-1.5 text-[11px] font-mono text-white/55">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5l8-1.2v8.4H3V5Zm0 14v-7.8h8V20.2L3 19Zm9-15.4L21 2.5v9.7h-9V3.6Zm0 16.8v-9.7h9V21.5L12 20.4Z"/></svg>
+              Made for Windows 10 &amp; 11
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-8 text-sm">
+            <div v-for="g in footer" :key="g.title">
+              <div class="text-[11px] uppercase tracking-[0.18em] text-white/35 mb-3">{{ g.title }}</div>
+              <ul class="space-y-2">
+                <li v-for="l in g.links" :key="l.label">
+                  <a :href="l.href" class="text-white/65 hover:text-white transition">{{ l.label }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-14 pt-6 border-t hairline flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-white/35">
+          <span>© 2026 suko. All rights reserved.</span>
+          <span class="flex items-center gap-3">
+            <span class="inline-flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> All systems operational</span>
+            <span>·</span>
+            <a href="#" class="hover:text-white/70">status</a>
+          </span>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<!-- ─────────────────────────  VUE APP  ───────────────────────── -->
+<script src="https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js"></script>
+<script>
+const { createApp, ref, reactive, computed, onMounted, onUnmounted, watch, nextTick } = Vue;
+
+createApp({
+  setup() {
+    const isDark = ref(false);
+    const scrolled = ref(false);
+    const activeSection = ref('');
+    const mobileOpen = ref(false);
+    const price = ref(10);
+    const active = ref(0);
+
+    const nav = [
+      { id:'why',       label:'Why' },
+      { id:'features',  label:'Features' },
+      { id:'demo',      label:'Demo' },
+      { id:'hotkeys',   label:'Hotkeys' },
+      { id:'cli',       label:'CLI' },
+      { id:'privacy',   label:'Privacy' },
+      { id:'pricing',   label:'Pricing' },
+      { id:'faq',       label:'FAQ' },
+      { id:'feedback',  label:'Feedback' },
+    ];
+
+    /* ───── Hero modes ───── */
+    const modes = [
+      { id:'work',    label:'Deep Work 🧠',    hotkey:'W', dot:'#a78bfa',
+        gradient:'linear-gradient(180deg,#8b5cf6,#6d28d9)', shadow:'rgba(124,58,237,.55)', glow:'rgba(139,92,246,.18)',
+        cols:'2fr 1.4fr 1fr', rows:'1.6fr 1fr', layout:'three-pane', dnd:true,
+        tiles:[
+          { app:'VS Code',  kind:'code',    note:'src/modes.ts',           c:'1', r:'1 / span 2', tag:'IDE',  bg:'linear-gradient(180deg,#1c1a30,#13111f)' },
+          { app:'Linear',   kind:'linear',  note:'SUK-204 · in progress',  c:'2', r:'1',          tag:'PM',   bg:'linear-gradient(180deg,#1d1b2e,#15131f)' },
+          { app:'Slack',    kind:'chat',    note:'#suko-team',              c:'3', r:'1',          tag:'CHAT', bg:'linear-gradient(180deg,#1c1a2c,#14121e)' },
+          { app:'Arc',      kind:'browser', note:'docs.suko.app',c:'2 / span 2', r:'2',  tag:'WEB',  bg:'linear-gradient(180deg,#1f1c33,#161324)' },
+        ]
+      },
+      { id:'focus',   label:'Focus ⚡',   hotkey:'F', dot:'#22d3ee',
+        gradient:'linear-gradient(180deg,#22d3ee,#0891b2)', shadow:'rgba(8,145,178,.55)', glow:'rgba(34,211,238,.16)',
+        cols:'1fr 1fr', rows:'1fr', layout:'split', dnd:true,
+        tiles:[
+          { app:'Obsidian',  kind:'notes', note:'Vault · daily.md',   c:'1', r:'1', tag:'NOTES', bg:'linear-gradient(180deg,#16243a,#0e1828)' },
+          { app:'Brain.fm',  kind:'audio', note:'Deep Focus · 50min', c:'2', r:'1', tag:'AUDIO', bg:'linear-gradient(180deg,#0f2a30,#0a1c22)' },
+        ]
+      },
+      { id:'gaming',  label:'Gaming 🎮',  hotkey:'G', dot:'#fb7185',
+        gradient:'linear-gradient(180deg,#fb7185,#db2777)', shadow:'rgba(219,39,119,.55)', glow:'rgba(251,113,133,.18)',
+        cols:'2fr 1fr', rows:'1fr 1fr', layout:'fullscreen', dnd:false,
+        tiles:[
+          { app:'Steam',     kind:'game',    note:'Hades II · 2025',     c:'1', r:'1 / span 2', tag:'GAME',  bg:'linear-gradient(180deg,#2a1820,#1c1018)' },
+          { app:'Discord',   kind:'voice',   note:'#voice-friday-night', c:'2', r:'1',          tag:'VC',    bg:'linear-gradient(180deg,#1d1a2e,#15131f)' },
+          { app:'Spotify',   kind:'spotify', note:'Synthwave · shuffle', c:'2', r:'2',          tag:'AUDIO', bg:'linear-gradient(180deg,#142822,#0c1c18)' },
+        ]
+      },
+      { id:'study',   label:'Study 📚',   hotkey:'S', dot:'#fbbf24',
+        gradient:'linear-gradient(180deg,#fbbf24,#d97706)', shadow:'rgba(217,119,6,.45)',  glow:'rgba(251,191,36,.16)',
+        cols:'1.4fr 1fr 1fr', rows:'1.2fr 1fr', layout:'reference', dnd:true,
+        tiles:[
+          { app:'Notion',  kind:'doc',     note:'CS244 · Distributed',    c:'1', r:'1 / span 2', tag:'NOTES', bg:'linear-gradient(180deg,#2a2516,#1c1810)' },
+          { app:'Anki',    kind:'card',    note:'Due today · 84 cards',   c:'2', r:'1',          tag:'CARDS', bg:'linear-gradient(180deg,#1e1b2e,#15131f)' },
+          { app:'YouTube', kind:'video',   note:'Raft Consensus · 23:11', c:'3', r:'1',          tag:'VID',   bg:'linear-gradient(180deg,#2a1820,#1c1018)' },
+          { app:'Zotero',  kind:'pdf',     note:'paxos.pdf',              c:'2 / span 2', r:'2',  tag:'PDF',   bg:'linear-gradient(180deg,#1f1b2c,#15131f)' },
+        ]
+      },
+    ];
+    const currentMode = computed(() => modes[active.value]);
+    const setMode = (i) => { active.value = i; };
+
+    /* ───── tile UI mocks ───── */
+    const tileUI = (kind, note) => {
+      const bar = (w, opacity=0.7, color='rgba(255,255,255,') => `<div class="h-1.5 rounded-sm" style="width:${w}%; background:${color}${opacity})"></div>`;
+      switch (kind) {
+        case 'code':
+          return `
+            <div class="h-full flex text-[9px] font-mono">
+              <div class="w-1/4 border-r hairline p-2 space-y-1 bg-black/20">
+                <div class="text-white/40">EXPLORER</div>
+                <div class="text-white/70">▾ src</div>
+                <div class="pl-2 text-violet-300">modes.ts</div>
+                <div class="pl-2 text-white/45">layout.ts</div>
+                <div class="pl-2 text-white/45">hotkeys.ts</div>
+                <div class="text-white/70 pt-1">▾ lib</div>
+                <div class="pl-2 text-white/45">paddle.ts</div>
+              </div>
+              <div class="flex-1 p-2 space-y-1">
+                <div><span class="text-pink-300">export</span> <span class="text-violet-300">async</span> <span class="text-cyan-300">function</span> <span class="text-amber-300">switchMode</span><span class="text-white/60">(</span></div>
+                <div class="pl-3"><span class="text-white/70">id</span><span class="text-white/40">:</span> <span class="text-emerald-300">ModeId</span></div>
+                <div><span class="text-white/60">) {</span></div>
+                <div class="pl-3"><span class="text-violet-300">const</span> <span class="text-white/80">prev</span> <span class="text-white/40">=</span> <span class="text-violet-300">await</span> <span class="text-amber-300">snapshot</span><span class="text-white/60">()</span></div>
+                <div class="pl-3"><span class="text-violet-300">await</span> <span class="text-amber-300">closeAll</span><span class="text-white/60">(prev)</span></div>
+                <div class="pl-3"><span class="text-violet-300">await</span> <span class="text-amber-300">launch</span><span class="text-white/60">(id)</span></div>
+                <div class="pl-3"><span class="text-violet-300">await</span> <span class="text-amber-300">applyLayout</span><span class="text-white/60">(id)</span></div>
+                <div><span class="text-white/60">}</span></div>
+              </div>
+            </div>`;
+        case 'linear':
+          return `
+            <div class="h-full p-2.5 space-y-1.5 text-[10px] font-mono">
+              <div class="flex items-center justify-between text-white/40">
+                <span>SUK · In Progress</span><span>5</span>
+              </div>
+              ${['Wire Paddle webhook','Mode preview animation','CLI: mode stats','License grace timer','Discord update.exe hook'].map((t,i)=>`
+                <div class="flex items-center gap-2 py-1 px-1.5 rounded ${i===0?'bg-violet-500/10 border border-violet-400/20':''}">
+                  <span class="h-2.5 w-2.5 rounded-full ${i===0?'border-2 border-violet-400':'border border-white/30'} shrink-0"></span>
+                  <span class="text-white/40">SUK-${204-i}</span>
+                  <span class="text-white/80 truncate">${t}</span>
+                </div>`).join('')}
+            </div>`;
+        case 'chat':
+          return `
+            <div class="h-full flex text-[9px]">
+              <div class="w-1/3 border-r hairline p-2 bg-black/20 space-y-1.5">
+                <div class="text-white/40 font-mono">CHANNELS</div>
+                <div class="px-1.5 py-1 rounded bg-violet-500/15 text-white/90"># suko-team</div>
+                <div class="px-1.5 text-white/55"># general</div>
+                <div class="px-1.5 text-white/55"># releases</div>
+                <div class="px-1.5 text-white/55 flex justify-between"><span># bugs</span><span class="text-rose-300">3</span></div>
+              </div>
+              <div class="flex-1 p-2 space-y-2">
+                <div class="flex items-start gap-1.5">
+                  <span class="h-4 w-4 rounded-full bg-gradient-to-br from-violet-400 to-pink-400 shrink-0"></span>
+                  <div class="flex-1">
+                    <div class="text-white/85">v1.0.3 just shipped 🚀</div>
+                    <div class="text-white/40 mt-0.5">CLI got history flag</div>
+                  </div>
+                </div>
+                <div class="flex items-start gap-1.5">
+                  <span class="h-4 w-4 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 shrink-0"></span>
+                  <div class="flex-1">
+                    <div class="text-white/85">nice — testing now</div>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+        case 'browser':
+          return `
+            <div class="h-full flex flex-col text-[10px]">
+              <div class="flex items-center gap-1 px-2 py-1.5 border-b hairline bg-black/20">
+                <div class="flex gap-1">
+                  <span class="px-2 py-0.5 rounded-md text-[9px] bg-white/10 text-white/85 font-mono">docs</span>
+                  <span class="px-2 py-0.5 rounded-md text-[9px] text-white/45 font-mono">github</span>
+                  <span class="px-2 py-0.5 rounded-md text-[9px] text-white/45 font-mono">linear</span>
+                </div>
+                <div class="ml-2 flex-1 px-2 py-0.5 rounded text-[9px] font-mono text-white/50 bg-white/5 truncate">docs.suko.app/cli</div>
+              </div>
+              <div class="flex-1 p-3">
+                <div class="text-[14px] font-semibold text-white/90 mb-2">CLI Reference</div>
+                <div class="space-y-1.5">
+                  ${bar(70)}${bar(85,0.5)}${bar(60,0.5)}${bar(80,0.4)}${bar(45,0.4)}
+                </div>
+                <div class="mt-3 p-2 rounded bg-black/40 font-mono text-[9px] text-violet-300">$ mode switch &lt;id&gt;</div>
+              </div>
+            </div>`;
+        case 'notes':
+          return `
+            <div class="h-full flex text-[10px] font-mono">
+              <div class="w-[38%] border-r hairline p-2 bg-black/20 space-y-1">
+                <div class="text-white/40">DAILY</div>
+                <div class="text-cyan-300">2026-05-26.md</div>
+                <div class="text-white/55">2026-05-25.md</div>
+                <div class="text-white/55">2026-05-24.md</div>
+                <div class="text-white/40 pt-2">PROJECTS</div>
+                <div class="text-white/55">writing.md</div>
+              </div>
+              <div class="flex-1 p-3 space-y-2">
+                <div class="text-[12px] text-white/90"># Tuesday</div>
+                <div class="text-white/65"><span class="text-cyan-300">- [ ]</span> ship landing</div>
+                <div class="text-white/65"><span class="text-cyan-300">- [x]</span> draft pricing copy</div>
+                <div class="text-white/65"><span class="text-cyan-300">- [ ]</span> reply to <span class="text-cyan-200">@jay</span></div>
+                <div class="text-white/45">> deep work block · 90 min</div>
+              </div>
+            </div>`;
+        case 'audio':
+          return `
+            <div class="h-full flex flex-col items-center justify-center p-4 gap-3">
+              <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-emerald-500 shadow-[0_0_30px_rgba(34,211,238,.5)] relative overflow-hidden">
+                <div class="absolute inset-0 grid place-items-center">
+                  <div class="h-2 w-2 rounded-full bg-white/90"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[11px] text-white/90">Deep Focus</div>
+                <div class="text-[9px] text-white/45 font-mono mt-0.5">50 min · neural phase</div>
+              </div>
+              <div class="flex items-end gap-0.5 h-6">
+                ${[3,7,11,8,14,18,12,15,9,13,6,4].map(h=>`<span class="w-1 rounded-sm bg-cyan-400/70" style="height:${h*3}%"></span>`).join('')}
+              </div>
+              <div class="flex items-center gap-2 text-white/80">
+                <span class="text-[9px] font-mono">12:34</span>
+                <span class="h-6 w-6 rounded-full bg-cyan-400/20 border border-cyan-300/40 flex items-center justify-center">▶</span>
+                <span class="text-[9px] font-mono text-white/40">37:26</span>
+              </div>
+            </div>`;
+        case 'game':
+          return `
+            <div class="h-full relative overflow-hidden">
+              <div class="absolute inset-0" style="background:
+                radial-gradient(circle at 30% 40%, rgba(251,113,133,.45), transparent 50%),
+                radial-gradient(circle at 75% 70%, rgba(219,39,119,.55), transparent 55%),
+                linear-gradient(180deg, #2a0f1a, #1a0510);"></div>
+              <div class="absolute inset-0 grid-noise opacity-40"></div>
+              <div class="absolute inset-3 flex flex-col justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-rose-400 to-pink-600 ring-1 ring-white/20 flex items-center justify-center">
+                    <span class="text-[16px]">⚔</span>
+                  </div>
+                  <div>
+                    <div class="text-[12px] font-semibold text-white/95">HADES II</div>
+                    <div class="text-[9px] font-mono text-white/55">Supergiant · roguelike</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="px-3 py-1.5 rounded-md bg-emerald-500 text-emerald-950 text-[10px] font-semibold">▶ PLAY</button>
+                  <span class="text-[9px] font-mono text-white/55">28h played</span>
+                </div>
+              </div>
+            </div>`;
+        case 'voice':
+          return `
+            <div class="h-full p-2.5 text-[10px]">
+              <div class="text-white/40 font-mono mb-2">🔊 friday-night</div>
+              <div class="space-y-1.5">
+                ${[
+                  {n:'jay',  c:'from-violet-400 to-pink-400',  on:true},
+                  {n:'mira', c:'from-cyan-400 to-emerald-400', on:true},
+                  {n:'sam',  c:'from-amber-400 to-rose-400',   on:false},
+                  {n:'kai',  c:'from-indigo-400 to-violet-400', on:true},
+                ].map(p=>`
+                  <div class="flex items-center gap-2">
+                    <span class="h-5 w-5 rounded-full bg-gradient-to-br ${p.c} ring-2 ${p.on?'ring-emerald-400/70':'ring-white/10'} shrink-0"></span>
+                    <span class="text-white/85">${p.n}</span>
+                    ${p.on?'<span class="ml-auto text-emerald-300">●</span>':'<span class="ml-auto text-white/30">muted</span>'}
+                  </div>`).join('')}
+              </div>
+            </div>`;
+        case 'spotify':
+          return `
+            <div class="h-full flex items-center gap-2.5 p-3">
+              <div class="h-12 w-12 rounded shrink-0" style="background:linear-gradient(135deg,#ec4899,#a855f7,#3b82f6);box-shadow:0 6px 20px -4px rgba(168,85,247,.6)"></div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] text-white/95 truncate">Midnight City</div>
+                <div class="text-[9px] text-white/45 font-mono truncate">M83 · Synthwave</div>
+                <div class="mt-1.5 h-0.5 bg-white/10 rounded-full overflow-hidden">
+                  <div class="h-full bg-emerald-400" style="width:42%"></div>
+                </div>
+              </div>
+              <span class="h-7 w-7 rounded-full bg-white text-black text-[10px] flex items-center justify-center shrink-0">▶</span>
+            </div>`;
+        case 'doc':
+          return `
+            <div class="h-full p-3 text-[10px] space-y-1.5">
+              <div class="text-[13px] font-semibold text-white/95">CS244 · Lecture 7</div>
+              <div class="text-[9px] text-white/40 font-mono">Distributed Consensus</div>
+              <div class="pt-1.5 space-y-1">
+                <div class="text-white/85">## Paxos vs Raft</div>
+                ${bar(85, 0.5)}${bar(72, 0.45)}${bar(90, 0.4)}
+                <div class="text-white/85 pt-1">## Leader election</div>
+                ${bar(80, 0.4)}${bar(60, 0.4)}
+              </div>
+              <div class="mt-2 p-1.5 rounded bg-amber-500/10 border border-amber-400/20 text-[9px] text-amber-200 font-mono">💡 quorum = (n/2)+1</div>
+            </div>`;
+        case 'card':
+          return `
+            <div class="h-full flex flex-col p-3">
+              <div class="text-[9px] font-mono text-white/40 mb-1">CARD 12 / 84</div>
+              <div class="flex-1 rounded-lg border hairline bg-white/[.03] flex items-center justify-center p-2 text-center">
+                <div>
+                  <div class="text-[14px] text-white/95">Raft term</div>
+                  <div class="text-[9px] font-mono text-white/40 mt-1">tap to flip</div>
+                </div>
+              </div>
+              <div class="mt-2 grid grid-cols-4 gap-1 text-[9px] font-mono">
+                <div class="text-center py-1 rounded bg-rose-500/15 text-rose-200">Again</div>
+                <div class="text-center py-1 rounded bg-amber-500/15 text-amber-200">Hard</div>
+                <div class="text-center py-1 rounded bg-emerald-500/15 text-emerald-200">Good</div>
+                <div class="text-center py-1 rounded bg-cyan-500/15 text-cyan-200">Easy</div>
+              </div>
+            </div>`;
+        case 'video':
+          return `
+            <div class="h-full flex flex-col">
+              <div class="relative flex-1 m-2 rounded-md overflow-hidden" style="background:linear-gradient(135deg,#7f1d1d,#450a0a)">
+                <div class="absolute inset-0 grid-noise opacity-30"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="h-9 w-9 rounded-full bg-white/95 text-black flex items-center justify-center text-[12px]">▶</span>
+                </div>
+                <div class="absolute bottom-1 right-1 px-1 rounded text-[8px] font-mono bg-black/70">23:11</div>
+              </div>
+              <div class="px-3 pb-2">
+                <div class="text-[10px] text-white/90 leading-tight">Raft Consensus, Explained</div>
+                <div class="text-[9px] text-white/40 font-mono mt-0.5">Stanford · 412K views</div>
+              </div>
+            </div>`;
+        case 'pdf':
+          return `
+            <div class="h-full flex p-2 gap-2">
+              <div class="w-10 space-y-1 shrink-0">
+                <div class="aspect-[3/4] rounded-sm bg-white/8 border border-violet-400/30"></div>
+                <div class="aspect-[3/4] rounded-sm bg-white/5"></div>
+                <div class="aspect-[3/4] rounded-sm bg-white/5"></div>
+              </div>
+              <div class="flex-1 rounded-md p-3 text-[9px] space-y-1" style="background:linear-gradient(180deg, #ece8d8, #d9d3bd); color:#222">
+                <div class="text-[11px] font-semibold">Paxos Made Simple</div>
+                <div class="text-[8px] opacity-70">Leslie Lamport · 2001</div>
+                <div class="mt-1 space-y-0.5">
+                  <div class="h-1 bg-black/60 rounded" style="width:90%"></div>
+                  <div class="h-1 bg-black/50 rounded" style="width:80%"></div>
+                  <div class="h-1 bg-black/50 rounded" style="width:85%"></div>
+                  <div class="h-1 bg-black/40 rounded" style="width:60%"></div>
+                  <div class="h-1 bg-black/50 rounded" style="width:70%"></div>
+                  <div class="h-1 bg-black/40 rounded" style="width:50%"></div>
+                </div>
+              </div>
+            </div>`;
+        default:
+          return `<div class="h-full flex items-center justify-center text-[10px] text-white/40 font-mono">${note||''}</div>`;
+      }
+    };
+
+    /* Auto-cycle hero pill */
+    let cycleT;
+    onMounted(() => {
+      cycleT = setInterval(() => { active.value = (active.value + 1) % modes.length; }, 4200);
+    });
+    onUnmounted(() => clearInterval(cycleT));
+
+    /* ───── real app brand logos + colors ───── */
+    const brandMap = {
+      'VS Code'  : { color:'#0098FF', logo:'<svg class="h-full w-full" viewBox="0 0 24 24" fill="none"><path d="m17.5 2.5-8 7.4L5 6.6 2.7 8l3.9 2.9-3.9 2.9L5 15.4l4.5-3.3 8 7.4 3.8-1.8V4.3L17.5 2.5Zm0 5.1v8.8l-5.6-4.4 5.6-4.4Z" fill="#0098FF"/></svg>' },
+      'Linear'   : { color:'#5E6AD2', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" fill="#5E6AD2"/><path d="M6 13.5 10.5 18M6 10.5 13.5 18M6.5 7 17 17.5M9.5 6 18 14.5" stroke="#fff" stroke-width="1.1" opacity=".95"/></svg>' },
+      'Slack'    : { color:'#36C5F0', logo:'<svg class="h-full w-full" viewBox="0 0 24 24" stroke-width="2.6" stroke-linecap="round"><path d="M9 4 8.2 20" stroke="#36C5F0"/><path d="M16 4 15.2 20" stroke="#2EB67D"/><path d="M4 9 20 8.2" stroke="#ECB22E"/><path d="M4 16 20 15.2" stroke="#E01E5A"/></svg>' },
+      'Arc'      : { color:'#F2547D', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#F2547D"/><circle cx="12" cy="12" r="4.6" fill="#5B7FFF"/></svg>' },
+      'Obsidian' : { color:'#9D6BFF', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><path d="M12 2 4 8.5 7 21h10l3-12.5L12 2Z" fill="#7C3AED"/><path d="M12 2 9 11.5 12 21l3-9.5L12 2Z" fill="#C4B5FD" opacity=".55"/></svg>' },
+      'Brain.fm' : { color:'#22D3EE', logo:'<svg class="h-full w-full" viewBox="0 0 24 24" stroke="#22D3EE" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M4 12h1.5M8 8.5v7M12 5v14M16 8.5v7M19.5 12H20"/></svg>' },
+      'Steam'    : { color:'#66C0F4', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1B2838"/><circle cx="15.2" cy="9" r="3" fill="none" stroke="#66C0F4" stroke-width="1.5"/><circle cx="8.2" cy="15" r="2.3" fill="#66C0F4"/><path d="m10.2 13.4 3.3-2.6" stroke="#66C0F4" stroke-width="1.3"/></svg>' },
+      'Discord'  : { color:'#5865F2', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><path d="M19.8 5.6A16 16 0 0 0 15.9 4l-.3.5a12 12 0 0 1 3.4 1.7 14 14 0 0 0-12 0A12 12 0 0 1 10.4 4.5L10.1 4a16 16 0 0 0-3.9 1.6C3.8 9 3.1 12.6 3.4 16.1A16 16 0 0 0 8 18.5l1-1.6c-.8-.3-1.6-.7-2.3-1.1l.5-.4a11 11 0 0 0 9.6 0l.6.4c-.7.4-1.5.8-2.3 1.1l1 1.6a16 16 0 0 0 4.6-2.4c.4-4-.7-7.6-2.9-10.5ZM9.4 13.9c-.8 0-1.4-.7-1.4-1.6s.6-1.6 1.4-1.6 1.5.7 1.4 1.6c0 .9-.6 1.6-1.4 1.6Zm5.2 0c-.8 0-1.4-.7-1.4-1.6s.6-1.6 1.4-1.6 1.5.7 1.4 1.6c0 .9-.6 1.6-1.4 1.6Z" fill="#5865F2"/></svg>' },
+      'Spotify'  : { color:'#1ED760', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1ED760"/><path d="M7 9.8c3.2-1 7-.6 9.6 1.1M7.6 12.8c2.6-.8 5.7-.4 7.8 1M8.2 15.6c2-.6 4.2-.3 5.8.8" stroke="#0a0a0a" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>' },
+      'Notion'   : { color:'#E9E9E7', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="#fff"/><path d="M8.5 16V8.5l7 7.5V8" stroke="#0a0a0a" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
+      'Anki'     : { color:'#3399FF', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="m12 5 1.9 4 4.4.5-3.3 3 .9 4.4L12 14.6 8.1 16.9l.9-4.4-3.3-3 4.4-.5L12 5Z" fill="#2F7FE0"/></svg>' },
+      'YouTube'  : { color:'#FF0033', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><rect x="2" y="5.5" width="20" height="13" rx="4" fill="#FF0033"/><path d="m10 9.5 5 2.5-5 2.5z" fill="#fff"/></svg>' },
+      'Zotero'   : { color:'#CC2936', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="#CC2936"/><path d="M8 7.8h8L8 16.2h8" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
+    };
+    const brand = (name) => brandMap[name] || { color:'#94a3b8', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="#475569"/></svg>' };
+    const brandLogo  = (name) => brand(name).logo;
+    const brandColor = (name) => brand(name).color;
+
+    /* ───── taskbar app icons ───── */
+    const appIconMap = {
+      'VS Code'  : { g:'❬❯', bg:'linear-gradient(135deg,#2563eb,#1d4ed8)', fg:'#fff' },
+      'Linear'   : { g:'L',    bg:'linear-gradient(135deg,#6366f1,#4338ca)', fg:'#fff' },
+      'Slack'    : { g:'#',    bg:'linear-gradient(135deg,#ec4899,#a855f7)', fg:'#fff' },
+      'Arc'      : { g:'A',    bg:'linear-gradient(135deg,#f97316,#ec4899)', fg:'#fff' },
+      'Obsidian' : { g:'◇',    bg:'linear-gradient(135deg,#7c3aed,#4c1d95)', fg:'#e9d5ff' },
+      'Brain.fm' : { g:'∿',    bg:'linear-gradient(135deg,#22d3ee,#0891b2)', fg:'#fff' },
+      'Steam'    : { g:'⚙',    bg:'linear-gradient(135deg,#1e3a8a,#0c1936)', fg:'#fff' },
+      'Discord'  : { g:'D',    bg:'linear-gradient(135deg,#6366f1,#4f46e5)', fg:'#fff' },
+      'Spotify'  : { g:'♫',    bg:'linear-gradient(135deg,#10b981,#047857)', fg:'#fff' },
+      'Notion'   : { g:'N',    bg:'linear-gradient(135deg,#f5f5f4,#d6d3d1)', fg:'#0a0a0a' },
+      'Anki'     : { g:'▤',    bg:'linear-gradient(135deg,#0ea5e9,#0369a1)', fg:'#fff' },
+      'YouTube'  : { g:'▶',    bg:'linear-gradient(135deg,#ef4444,#b91c1c)', fg:'#fff' },
+      'Zotero'   : { g:'Z',    bg:'linear-gradient(135deg,#dc2626,#7f1d1d)', fg:'#fff' },
+    };
+    const appIcon = (name) => appIconMap[name] || { g: name?.[0] || '?', bg:'linear-gradient(135deg,#475569,#1e293b)', fg:'#fff' };
+
+    // Live clock for the taskbar tray
+    const clockHM = ref('');
+    const tickClock = () => {
+      const d = new Date();
+      const h = d.getHours() % 12 || 12;
+      const m = String(d.getMinutes()).padStart(2,'0');
+      clockHM.value = `${h}:${m} ${d.getHours() >= 12 ? 'PM' : 'AM'}`;
+    };
+    let clockT;
+    onMounted(() => { tickClock(); clockT = setInterval(tickClock, 30000); });
+    onUnmounted(() => clearInterval(clockT));
+
+    /* ───── stats ───── */
+    const stats = [
+      { value:'2s',    label:'Switch in seconds', sub:'Your whole setup, instantly', color:'#a78bfa',
+        icon:'<svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-8 12h6l-1 8 8-12h-6l1-8Z"/></svg>' },
+      { value:'∞',     label:'Unlimited modes', sub:'One for every part of your day', color:'#22d3ee',
+        icon:'<svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 8c-2.5 0-4 1.8-4 4s1.5 4 4 4c3.5 0 6.5-8 10-8 2.5 0 4 1.8 4 4s-1.5 4-4 4c-3.5 0-6.5-8-10-8Z"/></svg>' },
+      { value:'1×',    label:'Pay once', sub:'No subscription, ever', color:'#fbbf24',
+        icon:'<svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' },
+      { value:'10 & 11', label:'Built for Windows', sub:'x64 and ARM64 ready', color:'#5e8bff',
+        icon:'<svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm0 13L10.5 19.6v-7H3v6.5ZM11.5 4.2 21 3v8.5h-9.5V4.2Zm0 15.6L21 21v-9.5h-9.5v8.3Z"/></svg>' },
+    ];
+
+    /* ───── problems ───── */
+    const problems = [
+      { t:'Done working, want to game', d:'Close 14 work apps. Kill Slack. Mute the pings. Launch Steam, open Discord. Ten minutes gone before you\'ve played anything.', fix:'One key. Gaming mode sets itself up.', glow:'rgba(251,113,133,.25)' },
+      { t:'Time to study',      d:'YouTube\'s right there. Discord\'s buzzing. Half your screen is yesterday\'s mess. By the time it\'s clean, the mood\'s gone.', fix:'One key. Distractions off, notes open.', glow:'rgba(167,139,250,.25)' },
+      { t:'Meeting in two minutes', d:'Scramble to close the game, find the right tab, silence everything, look presentable. You join flustered anyway.', fix:'One key. Camera-ready in seconds.', glow:'rgba(34,211,238,.25)' },
+    ];
+
+    /* ───── features ───── */
+    const ic = (svg) => svg;
+
+    /* ───── privacy ───── */
+    const privacyStays = [
+      'Your modes, layouts & app lists',
+      'Window positions and system settings',
+      'Launch commands, URLs & hotkey bindings',
+      'Usage history and switch logs',
+      'Everything else, in plain local files',
+    ];
+    const privacyPoints = [
+      { t:'Fully local', d:'Modes live as readable config files on your disk. Nothing is synced to a server.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="8" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 8h.01M7 17h.01"/></svg>' },
+      { t:'No account', d:'Download, install, done. No sign-up, no email gate, no profile to use the app.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0M2 2l20 20" stroke-opacity=".5"/></svg>' },
+      { t:'No telemetry', d:'Zero analytics or phone-home by default. suko does not watch how you use it.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7a11 11 0 0 1-4-.8"/><circle cx="12" cy="12" r="3"/><path d="m3 3 18 18"/></svg>' },
+      { t:'Yours to export', d:'Version your modes in git, move them between machines, or delete them — anytime.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>' },
+    ];
+
+    const whyCards = [
+      { t:'Everything in its place', color:'#a78bfa',
+        before:'Apps from three different tasks fighting over one screen.',
+        after:'Each mode opens only the apps that task needs.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>' },
+      { t:'Focus on demand', color:'#22d3ee',
+        before:'Notifications buzzing in the middle of deep work.',
+        after:'Focus mode silences the noise the instant you switch.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>' },
+      { t:'Zero setup, every time', color:'#fbbf24',
+        before:'Ten minutes rebuilding your desktop before you start.',
+        after:'One keystroke and you\'re ready to go.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-8 12h6l-1 8 8-12h-6l1-8Z"/></svg>' },
+    ];
+
+    const howItWorks = [
+      { t:'Create a workspace', d:'Choose the applications, websites, layouts, and system settings you want for a specific activity.' },
+      { t:'Save your setup',    d:'suko remembers exactly how everything is arranged.' },
+      { t:'Assign a shortcut',  d:'Create a keyboard shortcut that activates the workspace instantly.' },
+      { t:'Switch whenever you need', d:'Press one key combination and your environment changes automatically.' },
+    ];
+
+    const features = [
+      { t:'Instant switching', tone:'#a78bfa', chip:'< 2s average',
+        d:'Jump between workspaces in seconds. Apps launch, layouts restore, and settings adjust automatically.',
+        icon: ic('<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>') },
+      { t:'Global hotkeys',      tone:'#22d3ee', chip:'Works system-wide',
+        d:'Assign shortcuts to any workspace and switch from anywhere — even full-screen apps and games.',
+        icon: ic('<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M7 14h10"/></svg>') },
+      { t:'Window layouts',      tone:'#a78bfa', chip:'Always in the right place',
+        d:'Save your perfect setup and restore it instantly across one or multiple monitors.',
+        icon: ic('<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="10" width="8" height="11" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/></svg>') },
+      { t:'Smart system settings',     tone:'#22d3ee', chip:'Focus without the setup',
+        d:'Each workspace remembers its own volume, brightness, and notification preferences.',
+        icon: ic('<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>') },
+      { t:'Intelligent launchers',     tone:'#a78bfa', chip:'Everything ready at once',
+        d:'Open apps, websites, browser profiles, and startup commands with a single action.',
+        icon: ic('<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>') },
+      { t:'CLI for power users',      tone:'#22d3ee', chip:'Scriptable and extensible',
+        d:'Manage and automate workspaces directly from the terminal.',
+        icon: ic('<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></svg>') },
+    ];
+
+    /* ───── live demo ───── */
+    const demoMode = ref(0);
+    const demoFrom = ref(1);   // previous mode — powers the “from → to” banner
+    const demoIdx = ref(-1);
+    const elapsed = ref(0);
+    const startedAt = ref(0);
+
+    const demoStepsByMode = {
+      work:[
+        { label:'Saving previous state',    detail:'snapshot://focus → state.dat',      at:'0.10s', phase:'close' },
+        { label:'Closing Focus apps',       detail:'obsidian.exe · brain.fm',           at:'0.42s', phase:'close' },
+        { label:'Opening Work apps',        detail:'code · slack · linear · arc',       at:'0.91s', phase:'open' },
+        { label:'Applying window layout',   detail:'three-pane · monitor 1',            at:'1.34s', phase:'open' },
+        { label:'Tuning system',            detail:'volume 40% · brightness 80% · DND', at:'1.62s', phase:'open' },
+        { label:'Done',                     detail:'mode://work · ready',                at:'1.74s', phase:'open' },
+      ],
+      focus:[
+        { label:'Saving previous state',    detail:'snapshot://work → state.dat',       at:'0.08s', phase:'close' },
+        { label:'Closing Work apps',        detail:'code · slack · linear · arc',       at:'0.55s', phase:'close' },
+        { label:'Opening Focus apps',       detail:'obsidian.exe · brain.fm',           at:'0.84s', phase:'open' },
+        { label:'Applying window layout',   detail:'split · monitor 1',                 at:'1.08s', phase:'open' },
+        { label:'Tuning system',            detail:'volume 25% · brightness 60% · DND', at:'1.31s', phase:'open' },
+        { label:'Done',                     detail:'mode://focus · ready',               at:'1.45s', phase:'open' },
+      ],
+      gaming:[
+        { label:'Saving previous state',    detail:'snapshot://work → state.dat',       at:'0.12s', phase:'close' },
+        { label:'Closing Work apps',        detail:'code · slack · arc',                at:'0.61s', phase:'close' },
+        { label:'Opening Gaming apps',      detail:'steam · discord · spotify',         at:'1.20s', phase:'open' },
+        { label:'Applying window layout',   detail:'fullscreen · monitor 1',            at:'1.55s', phase:'open' },
+        { label:'Tuning system',            detail:'volume 80% · brightness 100%',      at:'1.78s', phase:'open' },
+        { label:'Done',                     detail:'mode://gaming · ready',              at:'1.92s', phase:'open' },
+      ],
+      study:[
+        { label:'Saving previous state',    detail:'snapshot://work → state.dat',       at:'0.09s', phase:'close' },
+        { label:'Closing Work apps',        detail:'slack · linear · arc',              at:'0.48s', phase:'close' },
+        { label:'Opening Study apps',       detail:'notion · anki · youtube · zotero',  at:'1.10s', phase:'open' },
+        { label:'Applying window layout',   detail:'reference · monitor 1 + 2',         at:'1.46s', phase:'open' },
+        { label:'Tuning system',            detail:'volume 30% · brightness 70% · DND', at:'1.71s', phase:'open' },
+        { label:'Done',                     detail:'mode://study · ready',               at:'1.84s', phase:'open' },
+      ],
+    };
+
+    const demoSteps = computed(() => demoStepsByMode[modes[demoMode.value].id]);
+    const doneSteps = computed(() => Math.max(0, demoIdx.value + 1));
+
+    const stepState = (i) => {
+      if (i < demoIdx.value) return 'done';
+      if (i === demoIdx.value) return demoIdx.value === demoSteps.value.length - 1 ? 'done' : 'active';
+      return 'pending';
+    };
+
+    // Phase-aware helpers (closing vs opening)
+    const stepsForPhase = (ph) => demoSteps.value
+      .map((s, idx) => ({ ...s, absIdx: idx }))
+      .filter(s => s.phase === ph);
+
+    const stepStateGlobal = (absIdx) => stepState(absIdx);
+
+    // Phase gate: pending / active / done
+    const phaseGate = (ph) => {
+      const inPhase = demoSteps.value.map((s,i)=>({ph:s.phase,i})).filter(x=>x.ph===ph).map(x=>x.i);
+      if (inPhase.length === 0) return 'done';
+      const lastIdx = inPhase[inPhase.length - 1];
+      const firstIdx = inPhase[0];
+      if (demoIdx.value < firstIdx) return 'pending';
+      if (demoIdx.value >= lastIdx && demoIdx.value === demoSteps.value.length - 1) return 'done';
+      if (demoIdx.value > lastIdx) return 'done';
+      return 'active';
+    };
+
+    let demoT, elapsedT;
+    const runDemo = (i) => {
+      // pick a different “from” so the close-then-open story is real
+      const prev = demoMode.value === i ? (i === 0 ? 1 : 0) : demoMode.value;
+      demoFrom.value = prev;
+      demoMode.value = i;
+      demoIdx.value = -1;
+      elapsed.value = 0;
+      clearInterval(demoT); clearInterval(elapsedT);
+      startedAt.value = Date.now();
+
+      elapsedT = setInterval(() => { elapsed.value = (Date.now() - startedAt.value) / 1000; }, 80);
+      demoT = setInterval(() => {
+        if (demoIdx.value < demoSteps.value.length - 1) demoIdx.value++;
+        else { clearInterval(demoT); clearInterval(elapsedT); }
+      }, 320);
+    };
+
+    /* ───── Hotkeys ───── */
+    const bindings = [
+      { label:'Work',   combo:['Ctrl','Shift','W'], keys:['ctrl','shift','w'], action:'switch → work · three-pane',  dot:'#a78bfa' },
+      { label:'Focus',  combo:['Ctrl','Shift','F'], keys:['ctrl','shift','f'], action:'switch → focus · split',       dot:'#22d3ee' },
+      { label:'Gaming', combo:['Ctrl','Shift','G'], keys:['ctrl','shift','g'], action:'switch → gaming · fullscreen', dot:'#fb7185' },
+      { label:'Study',  combo:['Ctrl','Shift','S'], keys:['ctrl','shift','s'], action:'switch → study · reference',   dot:'#fbbf24' },
+    ];
+    const hkActive = ref(0);
+    const hkFrom = ref(3);
+    const phase = ref('done');
+    const closeStep = ref(99);
+    const openStep = ref(99);
+    const addingBinding = ref(false);
+    const pressed = ref(null);
+    const events = ref([]);
+    let evId = 0;
+
+    const phaseLabel = computed(() => {
+      if (phase.value === 'closing') return 'closing ' + bindings[hkFrom.value].label.toLowerCase();
+      if (phase.value === 'opening') return 'opening ' + bindings[hkActive.value].label.toLowerCase();
+      if (phase.value === 'done')    return 'ready · ' + bindings[hkActive.value].label.toLowerCase();
+      return 'idle';
+    });
+
+    const isKeyHot = (code) => code && bindings[hkActive.value].keys.includes(code);
+
+    const pad2 = (n) => String(n).padStart(2,'0');
+    const fmtTime = (d=new Date()) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+
+    let phaseT1, phaseT2;
+    const firePress = (i) => {
+      if (i === hkActive.value) return;
+      clearInterval(phaseT1); clearInterval(phaseT2);
+      const from = hkActive.value;
+      hkFrom.value = from;
+      hkActive.value = i;
+
+      // animate keys depressing one-by-one
+      const seq = bindings[i].keys;
+      seq.forEach((k, idx) => {
+        setTimeout(() => { pressed.value = k; setTimeout(()=>{ if (pressed.value===k) pressed.value=null; }, 220); }, idx * 110);
+      });
+
+      // close → open phases
+      const fromApps = modes[from].tiles.length;
+      const toApps   = modes[i].tiles.length;
+      phase.value = 'closing';
+      closeStep.value = -1;
+      openStep.value = -1;
+
+      let s = 0;
+      phaseT1 = setInterval(() => {
+        if (s < fromApps) { closeStep.value = s; s++; }
+        else {
+          clearInterval(phaseT1);
+          phase.value = 'opening';
+          let o = 0;
+          phaseT2 = setInterval(() => {
+            if (o < toApps) { openStep.value = o; o++; }
+            else { clearInterval(phaseT2); phase.value = 'done'; }
+          }, 160);
+        }
+      }, 130);
+
+      const b = bindings[i];
+      const f = bindings[from];
+      const dur = (1.4 + Math.random()*0.6).toFixed(2) + 's';
+      events.value.unshift({ id: ++evId, time: fmtTime(), combo: b.combo, from: f.label, fromDot: f.dot, label: b.label, dot: b.dot, dur });
+      if (events.value.length > 5) events.value.length = 5;
+    };
+
+    // Keyboard layout — compact 60%-ish
+    const K = (l, code, w=1) => ({ l, code, w });
+    const keyboard = [
+      [K('`',null), K('1','1'), K('2','2'), K('3','3'), K('4','4'), K('5','5'), K('6','6'), K('7','7'), K('8','8'), K('9','9'), K('0','0'), K('-',null), K('=',null), K('⌫',null,1.8)],
+      [K('⇥',null,1.5), K('Q','q'), K('W','w'), K('E','e'), K('R','r'), K('T','t'), K('Y','y'), K('U','u'), K('I','i'), K('O','o'), K('P','p'), K('[',null), K(']',null), K('\\',null,1.3)],
+      [K('⇪',null,1.8), K('A','a'), K('S','s'), K('D','d'), K('F','f'), K('G','g'), K('H','h'), K('J','j'), K('K','k'), K('L','l'), K(';',null), K('\'',null), K('↵',null,2)],
+      [K('⇧ Shift','shift',2.3), K('Z','z'), K('X','x'), K('C','c'), K('V','v'), K('B','b'), K('N','n'), K('M','m'), K(',',null), K('.',null), K('/',null), K('⇧','shift',2.5)],
+      [K('Ctrl','ctrl',1.4), K('⊞',null,1.2), K('Alt',null,1.2), K('',null,5.5), K('Alt',null,1.2), K('Fn',null,1.2), K('Ctrl','ctrl',1.4)],
+    ];
+
+    // Auto-cycle bindings + seed log
+    let hkT;
+    onMounted(() => {
+      // seed initial log entries so the panel doesn't look empty
+      const now = new Date();
+      const seed = [
+        { off: -32,  from:3, to:0 },
+        { off: -120, from:0, to:1 },
+        { off: -340, from:1, to:2 },
+      ];
+      seed.forEach(s => {
+        const d = new Date(now.getTime() + s.off*1000);
+        const b = bindings[s.to]; const f = bindings[s.from];
+        events.value.push({ id: ++evId, time: fmtTime(d), combo: b.combo, from: f.label, fromDot: f.dot, label: b.label, dot: b.dot, dur: (1.4+Math.random()*0.6).toFixed(2)+'s' });
+      });
+      hkT = setInterval(() => {
+        const next = (hkActive.value + 1) % bindings.length;
+        firePress(next);
+      }, 4400);
+    });
+    onUnmounted(() => clearInterval(hkT));
+
+    /* ───── CLI cycling ───── */
+    const cliCmds = [
+      { tab:'list',
+        tagline:'show every mode at a glance',
+        prompt:'mode list',
+        out:[
+          '<span class="text-white/40">NAME       APPS  LAYOUT      HOTKEY      LAST USED</span>',
+          '<span class="text-violet-300">work</span>      <span class="text-white/80"> 4</span>    three-pane  <span class="text-cyan-300">Ctrl+⇧+W</span>   <span class="text-white/60">3 min ago</span>  <span class="text-emerald-400">● active</span>',
+          '<span class="text-cyan-300">focus</span>     <span class="text-white/80"> 2</span>    split       <span class="text-cyan-300">Ctrl+⇧+F</span>   <span class="text-white/60">2 hr ago</span>',
+          '<span class="text-rose-300">gaming</span>    <span class="text-white/80"> 3</span>    fullscreen  <span class="text-cyan-300">Ctrl+⇧+G</span>   <span class="text-white/60">yesterday</span>',
+          '<span class="text-amber-300">study</span>     <span class="text-white/80"> 4</span>    reference   <span class="text-cyan-300">Ctrl+⇧+S</span>   <span class="text-white/60">last week</span>',
+          '<span class="text-white/40">────────────────────────────────────────────────────</span>',
+          '<span class="text-white/60">4 modes · use </span><span class="text-violet-300">mode switch &lt;name&gt;</span><span class="text-white/60"> to change</span>',
+        ] },
+      { tab:'status',
+        tagline:'see what\'s currently running',
+        prompt:'mode status',
+        out:[
+          '<span class="text-white/40">▎ ACTIVE MODE</span>',
+          '<span class="text-violet-300">  work</span>   <span class="text-white/50">· three-pane · since 14:02 (37 min)</span>',
+          '',
+          '<span class="text-white/40">▎ MANAGED PROCESSES</span>',
+          '  <span class="text-emerald-400">✓</span> <span class="text-white/85">VS Code</span>      <span class="text-white/40">pid 14228  · 1.2 GB</span>',
+          '  <span class="text-emerald-400">✓</span> <span class="text-white/85">Slack</span>        <span class="text-white/40">pid 09144  · 412 MB</span>',
+          '  <span class="text-emerald-400">✓</span> <span class="text-white/85">Linear</span>       <span class="text-white/40">pid 18722  · 280 MB</span>',
+          '  <span class="text-emerald-400">✓</span> <span class="text-white/85">Arc</span>          <span class="text-white/40">pid 04019  · 720 MB · 12 tabs</span>',
+          '',
+          '<span class="text-white/40">▎ SYSTEM</span>',
+          '  volume <span class="text-cyan-300">40%</span> · brightness <span class="text-cyan-300">80%</span> · DND <span class="text-emerald-400">on</span>',
+        ] },
+      { tab:'switch gaming',
+        tagline:'fire a mode change from the shell',
+        prompt:'mode switch gaming',
+        out:[
+          '<span class="text-violet-300">→</span> <span class="text-white/80">switching</span> <span class="text-white/40">work</span> <span class="text-white/40">→</span> <span class="text-rose-300">gaming</span>',
+          '<span class="text-emerald-400">✓</span> <span class="text-white/75">saved snapshot</span>       <span class="text-white/40">work.state</span>     <span class="text-white/40">[0.12s]</span>',
+          '<span class="text-emerald-400">✓</span> <span class="text-white/75">closed 3 apps</span>        <span class="text-white/40">code, slack, arc</span> <span class="text-white/40">[0.61s]</span>',
+          '<span class="text-emerald-400">✓</span> <span class="text-white/75">opened 3 apps</span>        <span class="text-white/40">steam, discord, spotify</span> <span class="text-white/40">[1.20s]</span>',
+          '<span class="text-emerald-400">✓</span> <span class="text-white/75">applied layout</span>       <span class="text-white/40">fullscreen</span>     <span class="text-white/40">[1.55s]</span>',
+          '<span class="text-emerald-400">✓</span> <span class="text-white/75">tuned system</span>         <span class="text-white/40">vol 80, br 100</span> <span class="text-white/40">[1.78s]</span>',
+          '',
+          '<span class="text-rose-300">●</span> <span class="text-white/85">gaming</span> <span class="text-white/50">ready in</span> <span class="text-cyan-300">1.92s</span>',
+        ] },
+      { tab:'stats',
+        tagline:'usage history & time-in-mode',
+        prompt:'mode stats --week',
+        out:[
+          '<span class="text-white/40">▎ THIS WEEK · 26 switches</span>',
+          '',
+          '  <span class="text-violet-300">work</span>      <span class="text-white/70">█████████████████</span><span class="text-white/20">░░░</span>  <span class="text-white/60">22h 14m</span>',
+          '  <span class="text-cyan-300">focus</span>     <span class="text-white/70">█████████</span><span class="text-white/20">░░░░░░░░░░░</span>  <span class="text-white/60">11h 02m</span>',
+          '  <span class="text-amber-300">study</span>     <span class="text-white/70">█████</span><span class="text-white/20">░░░░░░░░░░░░░░░</span>  <span class="text-white/60"> 6h 47m</span>',
+          '  <span class="text-rose-300">gaming</span>    <span class="text-white/70">███</span><span class="text-white/20">░░░░░░░░░░░░░░░░░</span>  <span class="text-white/60"> 4h 18m</span>',
+          '',
+          '<span class="text-white/50">  busiest day · </span><span class="text-white/85">Tuesday</span><span class="text-white/50"> · </span><span class="text-cyan-300">8 switches</span>',
+          '<span class="text-white/50">  avg switch  · </span><span class="text-cyan-300">1.68s</span>',
+        ] },
+    ];
+    const cliIdx = ref(0);
+    const cliTyped = ref('');
+    const cliVisible = ref([]);
+    let typeT, lineT, cycleCli;
+
+    const playCli = (i) => {
+      clearInterval(typeT); clearInterval(lineT);
+      cliIdx.value = i;
+      cliTyped.value = '';
+      cliVisible.value = [];
+      const cmd = cliCmds[i].prompt;
+      let pos = 0;
+      typeT = setInterval(() => {
+        if (pos <= cmd.length) { cliTyped.value = cmd.slice(0, pos); pos++; }
+        else {
+          clearInterval(typeT);
+          // reveal lines
+          let li = 0;
+          const out = cliCmds[i].out;
+          lineT = setInterval(() => {
+            if (li < out.length) { cliVisible.value.push(out[li]); li++; }
+            else clearInterval(lineT);
+          }, 90);
+        }
+      }, 50);
+    };
+
+    const setCli = (i) => { clearInterval(cycleCli); playCli(i); cycleCli = setInterval(autoNextCli, 9000); };
+    const autoNextCli = () => playCli((cliIdx.value + 1) % cliCmds.length);
+
+    onMounted(() => {
+      playCli(0);
+      cycleCli = setInterval(autoNextCli, 9000);
+    });
+    onUnmounted(() => { clearInterval(typeT); clearInterval(lineT); clearInterval(cycleCli); });
+
+    /* ───── pricing benefits ───── */
+    const benefits = [
+      'Unlimited modes — Work, Focus, Gaming, Study, anything',
+      'Free updates for life — every release, including v2',
+      'License covers your machine (re-bind anytime)',
+      '7-day offline grace period · activates online once',
+      '30-day no-questions refund',
+      'Email support from the team that builds it',
+    ];
+
+    /* ───── licensing steps ───── */
+    const steps = [
+      { t:'Buy', d:'Checkout in 30 seconds via Paddle. Cards, PayPal, Apple/Google Pay.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h4l2 12h10l2-8H6"/><circle cx="10" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>' },
+      { t:'Get your key', d:'A UUID-v4 license key lands in your inbox the moment payment clears.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9 6 9-6M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2"/></svg>' },
+      { t:'Activate in app', d:'Paste the key into suko. Validates online once, then go.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>' },
+      { t:'Launch', d:'Create your first mode. Tap a hotkey. Watch your desktop change.',
+        icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>' },
+    ];
+
+    /* ───── FAQ ───── */
+    const faqs = [
+      { q:'How is suko different from Windows virtual desktops?', a:'Virtual desktops just hand you extra blank screens to drag windows onto — you still open, arrange and close everything by hand. suko does that work for you: one keystroke closes your current apps, launches the right ones, snaps them into a saved layout, and sets volume, brightness and Do Not Disturb. It\'s a workspace switcher, not just another empty desktop.' },
+      { q:'Is it really Windows-only?', a:'For now, yes. suko leans on Windows-specific APIs — FancyZones-style window tiling, Discord update.exe wiring, PowerShell launch hooks — that have no Mac or Linux equivalent. macOS and Linux are on the roadmap, but we\'re not promising dates yet.' },
+      { q:'What exactly is a "mode"?',  a:'A mode is a named bundle of everything a context needs: the apps to open (with launch arguments, browser URLs and terminal commands), the window layout to apply, the system settings to set (volume, brightness, Do Not Disturb), and a hotkey to trigger it. Switching modes closes the old apps before the new ones load, so your desktop never piles up.' },
+      { q:'Do I need to be a developer to use it?', a:'Not at all. Most people build their modes entirely in the visual app — click to add apps, drag windows where you want them, pick a hotkey, done. The CLI is there if you love the keyboard or want to script things, but it\'s completely optional.' },
+      { q:'Does suko work with multiple monitors?', a:'Yes. Layouts are captured per monitor, so each mode restores every window to the exact screen and position you saved. Run two displays for Study and a single screen for Gaming — each mode remembers its own arrangement.' },
+      { q:'Can I get a refund?',        a:'Yes — within 30 days of purchase, no questions asked. Email refund@suko.app with your license key and Paddle issues the refund directly.' },
+      { q:'I lost my license key.',     a:'Email hello@suko.app from the address you bought with and we\'ll re-send your key — usually within the hour, and within one business day at the latest.' },
+      { q:'Does it work offline?',      a:'After the first online activation, your license validates locally on a 7-day rolling grace period. Hop on a plane or work from a cabin — switching modes never needs an internet connection.' },
+      { q:'How many machines can I use it on?', a:'One license covers your machine. When you retire a device, deactivate it from the account portal and re-bind the license to a new one anytime.' },
+      { q:'Mac & Linux roadmap?',       a:'On our list, not yet on our calendar — we want to nail Windows first. Buy v1 and any future cross-platform release is yours at no extra charge.' },
+    ];
+
+    /* ───── Feedback form ───── */
+    const fbTypes = [
+      { id:'bug',        label:'Report a bug',     short:'Bug',     gradient:'linear-gradient(180deg,#fb7185,#e11d48)', shadow:'rgba(225,29,72,.55)',
+        icon:'<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 5a4 4 0 0 1 8 0v3M6 12a6 6 0 0 1 12 0v4a6 6 0 0 1-12 0v-4Zm-3-1h3m12 0h3M3 17h3m12 0h3M5 7l2 2m12-2-2 2"/></svg>' },
+      { id:'idea',       label:'Suggest an idea',  short:'Idea',    gradient:'linear-gradient(180deg,#a78bfa,#7c3aed)', shadow:'rgba(124,58,237,.55)',
+        icon:'<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.3V17h6v-1.2c0-.9.4-1.7 1-2.3A6 6 0 0 0 12 3ZM10 21h4M9 18h6"/></svg>' },
+      { id:'question',   label:'Ask a question',   short:'Question',gradient:'linear-gradient(180deg,#22d3ee,#0891b2)', shadow:'rgba(8,145,178,.55)',
+        icon:'<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 2-2 4M12.5 17.5h.01"/></svg>' },
+    ];
+    const fbPlaceholders = {
+      bug      : { title:'Hotkey stops working after sleep',
+                   body:'What you did, what you expected, what happened instead. Steps to reproduce — the more specific, the faster we fix it.' },
+      idea     : { title:'Per-monitor layouts',
+                   body:'Describe the workflow you want, and the friction you hit today. Sketches and screenshots welcome.' },
+      question : { title:'How do I bind a chord that includes a function key?',
+                   body:'Ask away. We answer most questions within a day.' },
+    };
+    const fbSeverities = [
+      { id:'low',      label:'Low',      glyph:'○', activeCls:'border-emerald-400/40 bg-emerald-500/10 text-emerald-200' },
+      { id:'normal',   label:'Normal',   glyph:'◐', activeCls:'border-amber-400/40   bg-amber-500/10   text-amber-200'   },
+      { id:'high',     label:'High',     glyph:'◑', activeCls:'border-orange-400/40  bg-orange-500/10  text-orange-200'  },
+      { id:'critical', label:'Critical', glyph:'●', activeCls:'border-rose-400/40    bg-rose-500/10    text-rose-200'    },
+    ];
+    const fbAreas = ['Hotkeys','Window layout','CLI','Modes','Licensing','UI','Other'];
+    const fbWhatHappens = [
+      { t:'Routed in minutes',  d:'Your message lands in our team queue with severity & area pre-tagged.',
+        icon:'<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9 6 9-6M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2"/></svg>' },
+      { t:'Reproduced & tracked', d:'Bugs become public issues with a ticket ID you can follow.',
+        icon:'<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/><circle cx="12" cy="12" r="5"/></svg>' },
+      { t:'Shipped in a patch', d:'Most bug fixes ship within 1–2 weeks. Ideas land in the next minor.',
+        icon:'<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>' },
+    ];
+
+    const blankFb = () => ({
+      type:'bug', title:'', body:'', email:'', version:'',
+      severity:'normal', area:'Hotkeys', diag:true,
+      sending:false, submitted:false, ticket:null,
+      errors:{},
+    });
+    const fb = reactive(blankFb());
+
+    const validateFb = () => {
+      const e = {};
+      if (!fb.title.trim() || fb.title.trim().length < 4) e.title = 'Give it a short title (4+ characters)';
+      if (!fb.body.trim()  || fb.body.trim().length  < 10) e.body  = 'A few sentences help us a lot (10+ characters)';
+      if (!fb.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fb.email)) e.email = 'We need a valid email to follow up';
+      fb.errors = e;
+      return Object.keys(e).length === 0;
+    };
+
+    const submitFeedback = () => {
+      if (!validateFb()) return;
+      fb.sending = true;
+      setTimeout(() => {
+        fb.sending = false;
+        fb.submitted = true;
+        fb.ticket = 'SUK-' + Math.floor(1000 + Math.random()*9000);
+      }, 900);
+    };
+
+    const resetFeedback = () => {
+      const fresh = blankFb();
+      Object.keys(fb).forEach(k => { fb[k] = fresh[k]; });
+    };
+
+    /* ───── footer ───── */
+    const footer = [
+      { title:'Product', links:[
+        { label:'Download', href:'#download' },
+        { label:'Pricing',  href:'#pricing'  },
+        { label:'Changelog',href:'#'         },
+        { label:'Roadmap',  href:'#'         },
+      ]},
+      { title:'Resources', links:[
+        { label:'Docs',      href:'#'   },
+        { label:'CLI guide', href:'#cli'},
+        { label:'Modes recipes', href:'#'   },
+        { label:'Status',    href:'#'   },
+      ]},
+      { title:'Support', links:[
+        { label:'Send feedback',  href:'#feedback' },
+        { label:'Email us',       href:'mailto:hello@suko.app' },
+        { label:'Refund policy',  href:'#'  },
+        { label:'License lookup', href:'#'  },
+      ]},
+      { title:'Legal', links:[
+        { label:'Privacy',   href:'privacy.html' },
+        { label:'Terms',     href:'#' },
+        { label:'Refunds',   href:'#' },
+        { label:'Imprint',   href:'#' },
+      ]},
+    ];
+
+    /* ───── interactions ───── */
+    const openCheckout = () => {
+      // Real impl would call Paddle.Checkout.open({ items: [{ priceId: pri_xxx }] })
+      alert('Paddle checkout overlay would open here.\n\nWiring: Paddle.Checkout.open({ items: [{ priceId: import.meta.env.NEXT_PUBLIC_PADDLE_PRICE_ID }] })');
+    };
+
+    const applyTheme = (dark) => {
+      isDark.value = dark;
+      document.documentElement.classList.toggle('dark', dark);
+      try { localStorage.setItem('suko-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    };
+    const toggleTheme = () => applyTheme(!isDark.value);
+
+    /* scroll + reveal */
+    const onScroll = () => { scrolled.value = (window.scrollY || document.documentElement.scrollTop || 0) > 8; };
+    const goSection = (id) => {
+      mobileOpen.value = false;
+      const el = document.getElementById(id);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + (window.scrollY || document.documentElement.scrollTop || 0) - 80;
+      window.scrollTo({ top, behavior: 'smooth' });
+    };
+    onMounted(() => {
+      // Initialise theme: saved preference, else system preference (default light)
+      let dark = false;
+      try {
+        const saved = localStorage.getItem('suko-theme');
+        if (saved) dark = saved === 'dark';
+        else dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      } catch (e) {}
+      isDark.value = dark;
+      document.documentElement.classList.toggle('dark', dark);
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      // Scroll-spy via IntersectionObserver (immune to which element scrolls)
+      nextTick(() => {
+        const spyEls = nav.map(n => document.getElementById(n.id)).filter(Boolean);
+        const visible = new Map();
+        const spy = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
+            else visible.delete(e.target.id);
+          });
+          // pick the section nearest the top that is currently crossing the band
+          let pick = '';
+          for (const n of nav) { if (visible.has(n.id)) { pick = n.id; break; } }
+          if (pick) activeSection.value = pick;
+        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+        spyEls.forEach(el => spy.observe(el));
+      });
+      // Reveal observer
+      nextTick(() => {
+        const els = document.querySelectorAll('.reveal');
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+        }, { rootMargin: '-40px' });
+        els.forEach(el => io.observe(el));
+      });
+      // First demo run
+      runDemo(0);
+    });
+    onUnmounted(() => window.removeEventListener('scroll', onScroll));
+
+    return {
+      isDark, scrolled, activeSection, mobileOpen, goSection, price, active, nav, modes, currentMode, setMode, tileUI, appIcon, brandLogo, brandColor, clockHM, stats, problems, features, howItWorks, whyCards,
+      demoMode, demoFrom, demoIdx, demoSteps, doneSteps, elapsed, stepState, runDemo, stepsForPhase, stepStateGlobal, phaseGate,
+      cliCmds, cliIdx, cliTyped, cliVisible, setCli,
+      bindings, hkActive, hkFrom, phase, phaseLabel, closeStep, openStep, addingBinding, pressed, events, isKeyHot, firePress, keyboard,
+      benefits, steps, faqs, footer, openCheckout, toggleTheme,
+      privacyStays, privacyPoints,
+      fbTypes, fbPlaceholders, fbSeverities, fbAreas, fbWhatHappens, fb, submitFeedback, resetFeedback,
+    };
+  }
+}).mount('#app');
+</script>
+
+</body>
+</html>

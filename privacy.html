@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/png" href="assets/suko-mark-512.png" />
+<link rel="apple-touch-icon" href="assets/suko-mark-512.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy Policy — suko</title>
+<meta name="description" content="How suko handles your data: fully local, no account, no telemetry. The only network call is a one-time license check." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+      },
+      borderRadius: { '2xl': '1rem', '3xl': '1.5rem' },
+    } }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    font-feature-settings: "ss01","cv11";
+    -webkit-font-smoothing: antialiased;
+    color: rgba(20,19,43,.90);
+    background:
+      radial-gradient(1100px 560px at 82% -12%, rgba(124,58,237,.06), transparent 60%),
+      radial-gradient(820px 460px at -8% 4%, rgba(34,211,238,.045), transparent 60%),
+      linear-gradient(180deg, #f6f5fa 0%, #f0eff6 58%, #ecebf3 100%);
+    background-color: #f1f0f6;
+    background-attachment: fixed;
+  }
+  .hairline { border-color: rgba(20,19,43,.09); }
+  .glass {
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(20,19,43,.05);
+  }
+  .gradient-text {
+    background: linear-gradient(180deg, #17142e 0%, #46426c 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, #a78bfa, #7c3aed);
+    box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 12px 30px -10px rgba(124,58,237,.55);
+    color: #fff;
+  }
+  .btn-primary:hover { filter: brightness(1.06); }
+  ::selection { background: rgba(124,58,237,.18); color: #17142e; }
+  /* readable prose rhythm */
+  .prose-block p { color: rgba(20,19,43,.62); line-height: 1.75; }
+  .prose-block p + p { margin-top: 1rem; }
+  .prose-block ul { margin-top: .75rem; }
+  .prose-block strong { color: rgba(20,19,43,.9); font-weight: 600; }
+</style>
+</head>
+<body class="font-sans antialiased min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b hairline" style="background: rgba(246,245,250,.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    <div class="mx-auto max-w-5xl px-5 h-16 flex items-center justify-between">
+      <a href="Workspace Modes.html" class="flex items-center gap-2.5 group">
+        <img src="assets/suko-mark-512.png" alt="suko" width="32" height="32" class="h-8 w-8" style="filter: drop-shadow(0 2px 8px rgba(79,124,240,.3))" />
+        <span class="text-base font-semibold tracking-tight">suko</span>
+      </a>
+      <a href="Workspace Modes.html" class="inline-flex items-center gap-2 text-sm text-[#46426c] hover:text-[#17142e] transition">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5m5-5-5 5 5 5"/></svg>
+        Back to site
+      </a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-5 pt-16 pb-24">
+
+    <!-- Title -->
+    <div>
+      <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-700/80 font-medium">Privacy</span>
+      <h1 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">Privacy Policy</h1>
+      <p class="mt-4 text-[15px] font-mono text-[#46426c]/70">Last updated 8 June 2026 · v1.0.3</p>
+      <p class="mt-5 text-lg text-[#46426c] leading-relaxed">
+        suko is a desktop app for Windows. We built it to run entirely on your own
+        machine — so this policy is short, and most of it is simply confirming what we
+        <em>don't</em> collect.
+      </p>
+    </div>
+
+    <!-- TL;DR card -->
+    <div class="mt-10 rounded-3xl border hairline glass p-7">
+      <div class="flex items-center gap-2.5">
+        <div class="h-9 w-9 rounded-xl border hairline flex items-center justify-center text-cyan-700">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4v6c0 5-3.8 8-9 9-5.2-1-9-4-9-9V7Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h2 class="text-lg font-semibold tracking-tight">The short version</h2>
+      </div>
+      <ul class="mt-5 space-y-3">
+        <li class="flex items-start gap-3 text-[15px] text-[#332f55]">
+          <svg class="h-5 w-5 shrink-0 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+          <span><strong>It's fully local.</strong> Your modes, layouts, app lists and settings live in files on your PC. Nothing is uploaded to us or to any cloud.</span>
+        </li>
+        <li class="flex items-start gap-3 text-[15px] text-[#332f55]">
+          <svg class="h-5 w-5 shrink-0 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+          <span><strong>No account.</strong> There's no sign-up and no profile. You don't give us an email to use the app.</span>
+        </li>
+        <li class="flex items-start gap-3 text-[15px] text-[#332f55]">
+          <svg class="h-5 w-5 shrink-0 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+          <span><strong>One network call.</strong> The app contacts the internet exactly once — to verify your license key on activation.</span>
+        </li>
+        <li class="flex items-start gap-3 text-[15px] text-[#332f55]">
+          <svg class="h-5 w-5 shrink-0 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+          <span><strong>No telemetry.</strong> No analytics, no tracking, no usage reporting. Diagnostics exist but are strictly opt-in and anonymous.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sections -->
+    <div class="mt-14 space-y-12 prose-block">
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">1. What suko stores — and where</h2>
+        <p>Everything the app creates is written to ordinary files in your Windows user profile (and anywhere you choose to export them). This includes:</p>
+        <ul class="space-y-2 text-[#46426c]">
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400"></span> Your modes: the apps each one opens, launch arguments, browser URLs and terminal startup commands.</li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400"></span> Window layouts and per-mode system settings (do-not-disturb, audio routing, brightness).</li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400"></span> Hotkey bindings and your switch history / logs.</li>
+        </ul>
+        <p>These files never leave your device unless you move them yourself. We have no copy of them and no way to read them.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">2. What leaves your device</h2>
+        <p>There is exactly one routine network request, plus one optional one:</p>
+        <div class="mt-4 rounded-2xl border hairline bg-white px-5 py-4">
+          <div class="text-sm font-semibold">License verification <span class="ml-1 text-[11px] font-mono text-cyan-700">required · once</span></div>
+          <p class="mt-1 text-[14px]">On activation, suko sends your <strong>license key</strong> to our licensing provider to confirm it's valid and not over its seat count. The request contains the key and a non-identifying machine fingerprint used for seat counting. It does not contain your modes, app lists, files, or any personal content.</p>
+        </div>
+        <div class="mt-3 rounded-2xl border hairline bg-white px-5 py-4">
+          <div class="text-sm font-semibold">Diagnostics <span class="ml-1 text-[11px] font-mono text-[#46426c]/60">optional · off by default</span></div>
+          <p class="mt-1 text-[14px]">If — and only if — you turn diagnostics on, an anonymous report may be sent when something crashes: your OS version, GPU, app version, and the last few lines of the local log. No personal data, no file contents, no identifiers. You can turn it off again at any time.</p>
+        </div>
+        <p class="mt-4 text-[14px] font-mono text-[#46426c]/60">That is the entire list. There is no third network call.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">3. No account, no tracking</h2>
+        <p>suko has no user accounts. We don't ask for your name or email to run the app, we don't set advertising identifiers, and the application contains no third-party analytics or tracking SDKs. We cannot build a profile of how you use your computer because that information never reaches us.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">4. Buying a license</h2>
+        <p>When you purchase suko, checkout is handled by our payment processor, who acts as merchant of record. They collect the details needed to complete the sale — your email and billing information — and send you a license key. That transaction happens on the checkout page, not inside the app.</p>
+        <p>We receive your email and order record so we can deliver the key and provide support. We use it only for that. We don't sell it, and we don't add you to marketing lists you didn't ask for.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">5. Your control</h2>
+        <p>Because your data lives in plain files on your machine, you're in charge of it:</p>
+        <ul class="space-y-2 text-[#46426c]">
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400"></span> <span><strong>Export</strong> any mode as readable config — version it in git or copy it to another PC.</span></li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400"></span> <span><strong>Delete</strong> everything by removing the app and its config folder. Nothing is left on a server because nothing was sent to one.</span></li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400"></span> <span><strong>Revoke diagnostics</strong> whenever you like from settings.</span></li>
+        </ul>
+        <p>For the limited data tied to your purchase (email, order record), you can ask us to access or delete it — see contact below.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">6. Changes &amp; contact</h2>
+        <p>If this policy changes, we'll update the date at the top and note significant changes in the app's release notes. We won't quietly start collecting something new — that's the whole point.</p>
+        <p>Questions about privacy? Email <a href="mailto:privacy@suko.app" class="text-violet-600 hover:text-violet-700 font-medium">privacy@suko.app</a> and a human will reply.</p>
+      </section>
+
+    </div>
+
+    <!-- CTA back -->
+    <div class="mt-16 rounded-3xl border hairline glass p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+      <div>
+        <h3 class="text-lg font-semibold tracking-tight">Privacy you can verify, not just read.</h3>
+        <p class="mt-1 text-sm text-[#46426c]">Your machine, your data — that's the product.</p>
+      </div>
+      <a href="Workspace Modes.html#download" class="btn-primary shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium">
+        Download suko
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t hairline">
+    <div class="mx-auto max-w-3xl px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-[#46426c]/60">
+      <span class="font-mono">© 2026 suko. All rights reserved.</span>
+      <div class="flex items-center gap-4">
+        <a href="Workspace Modes.html" class="hover:text-[#17142e] transition">Home</a>
+        <a href="privacy.html" class="text-[#17142e] font-medium">Privacy</a>
+        <a href="Workspace Modes.html#feedback" class="hover:text-[#17142e] transition">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
