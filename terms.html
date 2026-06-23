@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/png" href="assets/suko-mark-512.png" />
+<link rel="apple-touch-icon" href="assets/suko-mark-512.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Terms of Service — suko</title>
+<meta name="description" content="The terms that govern your purchase and use of suko, the one-click workspace switcher for Windows: your license, refunds, acceptable use, and the legal basics." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+      },
+      borderRadius: { '2xl': '1rem', '3xl': '1.5rem' },
+    } }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    font-feature-settings: "ss01","cv11";
+    -webkit-font-smoothing: antialiased;
+    color: rgba(20,19,43,.90);
+    background:
+      radial-gradient(1100px 560px at 82% -12%, rgba(124,58,237,.06), transparent 60%),
+      radial-gradient(820px 460px at -8% 4%, rgba(34,211,238,.045), transparent 60%),
+      linear-gradient(180deg, #f6f5fa 0%, #f0eff6 58%, #ecebf3 100%);
+    background-color: #f1f0f6;
+    background-attachment: fixed;
+  }
+  .hairline { border-color: rgba(20,19,43,.09); }
+  .glass {
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(20,19,43,.05);
+  }
+  .gradient-text {
+    background: linear-gradient(180deg, #17142e 0%, #46426c 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, #a78bfa, #7c3aed);
+    box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 12px 30px -10px rgba(124,58,237,.55);
+    color: #fff;
+  }
+  .btn-primary:hover { filter: brightness(1.06); }
+  ::selection { background: rgba(124,58,237,.18); color: #17142e; }
+  /* readable prose rhythm */
+  .prose-block p { color: rgba(20,19,43,.62); line-height: 1.75; }
+  .prose-block p + p { margin-top: 1rem; }
+  .prose-block ul { margin-top: .75rem; }
+  .prose-block strong { color: rgba(20,19,43,.9); font-weight: 600; }
+</style>
+</head>
+<body class="font-sans antialiased min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b hairline" style="background: rgba(246,245,250,.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    <div class="mx-auto max-w-5xl px-5 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <img src="assets/suko-mark-512.png" alt="suko" width="32" height="32" class="h-8 w-8" style="filter: drop-shadow(0 2px 8px rgba(79,124,240,.3))" />
+        <span class="text-base font-semibold tracking-tight">suko</span>
+      </a>
+      <a href="index.html" class="inline-flex items-center gap-2 text-sm text-[#46426c] hover:text-[#17142e] transition">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5m5-5-5 5 5 5"/></svg>
+        Back to site
+      </a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-5 pt-16 pb-24">
+
+    <!-- Title -->
+    <div>
+      <span class="text-[11px] uppercase tracking-[0.18em] text-cyan-700/80 font-medium">Legal</span>
+      <h1 class="mt-3 text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">Terms of Service</h1>
+      <p class="mt-4 text-[15px] font-mono text-[#46426c]/70">Last updated 23 June 2026 · v1.0</p>
+      <p class="mt-5 text-lg text-[#46426c] leading-relaxed">
+        These terms cover your purchase and use of suko, our one-click workspace
+        switcher for Windows. We've kept them plain. By downloading, buying, or using
+        suko, you agree to what's below.
+      </p>
+    </div>
+
+    <!-- TL;DR card -->
+    <div class="mt-10 rounded-3xl border hairline glass p-7">
+      <div class="flex items-center gap-2.5">
+        <div class="h-9 w-9 rounded-xl border hairline flex items-center justify-center text-cyan-700">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4v6c0 5-3.8 8-9 9-5.2-1-9-4-9-9V7Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h2 class="text-lg font-semibold tracking-tight">The short version</h2>
+      </div>
+      <ul class="mt-5 space-y-3">
+        <li class="flex items-start gap-3 text-[15px] text-[#332f55]">
+          <svg class="h-5 w-5 shrink-0 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+          <span><strong>You buy a license, not the software.</strong> One lifetime license to install and use suko on your own machines, with free updates.</span>
+        </li>
+        <li class="flex items-start gap-3 text-[15px] text-[#332f55]">
+          <svg class="h-5 w-5 shrink-0 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+          <span><strong>It's yours to use, not to resell.</strong> Don't share your key publicly, resell it, or pass the app off as your own.</span>
+        </li>
+        <li class="flex items-start gap-3 text-[15px] text-[#332f55]">
+          <svg class="h-5 w-5 shrink-0 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+          <span><strong>30-day refund.</strong> Don't like it? Get your money back — see the <a href="refund.html" class="text-violet-600 hover:text-violet-700 font-medium">Refund Policy</a>.</span>
+        </li>
+        <li class="flex items-start gap-3 text-[15px] text-[#332f55]">
+          <svg class="h-5 w-5 shrink-0 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg>
+          <span><strong>Provided "as is."</strong> We work hard to make suko reliable, but you use it at your own risk, like any software.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sections -->
+    <div class="mt-14 space-y-12 prose-block">
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">1. The agreement</h2>
+        <p>These Terms of Service ("Terms") are between you and suko ("we", "us", "our") and govern your access to and use of the suko application and this website. By downloading, installing, purchasing, or using suko, you accept these Terms. If you don't agree, please don't use the app.</p>
+        <p>If you're using suko on behalf of an organisation, you confirm you're authorised to accept these Terms for it.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">2. Your license</h2>
+        <p>When you purchase suko, we grant you a personal, non-exclusive, non-transferable, <strong>lifetime license</strong> to install and use the app on machines you own or control, for as long as you comply with these Terms. Your purchase includes free updates to the app.</p>
+        <ul class="space-y-2 text-[#46426c]">
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400"></span> <span>You keep ownership of everything <em>you</em> create — your modes, layouts, app lists and settings. Those stay on your device.</span></li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400"></span> <span>We keep ownership of suko itself — the software, its name, logo, and design.</span></li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400"></span> <span>The app is free to download and try; a valid license key is required for continued or full use as described at purchase.</span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">3. License keys &amp; activation</h2>
+        <p>Your license key is yours to keep. On activation, suko verifies the key once over the internet; after that it validates locally on a rolling grace period, so switching modes never needs a connection. Please keep your key private. You may not sell, sub-license, publish, or share your key, or attempt to bypass activation. We may deactivate keys that are shared publicly, used beyond their seat count, or obtained fraudulently.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">4. Payment &amp; refunds</h2>
+        <p>suko is sold as a one-time purchase. Checkout is handled by <strong>Paddle</strong>, our payment provider and merchant of record, who collects payment and issues your license key. Prices are shown at checkout and may change for future purchases, but the price you paid is the price you paid.</p>
+        <p>We offer a 30-day, no-questions-asked refund. The full details are in our <a href="refund.html" class="text-violet-600 hover:text-violet-700 font-medium">Refund Policy</a>, which forms part of these Terms.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">5. Acceptable use</h2>
+        <p>You agree not to:</p>
+        <ul class="space-y-2 text-[#46426c]">
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400"></span> <span>Reverse-engineer, decompile, or attempt to extract the source code of suko, except where the law expressly permits it.</span></li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400"></span> <span>Resell, rent, sub-license, or redistribute the app or your license key.</span></li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400"></span> <span>Remove or alter any branding, copyright, or licensing notices.</span></li>
+          <li class="flex items-start gap-3"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400"></span> <span>Use suko to break the law or to interfere with other software or systems you don't have the right to control.</span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">6. Privacy</h2>
+        <p>suko runs locally and collects as little as possible. How we handle the limited data tied to your purchase, and the app's single license-verification call, is explained in our <a href="privacy.html" class="text-violet-600 hover:text-violet-700 font-medium">Privacy Policy</a>, which forms part of these Terms.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">7. Warranty disclaimer</h2>
+        <p>suko is provided <strong>"as is" and "as available"</strong>, without warranties of any kind, whether express or implied, including fitness for a particular purpose, merchantability, and non-infringement. You're responsible for how you configure your modes — including which apps they close and open — and for keeping your own backups. We don't guarantee the app will be uninterrupted, error-free, or compatible with every program or device.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">8. Limitation of liability</h2>
+        <p>To the maximum extent permitted by law, suko will not be liable for any indirect, incidental, special, or consequential damages, or for lost data, profits, or work, arising out of your use of the app. Our total liability for any claim relating to suko is limited to the amount you paid for your license. Some jurisdictions don't allow certain limitations, so parts of this section may not apply to you.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">9. Termination</h2>
+        <p>You may stop using suko at any time by uninstalling it. We may suspend or terminate your license if you materially breach these Terms — for example, by sharing or reselling your key. If we terminate your license for a breach, the acceptable-use and liability sections survive. Your rights under the Refund Policy are unaffected within its window.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">10. Changes to these Terms</h2>
+        <p>We may update these Terms from time to time. When we do, we'll change the date at the top of this page and note significant changes in the app's release notes. Continuing to use suko after an update means you accept the revised Terms.</p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold tracking-tight">11. Contact</h2>
+        <p>Questions about these Terms? Email <a href="mailto:hello@suko.pro" class="text-violet-600 hover:text-violet-700 font-medium">hello@suko.pro</a> and a human will reply.</p>
+      </section>
+
+    </div>
+
+    <!-- CTA back -->
+    <div class="mt-16 rounded-3xl border hairline glass p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+      <div>
+        <h3 class="text-lg font-semibold tracking-tight">Simple terms, simple software.</h3>
+        <p class="mt-1 text-sm text-[#46426c]">Buy once, use it forever, get a refund if it's not for you.</p>
+      </div>
+      <a href="index.html#download" class="btn-primary shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium">
+        Download suko
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t hairline">
+    <div class="mx-auto max-w-3xl px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-[#46426c]/60">
+      <span class="font-mono">© 2026 suko. All rights reserved.</span>
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="hover:text-[#17142e] transition">Home</a>
+        <a href="privacy.html" class="hover:text-[#17142e] transition">Privacy</a>
+        <a href="terms.html" class="text-[#17142e] font-medium">Terms</a>
+        <a href="refund.html" class="hover:text-[#17142e] transition">Refunds</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
