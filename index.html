@@ -71,7 +71,7 @@
     { "@type": "Question", "name": "What exactly is a mode in suko?", "acceptedAnswer": { "@type": "Answer", "text": "A mode is a named bundle of everything a context needs: the apps to open (with launch arguments, browser URLs and terminal commands), the window layout to apply, the system settings to set (volume, brightness, Do Not Disturb) and a hotkey to trigger it. Switching modes closes the old apps before the new ones load." } },
     { "@type": "Question", "name": "Do I need to be a developer to use suko?", "acceptedAnswer": { "@type": "Answer", "text": "Not at all. Most people build their modes entirely in the visual app, click to add apps, drag windows where you want them, pick a hotkey, done. The CLI is there if you love the keyboard or want to script things, but it is completely optional." } },
     { "@type": "Question", "name": "Does suko work with multiple monitors?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Layouts are captured per monitor, so each mode restores every window to the exact screen and position you saved. Run two displays for Study and a single screen for Gaming, each mode remembers its own arrangement." } },
-    { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, within 30 days of purchase, no questions asked. Email hello@suko.pro with your license key and Paddle issues the refund directly." } },
+    { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, within 30 days of purchase, no questions asked. Email hello@suko.pro with your license key and Polar issues the refund directly." } },
     { "@type": "Question", "name": "Does suko work offline?", "acceptedAnswer": { "@type": "Answer", "text": "After the first online activation, your license validates locally on a 7-day rolling grace period. Switching modes never needs an internet connection." } }
   ]
 }
@@ -1275,12 +1275,12 @@
               </div>
               <p class="mt-2 text-sm text-white/45">Buy once. Use it forever. Get every update free.</p>
 
-              <button @click="openCheckout"
+              <a href="https://buy.polar.sh/polar_cl_tMUEZM2GWSCO3ek8oUmWjxG0vrYiRc1ahAowo1dBEAt" target="_blank" rel="noopener"
                       class="btn-primary mt-7 w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-medium">
-                Buy now with Paddle
+                Buy now
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
-              </button>
-              <p class="mt-3 text-center text-[11px] text-white/40 font-mono">Secure checkout · Cards, PayPal, Apple/Google Pay</p>
+              </a>
+              <p class="mt-3 text-center text-[11px] text-white/40 font-mono">Secure checkout via Polar · Cards, Apple/Google Pay</p>
               <p class="mt-2 text-center text-xs text-white/50">Not sure yet? Try it free first, and there's a 30-day refund if it's not for you.</p>
 
               <ul class="mt-7 space-y-2.5 text-sm">
@@ -1666,7 +1666,7 @@ createApp({
               <div class="flex items-center justify-between text-white/40">
                 <span>SUK · In Progress</span><span>5</span>
               </div>
-              ${['Wire Paddle webhook','Mode preview animation','CLI: mode stats','License grace timer','Discord update.exe hook'].map((t,i)=>`
+              ${['Wire Polar webhook','Mode preview animation','CLI: mode stats','License grace timer','Discord update.exe hook'].map((t,i)=>`
                 <div class="flex items-center gap-2 py-1 px-1.5 rounded ${i===0?'bg-violet-500/10 border border-violet-400/20':''}">
                   <span class="h-2.5 w-2.5 rounded-full ${i===0?'border-2 border-violet-400':'border border-white/30'} shrink-0"></span>
                   <span class="text-white/40">SUK-${204-i}</span>
@@ -2322,7 +2322,7 @@ createApp({
 
     /* ───── licensing steps ───── */
     const steps = [
-      { t:'Buy', d:'Checkout in 30 seconds via Paddle. Cards, PayPal, Apple/Google Pay.',
+      { t:'Buy', d:'Checkout in 30 seconds via Polar. Cards, Apple/Google Pay.',
         icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h4l2 12h10l2-8H6"/><circle cx="10" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>' },
       { t:'Get your key', d:'A UUID-v4 license key lands in your inbox the moment payment clears.',
         icon:'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9 6 9-6M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2"/></svg>' },
@@ -2339,7 +2339,7 @@ createApp({
       { q:'What exactly is a "mode"?',  a:'A mode is a named bundle of everything a context needs: the apps to open (with launch arguments, browser URLs and terminal commands), the window layout to apply, the system settings to set (volume, brightness, Do Not Disturb), and a hotkey to trigger it. Switching modes closes the old apps before the new ones load, so your desktop never piles up.' },
       { q:'Do I need to be a developer to use it?', a:'Not at all. Most people build their modes entirely in the visual app, click to add apps, drag windows where you want them, pick a hotkey, done. The CLI is there if you love the keyboard or want to script things, but it\'s completely optional.' },
       { q:'Does suko work with multiple monitors?', a:'Yes. Layouts are captured per monitor, so each mode restores every window to the exact screen and position you saved. Run two displays for Study and a single screen for Gaming, each mode remembers its own arrangement.' },
-      { q:'Can I get a refund?',        a:'Yes, within 30 days of purchase, no questions asked. Email hello@suko.pro with your license key and Paddle issues the refund directly.' },
+      { q:'Can I get a refund?',        a:'Yes, within 30 days of purchase, no questions asked. Email hello@suko.pro with your license key and Polar issues the refund directly.' },
       { q:'I lost my license key.',     a:'Email hello@suko.pro from the address you bought with and we\'ll re-send your key, usually within the hour, and within one business day at the latest.' },
       { q:'Does it work offline?',      a:'After the first online activation, your license validates locally on a 7-day rolling grace period. Hop on a plane or work from a cabin, switching modes never needs an internet connection.' },
       { q:'How many machines can I use it on?', a:'One license covers your machine. When you retire a device, deactivate it from the account portal and re-bind the license to a new one anytime.' },
@@ -2440,11 +2440,6 @@ createApp({
     ];
 
     /* ───── interactions ───── */
-    const openCheckout = () => {
-      // Real impl would call Paddle.Checkout.open({ items: [{ priceId: pri_xxx }] })
-      alert('Paddle checkout overlay would open here.\n\nWiring: Paddle.Checkout.open({ items: [{ priceId: import.meta.env.NEXT_PUBLIC_PADDLE_PRICE_ID }] })');
-    };
-
     const applyTheme = (dark) => {
       isDark.value = dark;
       document.documentElement.classList.toggle('dark', dark);
@@ -2508,7 +2503,7 @@ createApp({
       demoMode, demoFrom, demoIdx, demoSteps, doneSteps, elapsed, stepState, runDemo, stepsForPhase, stepStateGlobal, phaseGate,
       cliCmds, cliIdx, cliTyped, cliVisible, setCli,
       bindings, hkActive, hkFrom, phase, phaseLabel, closeStep, openStep, addingBinding, pressed, events, isKeyHot, firePress, keyboard,
-      benefits, steps, faqs, footer, openCheckout, toggleTheme,
+      benefits, steps, faqs, footer, toggleTheme,
       privacyStays, privacyPoints,
       fbTypes, fbPlaceholders, fbSeverities, fbAreas, fbWhatHappens, fb, submitFeedback, resetFeedback,
     };
