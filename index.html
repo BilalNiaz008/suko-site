@@ -26,27 +26,33 @@
 <link rel="apple-touch-icon" href="assets/suko-mark-512.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>suko, One-Click Workspace Switcher for Windows 10 &amp; 11</title>
-<meta name="description" content="Switch your whole Windows desktop with one keystroke. suko builds Work, Gaming, Study and Focus modes that close your old apps, open the right ones, arrange windows and tune your system. One-time price, no subscription." />
+<meta name="description" content="One-click workspace switcher for Windows 10 and 11. One keystroke closes your old apps, opens the right ones and restores your window layout. Pay once." />
 <meta name="keywords" content="Windows workspace switcher, desktop context switcher, one-click focus mode for Windows, window layout manager, workspace modes, Windows productivity app, hotkey app launcher, multi-monitor window layout" />
 <meta name="author" content="suko" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#0a0814" />
-<link rel="canonical" href="https://suko.app/" />
+<meta name="application-name" content="suko" />
+<link rel="canonical" href="https://suko.pro/" />
 
 <!-- Open Graph -->
 <meta property="og:site_name" content="suko" />
 <meta property="og:title" content="suko, One-Click Workspace Switcher for Windows 10 &amp; 11" />
 <meta property="og:description" content="Switch your whole Windows desktop with one keystroke. suko builds Work, Gaming, Study and Focus modes that close your old apps, open the right ones, arrange windows and tune your system. One-time price, no subscription." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://suko.app/" />
-<meta property="og:image" content="https://suko.app/assets/suko-mark-512.png" />
+<meta property="og:url" content="https://suko.pro/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image" content="https://suko.pro/assets/og-cover.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="suko, One-Click Workspace Switcher for Windows 10 &amp; 11" />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="suko, One-Click Workspace Switcher for Windows 10 &amp; 11" />
 <meta name="twitter:description" content="Switch your whole Windows desktop with one keystroke. Work, Gaming, Study and Focus modes that open the right apps, arrange windows and tune your system." />
-<meta name="twitter:image" content="https://suko.app/assets/suko-mark-512.png" />
+<meta name="twitter:image" content="https://suko.pro/assets/og-cover.png" />
+<meta name="twitter:image:alt" content="suko, One-Click Workspace Switcher for Windows 10 &amp; 11" />
 
 <!-- Structured data -->
 <script type="application/ld+json">
@@ -54,11 +60,33 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "suko",
+  "alternateName": "suko workspace switcher",
   "applicationCategory": "UtilitiesApplication",
+  "applicationSubCategory": "Productivity",
   "operatingSystem": "Windows 10, Windows 11",
+  "processorRequirements": "x64, ARM64",
+  "softwareVersion": "1.0.2",
   "description": "One-click workspace switcher for Windows. Build modes for Work, Gaming, Study and Focus, one keystroke closes your last apps, opens the right ones, arranges windows and tunes your system.",
-  "url": "https://suko.app/",
-  "offers": { "@type": "Offer", "price": "5", "priceCurrency": "USD" }
+  "url": "https://suko.pro/",
+  "image": "https://suko.pro/assets/og-cover.png",
+  "downloadUrl": "https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe",
+  "installUrl": "https://suko.pro/#download",
+  "featureList": [
+    "Switch your entire desktop with one global hotkey",
+    "Close the previous mode's apps before opening the next",
+    "Save and restore window layouts across multiple monitors",
+    "Per-mode volume, brightness and Do Not Disturb",
+    "Launch apps, browser profiles, URLs and terminal commands",
+    "Optional CLI for scripting mode switches"
+  ],
+  "publisher": { "@type": "Organization", "name": "suko", "url": "https://suko.pro/" },
+  "offers": {
+    "@type": "Offer",
+    "price": "5",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "url": "https://suko.pro/#pricing"
+  }
 }
 </script>
 <script type="application/ld+json">
@@ -74,6 +102,27 @@
     { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, within 30 days of purchase, no questions asked. Email hello@suko.pro with your license key and Polar issues the refund directly." } },
     { "@type": "Question", "name": "Does suko work offline?", "acceptedAnswer": { "@type": "Answer", "text": "After the first online activation, your license validates locally on a 7-day rolling grace period. Switching modes never needs an internet connection." } }
   ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "suko",
+  "url": "https://suko.pro/",
+  "logo": "https://suko.pro/assets/suko-mark-512.png",
+  "email": "hello@suko.pro",
+  "sameAs": ["https://github.com/BilalNiaz008/suko-app-releases"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "suko",
+  "url": "https://suko.pro/",
+  "inLanguage": "en",
+  "description": "One-click workspace switcher for Windows 10 and 11."
 }
 </script>
 
@@ -1599,7 +1648,7 @@ createApp({
           { app:'VS Code',  kind:'code',    note:'src/modes.ts',           c:'1', r:'1 / span 2', tag:'IDE',  bg:'linear-gradient(180deg,#1c1a30,#13111f)' },
           { app:'Linear',   kind:'linear',  note:'SUK-204 · in progress',  c:'2', r:'1',          tag:'PM',   bg:'linear-gradient(180deg,#1d1b2e,#15131f)' },
           { app:'Slack',    kind:'chat',    note:'#suko-team',              c:'3', r:'1',          tag:'CHAT', bg:'linear-gradient(180deg,#1c1a2c,#14121e)' },
-          { app:'Arc',      kind:'browser', note:'docs.suko.app',c:'2 / span 2', r:'2',  tag:'WEB',  bg:'linear-gradient(180deg,#1f1c33,#161324)' },
+          { app:'Arc',      kind:'browser', note:'docs.suko.pro',c:'2 / span 2', r:'2',  tag:'WEB',  bg:'linear-gradient(180deg,#1f1c33,#161324)' },
         ]
       },
       { id:'focus',   label:'Focus ⚡',   hotkey:'F', dot:'#22d3ee',
@@ -1708,7 +1757,7 @@ createApp({
                   <span class="px-2 py-0.5 rounded-md text-[9px] text-white/45 font-mono">github</span>
                   <span class="px-2 py-0.5 rounded-md text-[9px] text-white/45 font-mono">linear</span>
                 </div>
-                <div class="ml-2 flex-1 px-2 py-0.5 rounded text-[9px] font-mono text-white/50 bg-white/5 truncate">docs.suko.app/cli</div>
+                <div class="ml-2 flex-1 px-2 py-0.5 rounded text-[9px] font-mono text-white/50 bg-white/5 truncate">docs.suko.pro/cli</div>
               </div>
               <div class="flex-1 p-3">
                 <div class="text-[14px] font-semibold text-white/90 mb-2">CLI Reference</div>
@@ -2510,6 +2559,10 @@ createApp({
   }
 }).mount('#app');
 </script>
+
+
+<!-- Explains the Windows SmartScreen dialog when a download starts -->
+<script defer src="assets/smartscreen-notice.js"></script>
 
 </body>
 </html>

@@ -29,24 +29,24 @@
 <meta name="description" content="Switch your whole Windows desktop with one keystroke. suko builds Work, Gaming, Study and Focus modes that close your old apps, open the right ones, arrange windows and tune your system. One-time price, no subscription." />
 <meta name="keywords" content="Windows workspace switcher, desktop context switcher, one-click focus mode for Windows, window layout manager, workspace modes, Windows productivity app, hotkey app launcher, multi-monitor window layout" />
 <meta name="author" content="suko" />
-<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#0a0814" />
-<link rel="canonical" href="https://suko.app/" />
+<link rel="canonical" href="https://suko.pro/" />
 
 <!-- Open Graph -->
 <meta property="og:site_name" content="suko" />
 <meta property="og:title" content="suko, One-Click Workspace Switcher for Windows" />
 <meta property="og:description" content="One keystroke closes your old apps, opens the right ones, arranges windows and tunes your system. Set up Work, Gaming, Study and Focus modes on Windows 10 &amp; 11." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://suko.app/" />
-<meta property="og:image" content="https://suko.app/assets/suko-mark-512.png" />
+<meta property="og:url" content="https://suko.pro/" />
+<meta property="og:image" content="https://suko.pro/assets/suko-mark-512.png" />
 <meta property="og:image:alt" content="suko, one-click workspace switcher for Windows" />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="suko, One-Click Workspace Switcher for Windows" />
 <meta name="twitter:description" content="Switch your whole Windows desktop with one keystroke. Work, Gaming, Study and Focus modes that open the right apps, arrange windows and tune your system." />
-<meta name="twitter:image" content="https://suko.app/assets/suko-mark-512.png" />
+<meta name="twitter:image" content="https://suko.pro/assets/suko-mark-512.png" />
 
 <!-- Structured data -->
 <script type="application/ld+json">
@@ -57,7 +57,7 @@
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Windows 10, Windows 11",
   "description": "One-click workspace switcher for Windows. Build modes for Work, Gaming, Study and Focus, one keystroke closes your last apps, opens the right ones, arranges windows and tunes your system.",
-  "url": "https://suko.app/",
+  "url": "https://suko.pro/",
   "offers": { "@type": "Offer", "price": "5", "priceCurrency": "USD" }
 }
 </script>
@@ -71,7 +71,7 @@
     { "@type": "Question", "name": "What exactly is a mode in suko?", "acceptedAnswer": { "@type": "Answer", "text": "A mode is a named bundle of everything a context needs: the apps to open (with launch arguments, browser URLs and terminal commands), the window layout to apply, the system settings to set (volume, brightness, Do Not Disturb) and a hotkey to trigger it. Switching modes closes the old apps before the new ones load." } },
     { "@type": "Question", "name": "Do I need to be a developer to use suko?", "acceptedAnswer": { "@type": "Answer", "text": "Not at all. Most people build their modes entirely in the visual app, click to add apps, drag windows where you want them, pick a hotkey, done. The CLI is there if you love the keyboard or want to script things, but it is completely optional." } },
     { "@type": "Question", "name": "Does suko work with multiple monitors?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Layouts are captured per monitor, so each mode restores every window to the exact screen and position you saved. Run two displays for Study and a single screen for Gaming, each mode remembers its own arrangement." } },
-    { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, within 30 days of purchase, no questions asked. Email refund@suko.app with your license key and Polar issues the refund directly." } },
+    { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, within 30 days of purchase, no questions asked. Email hello@suko.pro with your license key and Polar issues the refund directly." } },
     { "@type": "Question", "name": "Does suko work offline?", "acceptedAnswer": { "@type": "Answer", "text": "After the first online activation, your license validates locally on a 7-day rolling grace period. Switching modes never needs an internet connection." } }
   ]
 }
@@ -1299,7 +1299,7 @@
           </div>
 
           <p class="mt-5 text-center text-xs text-white/40">
-            Need a team license or a PO? <a href="mailto:hello@suko.app" class="text-violet-300 hover:underline">Email us</a>.
+            Need a team license or a PO? <a href="mailto:hello@suko.pro" class="text-violet-300 hover:underline">Email us</a>.
           </p>
         </div>
       </div>
@@ -1597,7 +1597,7 @@ createApp({
           { app:'VS Code',  kind:'code',    note:'src/modes.ts',           c:'1', r:'1 / span 2', tag:'IDE',  bg:'linear-gradient(180deg,#1c1a30,#13111f)' },
           { app:'Linear',   kind:'linear',  note:'SUK-204 · in progress',  c:'2', r:'1',          tag:'PM',   bg:'linear-gradient(180deg,#1d1b2e,#15131f)' },
           { app:'Slack',    kind:'chat',    note:'#suko-team',              c:'3', r:'1',          tag:'CHAT', bg:'linear-gradient(180deg,#1c1a2c,#14121e)' },
-          { app:'Arc',      kind:'browser', note:'docs.suko.app',c:'2 / span 2', r:'2',  tag:'WEB',  bg:'linear-gradient(180deg,#1f1c33,#161324)' },
+          { app:'Arc',      kind:'browser', note:'docs.suko.pro',c:'2 / span 2', r:'2',  tag:'WEB',  bg:'linear-gradient(180deg,#1f1c33,#161324)' },
         ]
       },
       { id:'focus',   label:'Focus ⚡',   hotkey:'F', dot:'#22d3ee',
@@ -1706,7 +1706,7 @@ createApp({
                   <span class="px-2 py-0.5 rounded-md text-[9px] text-white/45 font-mono">github</span>
                   <span class="px-2 py-0.5 rounded-md text-[9px] text-white/45 font-mono">linear</span>
                 </div>
-                <div class="ml-2 flex-1 px-2 py-0.5 rounded text-[9px] font-mono text-white/50 bg-white/5 truncate">docs.suko.app/cli</div>
+                <div class="ml-2 flex-1 px-2 py-0.5 rounded text-[9px] font-mono text-white/50 bg-white/5 truncate">docs.suko.pro/cli</div>
               </div>
               <div class="flex-1 p-3">
                 <div class="text-[14px] font-semibold text-white/90 mb-2">CLI Reference</div>
@@ -2337,8 +2337,8 @@ createApp({
       { q:'What exactly is a "mode"?',  a:'A mode is a named bundle of everything a context needs: the apps to open (with launch arguments, browser URLs and terminal commands), the window layout to apply, the system settings to set (volume, brightness, Do Not Disturb), and a hotkey to trigger it. Switching modes closes the old apps before the new ones load, so your desktop never piles up.' },
       { q:'Do I need to be a developer to use it?', a:'Not at all. Most people build their modes entirely in the visual app, click to add apps, drag windows where you want them, pick a hotkey, done. The CLI is there if you love the keyboard or want to script things, but it\'s completely optional.' },
       { q:'Does suko work with multiple monitors?', a:'Yes. Layouts are captured per monitor, so each mode restores every window to the exact screen and position you saved. Run two displays for Study and a single screen for Gaming, each mode remembers its own arrangement.' },
-      { q:'Can I get a refund?',        a:'Yes, within 30 days of purchase, no questions asked. Email refund@suko.app with your license key and Polar issues the refund directly.' },
-      { q:'I lost my license key.',     a:'Email hello@suko.app from the address you bought with and we\'ll re-send your key, usually within the hour, and within one business day at the latest.' },
+      { q:'Can I get a refund?',        a:'Yes, within 30 days of purchase, no questions asked. Email hello@suko.pro with your license key and Polar issues the refund directly.' },
+      { q:'I lost my license key.',     a:'Email hello@suko.pro from the address you bought with and we\'ll re-send your key, usually within the hour, and within one business day at the latest.' },
       { q:'Does it work offline?',      a:'After the first online activation, your license validates locally on a 7-day rolling grace period. Hop on a plane or work from a cabin, switching modes never needs an internet connection.' },
       { q:'How many machines can I use it on?', a:'One license covers your machine. When you retire a device, deactivate it from the account portal and re-bind the license to a new one anytime.' },
       { q:'Mac & Linux roadmap?',       a:'On our list, not yet on our calendar, we want to nail Windows first. Buy v1 and any future cross-platform release is yours at no extra charge.' },
@@ -2425,7 +2425,7 @@ createApp({
       ]},
       { title:'Support', links:[
         { label:'Send feedback',  href:'#feedback' },
-        { label:'Email us',       href:'mailto:hello@suko.app' },
+        { label:'Email us',       href:'mailto:hello@suko.pro' },
         { label:'Refund policy',  href:'#'  },
         { label:'License lookup', href:'#'  },
       ]},
@@ -2508,6 +2508,10 @@ createApp({
   }
 }).mount('#app');
 </script>
+
+
+<!-- Explains the Windows SmartScreen dialog when a download starts -->
+<script defer src="assets/smartscreen-notice.js"></script>
 
 </body>
 </html>
