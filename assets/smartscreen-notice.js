@@ -17,6 +17,9 @@
 
   var DOWNLOAD_SELECTOR = 'a[href*="suko-app-releases"], a[href$=".exe"]';
   var AUTO_HIDE_MS = 45000;
+  var ON_LOAD_DELAY_MS = 900;      // let the page paint before it slides in
+  var STORAGE_KEY = 'suko-smartscreen-dismissed';
+  var SUPPRESS_DAYS = 7;           // once closed, stay quiet on later visits
   var mounted = null;
   var hideT;
 
@@ -140,8 +143,23 @@
     document.head.appendChild(s);
   }
 
-  function hide() {
+  // Was it closed by hand recently? Only an explicit close counts, so a
+  // toast that timed out on its own still greets the next visit.
+  function isSuppressed() {
+    try {
+      var at = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+      if (!at) return false;
+      return (Date.now() - at) < SUPPRESS_DAYS * 24 * 60 * 60 * 1000;
+    } catch (e) { return false; }
+  }
+
+  function remember() {
+    try { localStorage.setItem(STORAGE_KEY, String(Date.now())); } catch (e) {}
+  }
+
+  function hide(dismissedByUser) {
     if (!mounted) return;
+    if (dismissedByUser === true) remember();
     var el = mounted;
     mounted = null;
     clearTimeout(hideT);
@@ -150,6 +168,8 @@
       if (el.parentNode) el.parentNode.removeChild(el);
     }, 400);
   }
+
+  function dismiss() { hide(true); }
 
   function show() {
     if (mounted) {                    // already up, just restart the auto-hide
@@ -165,8 +185,8 @@
     el.setAttribute('aria-live', 'polite');
     el.innerHTML = HTML;
 
-    el.querySelector('.ss-close').addEventListener('click', hide);
-    el.querySelector('.ss-ok').addEventListener('click', hide);
+    el.querySelector('.ss-close').addEventListener('click', dismiss);
+    el.querySelector('.ss-ok').addEventListener('click', dismiss);
 
     document.body.appendChild(el);
     mounted = el;
@@ -187,6 +207,20 @@
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') hide();
+    if (e.key === 'Escape') dismiss();
   });
+
+  // Greet visitors on arrival, unless they closed it within the last week.
+  if (!isSuppressed()) setTimeout(show, ON_LOAD_DELAY_MS);
+
+  // Manual trigger, for previewing the copy without downloading anything:
+  // open DevTools and run sukoNotice.show(), or sukoNotice.reset() to make
+  // it greet you again after you have dismissed it.
+  window.sukoNotice = {
+    show: show,
+    hide: hide,
+    reset: function () {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    }
+  };
 })();
