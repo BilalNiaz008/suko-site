@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Older exports of the landing page, kept for old links but not for search.
+Disallow: /share/
+Disallow: /Workspace%20Modes.html
+Disallow: /uploads/
+
+Sitemap: https://suko.pro/sitemap.xml
