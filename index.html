@@ -290,6 +290,105 @@
   /* Selection */
   ::selection { background: rgba(167,139,250,.35); color: #fff; }
 
+  /* ── "How a switch works" SVG diagram ──
+     One set of tokens, so the drawing follows the site theme. Light is the
+     default; the dark block below only re-points the tokens. */
+  .dg {
+    --dg-panel: rgba(20,19,43,.025);
+    --dg-panel-line: rgba(20,19,43,.10);
+    --dg-window: #ffffff;
+    --dg-tile: #ffffff;
+    --dg-line: rgba(20,19,43,.10);
+    --dg-text: rgba(20,19,43,.90);
+    --dg-muted: rgba(20,19,43,.50);
+    --dg-faint: rgba(20,19,43,.28);
+    --dg-bar: rgba(20,19,43,.14);
+    --dg-accent: #7c3aed;
+    --dg-accent-soft: rgba(124,58,237,.10);
+    --dg-ok: #059669;
+    --dg-warn: #e11d48;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  html.dark .dg {
+    --dg-panel: rgba(255,255,255,.028);
+    --dg-panel-line: rgba(255,255,255,.09);
+    --dg-window: #16142a;
+    --dg-tile: #17152c;
+    --dg-line: rgba(255,255,255,.10);
+    --dg-text: rgba(255,255,255,.92);
+    --dg-muted: rgba(255,255,255,.55);
+    --dg-faint: rgba(255,255,255,.30);
+    --dg-bar: rgba(255,255,255,.16);
+    --dg-accent: #a78bfa;
+    --dg-accent-soft: rgba(139,92,246,.16);
+    --dg-ok: #34d399;
+    --dg-warn: #fb7185;
+  }
+
+  .dg-panel  { fill: var(--dg-panel); stroke: var(--dg-panel-line); }
+  .dg-window { fill: var(--dg-window); stroke: var(--dg-line); }
+  .dg-tile   { fill: var(--dg-tile); stroke-opacity: .45; stroke-width: 1.2; }
+  .dg-hair   { stroke: var(--dg-line); stroke-width: 1; }
+  .dg-bar    { fill: var(--dg-bar); }
+  .dg-bar-faint { opacity: .55; }
+  .dg-dot-dim   { fill: var(--dg-faint); }
+
+  .dg-step { fill: var(--dg-accent); font-size: 13px; font-weight: 700; letter-spacing: .06em;
+             font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .dg-head { fill: var(--dg-text); font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .dg-cap  { fill: var(--dg-muted); font-size: 12px;
+             font-family: "JetBrains Mono", ui-monospace, monospace; transition: fill .4s ease; }
+  .dg-cap-warn { fill: var(--dg-warn); }
+
+  .dg-win-name { fill: var(--dg-text); font-size: 11.5px; font-weight: 600; }
+  .dg-win-note { fill: var(--dg-muted); font-size: 10.5px;
+                 font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .dg-win { transition: opacity .55s ease, transform .55s cubic-bezier(.4,0,.6,1); }
+  .dg-win-closed { opacity: .13; transform: translateY(16px); }
+
+  .dg-key { transition: transform .22s cubic-bezier(.2,.7,.2,1); }
+  .dg-key-down { transform: translateY(4px); }
+  .dg-keycap { fill: var(--dg-window); stroke: var(--dg-line); transition: fill .25s ease, stroke .25s ease; }
+  .dg-key-down .dg-keycap { fill: var(--dg-accent-soft); stroke: var(--dg-accent); }
+  .dg-key-label { fill: var(--dg-text); font-size: 14px; font-weight: 600;
+                  font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .dg-key-down .dg-key-label { fill: var(--dg-accent); }
+
+  .dg-engine { fill: none; stroke: var(--dg-accent); stroke-opacity: .35; }
+  .dg-engine-title { fill: var(--dg-text); font-size: 14px; font-weight: 600; }
+
+  .dg-tick { fill: none; stroke: var(--dg-faint); stroke-width: 1.6; transition: all .35s ease; }
+  .dg-tick.is-active { stroke: var(--dg-accent); fill: var(--dg-accent-soft); }
+  .dg-tick.is-done   { stroke: var(--dg-ok); fill: none; }
+  .dg-check { stroke: var(--dg-ok); opacity: 0; transition: opacity .3s ease; }
+  .dg-check-on { opacity: 1; }
+  .dg-task { fill: var(--dg-faint); font-size: 12.5px; transition: fill .35s ease; }
+  .dg-task.is-active { fill: var(--dg-text); font-weight: 600; }
+  .dg-task.is-done   { fill: var(--dg-muted); }
+  .dg-task-time { fill: var(--dg-faint); font-size: 10.5px;
+                  font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  .dg-rail      { fill: var(--dg-bar); }
+  .dg-rail-fill { fill: var(--dg-accent); transition: width .4s cubic-bezier(.2,.7,.2,1); }
+
+  .dg-after { opacity: .22; transform: scale(.985); transform-origin: center;
+              transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1); }
+  .dg-after-on { opacity: 1; transform: none; }
+  .dg-tile-name { fill: var(--dg-text); font-size: 11.5px; font-weight: 600; }
+  .dg-ready { opacity: 0; transition: opacity .4s ease .1s; }
+  .dg-ready-on { opacity: 1; }
+  .dg-ok-dot  { fill: var(--dg-ok); }
+  .dg-ok-text { fill: var(--dg-ok); font-size: 11.5px; font-weight: 600;
+                font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  .dg-flow { opacity: .2; transition: opacity .45s ease; }
+  .dg-flow-on { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dg-win, .dg-key, .dg-after, .dg-ready, .dg-flow, .dg-rail-fill,
+    .dg-tick, .dg-check, .dg-task, .dg-cap { transition: none !important; }
+  }
+
 <style id="theme-light-solid">
   /* ===================  SOLID PREMIUM LIGHT THEME  =================== */
   /* Surfaces */
@@ -585,96 +684,146 @@
           </div>
         </div>
 
-        <!-- Desktop morphing visual -->
+        <!-- How a switch works, told as one animated SVG -->
         <div class="reveal mt-10">
-          <div class="mock-dark mx-auto max-w-5xl rounded-3xl border hairline glass overflow-hidden shadow-glow" role="img" aria-label="Preview of the suko desktop rearranging its apps, window layout and system settings for the selected mode">
-            <!-- Window bar -->
-            <div class="win-bar flex items-center justify-between px-4 py-2.5 border-b hairline">
-              <div class="flex items-center gap-2">
-                <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
-                <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
-                <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
-                <span class="ml-3 text-[11px] font-mono text-white/45">desktop · {{ currentMode.id }}.mode</span>
-              </div>
-              <div class="text-[11px] font-mono text-white/40 flex items-center gap-3">
-                <span>Ctrl ⇧ {{ currentMode.hotkey }}</span>
-                <span class="inline-flex items-center gap-1">
-                  <span class="h-1.5 w-1.5 rounded-full" :style="{ background: currentMode.dot }"></span>
-                  active
-                </span>
-              </div>
-            </div>
+          <div class="mx-auto max-w-5xl rounded-3xl border hairline glass overflow-hidden shadow-glow px-4 py-6 sm:px-8 sm:py-8">
+            <svg class="dg w-full h-auto" ref="dgSvg" role="img" aria-labelledby="dg-title dg-desc" preserveAspectRatio="xMidYMid meet">
+              <title id="dg-title">How suko switches your workspace</title>
+              <desc id="dg-desc">Three panels. Before: five apps from different tasks scattered across one desktop. One keystroke: pressing Ctrl Shift and a mode key runs the suko engine, which closes the previous apps, launches the next ones, arranges the window layout and sets volume, Do Not Disturb and theme. After: the apps for the selected mode, tiled into their saved layout and ready.</desc>
 
-            <!-- Desktop area -->
-            <div class="relative h-[360px] sm:h-[420px] p-3 sm:p-4 bg-black/30">
-              <div class="absolute inset-0 grid-noise opacity-50 pointer-events-none"></div>
-              <div class="absolute inset-0 pointer-events-none"
-                   :style="{ background: 'radial-gradient(600px 280px at 50% 0%, '+currentMode.glow+', transparent 60%)' }"></div>
+              <defs>
+                <marker id="dg-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M0 1 L9 5 L0 9 z" fill="var(--dg-accent)"/>
+                </marker>
+                <linearGradient id="dg-engine-glow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="var(--dg-accent)" stop-opacity=".16"/>
+                  <stop offset="1" stop-color="var(--dg-accent)" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
 
-              <div class="relative h-full grid gap-3"
-                   :style="{ gridTemplateColumns: currentMode.cols, gridTemplateRows: currentMode.rows }">
-                <div v-for="(tile, idx) in currentMode.tiles" :key="currentMode.id + '-' + idx"
-                     class="app-tile rounded-xl border hairline relative overflow-hidden"
-                     :style="{ gridColumn: tile.c, gridRow: tile.r, background: tile.bg }">
-                  <!-- brand glow -->
-                  <div class="absolute -top-8 -right-8 h-24 w-24 rounded-full pointer-events-none z-0"
-                       :style="{ background: 'radial-gradient(circle, '+brandColor(tile.app)+'40, transparent 70%)' }"></div>
-                  <!-- brand watermark -->
-                  <div class="absolute bottom-2 right-2 h-12 w-12 opacity-[0.10] pointer-events-none z-0" v-html="brandLogo(tile.app)"></div>
-                  <!-- chrome -->
-                  <div class="absolute top-0 inset-x-0 h-7 px-2 border-b hairline flex items-center gap-2 bg-black/25 backdrop-blur-sm z-10">
-                    <span class="h-[18px] w-[18px] rounded-[5px] overflow-hidden shrink-0 ring-1 ring-white/10 bg-black/40 grid place-items-center"
-                          :style="{ boxShadow: '0 0 0 1px '+brandColor(tile.app)+'30' }" v-html="brandLogo(tile.app)"></span>
-                    <span class="text-[10px] font-mono text-white/80 truncate">{{ tile.app }}</span>
-                    <span v-if="tile.tag" class="ml-auto text-[9px] font-mono uppercase tracking-wider" :style="{ color: brandColor(tile.app) }">{{ tile.tag }}</span>
-                  </div>
-                  <!-- app UI -->
-                  <div class="absolute inset-0 pt-7 overflow-hidden z-[1]" v-html="tileUI(tile.kind, tile.note)"></div>
-                  <!-- caption -->
-                  <div class="absolute bottom-1.5 left-2.5 right-2.5 text-[9px] text-white/40 font-mono truncate pointer-events-none z-[2]">{{ tile.note }}</div>
-                </div>
-              </div>
-            </div>
+              <!-- ── connectors ── -->
+              <g v-for="(a, i) in dgGeom.arrows" :key="'dg-arrow-'+i">
+                <line :x1="a.x1" :y1="a.y1" :x2="a.x2" :y2="a.y2"
+                      stroke="var(--dg-accent)" stroke-width="2" stroke-linecap="round"
+                      marker-end="url(#dg-arrow)"
+                      :class="['dg-flow', dgStep > (i === 0 ? 0 : 5) ? 'dg-flow-on' : '']"/>
+              </g>
 
-            <!-- Taskbar -->
-            <div class="win-bar flex items-center justify-between border-t hairline px-3 py-1.5">
-              <div class="flex items-center gap-1.5">
-                <!-- System tray (start / search / task view) -->
-                <button class="h-6 w-6 rounded grid place-items-center border hairline bg-white/[.04] hover:bg-white/10 transition" title="Start">
-                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="currentColor" style="color:#60a5fa"><path d="M3 5l8-1.2v8.4H3V5Zm0 14v-7.8h8V20.2L3 19Zm9-15.4L21 2.5v9.7h-9V3.6Zm0 16.8v-9.7h9V21.5L12 20.4Z"/></svg>
-                </button>
-                <button class="h-6 w-6 rounded grid place-items-center border hairline bg-white/[.04] hover:bg-white/10 transition" title="Search">
-                  <svg class="h-3 w-3 text-white/65" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.5-3.5"/></svg>
-                </button>
-                <button class="h-6 w-6 rounded grid place-items-center border hairline bg-white/[.04] hover:bg-white/10 transition" title="Task view">
-                  <svg class="h-3 w-3 text-white/65" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="5" rx="1"/><rect x="14" y="15" width="7" height="5" rx="1"/></svg>
-                </button>
-                <span class="mx-1 h-4 w-px bg-white/10"></span>
-                <!-- Per-mode app icons -->
-                <button v-for="(t, i) in currentMode.tiles" :key="'task-'+currentMode.id+'-'+i"
-                        class="h-6 w-6 rounded grid place-items-center border hairline relative overflow-hidden transition hover:brightness-125 bg-black/30 p-0.5"
-                        :title="t.app">
-                  <span class="h-full w-full" v-html="brandLogo(t.app)"></span>
-                  <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-2 rounded-full" :style="{ background: currentMode.dot }"></span>
-                </button>
-              </div>
-              <div class="flex items-center gap-2.5 text-[10px] font-mono text-white/45">
-                <span class="hidden sm:inline">{{ currentMode.tiles.length }} apps · layout {{ currentMode.layout }} · DND {{ currentMode.dnd ? 'on' : 'off' }}</span>
-                <!-- System tray icons -->
-                <div class="flex items-center gap-1.5">
-                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" :class="currentMode.dnd ? 'text-rose-300' : 'text-white/55'" :title="currentMode.dnd ? 'Do Not Disturb' : 'Notifications on'">
-                    <path v-if="currentMode.dnd" d="M12 22a3 3 0 0 0 2.83-2H9.17A3 3 0 0 0 12 22ZM4 4l16 16M19 17H6V11a6 6 0 0 1 8-5.6"/>
-                    <path v-else d="M6 8a6 6 0 0 1 12 0v5l1.5 3h-15L6 13V8ZM9 19a3 3 0 0 0 6 0"/>
-                  </svg>
-                  <svg class="h-3 w-3 text-white/55" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M2 8.8a14 14 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8 15a6 6 0 0 1 8 0"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/>
-                  </svg>
-                  <svg class="h-3 w-3 text-white/55" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 13c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>
-                  </svg>
-                  <span class="text-white/65 tabular-nums">{{ clockHM }}</span>
-                </div>
-              </div>
+              <!-- ─────────────  1 · BEFORE  ───────────── -->
+              <g :transform="'translate(' + dgGeom.pos[0].x + ',' + dgGeom.pos[0].y + ')'">
+                <text x="2" y="-16" class="dg-step">01</text>
+                <text x="30" y="-16" class="dg-head">Before, one desktop for everything</text>
+
+                <rect x="0" y="0" :width="dgGeom.W" :height="dgGeom.H" rx="18" class="dg-panel"/>
+
+                <g v-for="(w, i) in dgChaos" :key="'dg-chaos-'+i"
+                   :transform="'rotate(' + w.rot + ',' + (w.x + w.w/2) + ',' + (w.y + w.h/2) + ')'">
+                  <g :class="['dg-win', dgStep >= 2 ? 'dg-win-closed' : '']" :style="{ transitionDelay: (i * 70) + 'ms' }">
+                    <rect :x="w.x" :y="w.y" :width="w.w" :height="w.h" rx="10" class="dg-window"/>
+                    <path :d="'M' + w.x + ' ' + (w.y + 22) + ' h' + w.w" class="dg-hair"/>
+                    <circle :cx="w.x + 14" :cy="w.y + 11" r="3" class="dg-dot-dim"/>
+                    <circle :cx="w.x + 24" :cy="w.y + 11" r="3" class="dg-dot-dim"/>
+                    <circle :cx="w.x + 34" :cy="w.y + 11" r="3" class="dg-dot-dim"/>
+                    <rect :x="w.x + 46" :y="w.y + 5" width="12" height="12" rx="3" :fill="brandColor(w.app)" opacity=".85"/>
+                    <text :x="w.x + 64" :y="w.y + 15" class="dg-win-name">{{ w.app }}</text>
+                    <text :x="w.x + 14" :y="w.y + 44" class="dg-win-note">{{ w.note }}</text>
+                    <rect :x="w.x + 14" :y="w.y + 56" :width="w.w * 0.62" height="5" rx="2.5" class="dg-bar"/>
+                    <rect :x="w.x + 14" :y="w.y + 68" :width="w.w * 0.44" height="5" rx="2.5" class="dg-bar dg-bar-faint"/>
+                  </g>
+                </g>
+
+                <text :x="dgGeom.W / 2" :y="dgGeom.H - 18" text-anchor="middle"
+                      :class="['dg-cap', dgStep >= 2 ? 'dg-cap-warn' : '']">
+                  {{ dgStep >= 2 ? 'closing 5 apps, state saved first' : '5 apps, three different tasks, one screen' }}
+                </text>
+              </g>
+
+              <!-- ─────────────  2 · ONE KEYSTROKE  ───────────── -->
+              <g :transform="'translate(' + dgGeom.pos[1].x + ',' + dgGeom.pos[1].y + ')'">
+                <text x="2" y="-16" class="dg-step">02</text>
+                <text x="30" y="-16" class="dg-head">One keystroke</text>
+
+                <rect x="0" y="0" :width="dgGeom.W" :height="dgGeom.H" rx="18" class="dg-panel"/>
+
+                <!-- hotkey chord -->
+                <g v-for="(k, i) in dgKeys" :key="'dg-key-'+i"
+                   :class="['dg-key', dgStep >= 1 ? 'dg-key-down' : '']" :style="{ transitionDelay: (i * 90) + 'ms' }">
+                  <rect :x="k.x" y="30" :width="k.w" height="46" rx="11" class="dg-keycap"/>
+                  <text :x="k.x + k.w / 2" y="59" text-anchor="middle" class="dg-key-label">{{ k.label }}</text>
+                </g>
+
+                <!-- engine -->
+                <rect x="24" y="104" :width="dgGeom.W - 48" height="246" rx="18" class="dg-engine"/>
+                <rect x="24" y="104" :width="dgGeom.W - 48" height="246" rx="18" fill="url(#dg-engine-glow)"/>
+
+                <g transform="translate(46,132)">
+                  <rect x="2" y="0" width="22" height="7" rx="3.5" fill="#4f7cf0"/>
+                  <rect x="0" y="8" width="22" height="7" rx="3.5" fill="#f24aa0"/>
+                  <rect x="2" y="16" width="22" height="7" rx="3.5" fill="#4f7cf0"/>
+                </g>
+                <text x="80" y="150" class="dg-engine-title">suko engine</text>
+                <text :x="dgGeom.W - 46" y="150" text-anchor="end" class="dg-cap">{{ currentMode.id }}.mode</text>
+
+                <!-- checklist -->
+                <g v-for="(t, i) in dgTasks" :key="'dg-task-'+i" :transform="'translate(46,' + (176 + i * 40) + ')'">
+                  <circle cx="9" cy="0" r="9" :class="['dg-tick', dgTaskState(i)]"/>
+                  <path d="M4.6 0.2 L7.8 3.4 L13.4 -2.6" fill="none" stroke-width="2.2" stroke-linecap="round"
+                        stroke-linejoin="round" :class="['dg-check', dgStep > i + 2 ? 'dg-check-on' : '']"/>
+                  <text x="30" y="5" :class="['dg-task', dgTaskState(i)]">{{ t.label }}</text>
+                  <text :x="dgGeom.W - 92" y="5" text-anchor="end" class="dg-task-time"
+                        v-if="dgStep > i + 2">{{ t.time }}</text>
+                </g>
+
+                <!-- progress -->
+                <rect x="46" y="330" :width="dgGeom.W - 92" height="5" rx="2.5" class="dg-rail"/>
+                <rect x="46" y="330" :width="(dgGeom.W - 92) * dgProgress" height="5" rx="2.5" class="dg-rail-fill"/>
+
+                <text :x="dgGeom.W / 2" :y="dgGeom.H - 18" text-anchor="middle" class="dg-cap">{{ dgKeyCaption }}</text>
+              </g>
+
+              <!-- ─────────────  3 · AFTER  ───────────── -->
+              <g :transform="'translate(' + dgGeom.pos[2].x + ',' + dgGeom.pos[2].y + ')'">
+                <text x="2" y="-16" class="dg-step">03</text>
+                <text x="30" y="-16" class="dg-head">After, {{ currentMode.label.replace(/[^A-Za-z ]/g, '').trim().toLowerCase() }} ready</text>
+
+                <rect x="0" y="0" :width="dgGeom.W" :height="dgGeom.H" rx="18" class="dg-panel"/>
+
+                <g :class="['dg-after', dgStep >= 6 ? 'dg-after-on' : '']">
+                  <g v-for="(t, i) in dgAfterTiles" :key="'dg-tile-'+currentMode.id+'-'+i">
+                    <rect :x="t.x" :y="t.y" :width="t.w" :height="t.h" rx="11" class="dg-tile"
+                          :style="{ stroke: brandColor(t.app) }"/>
+                    <path :d="'M' + t.x + ' ' + (t.y + 24) + ' h' + t.w" class="dg-hair"/>
+                    <rect :x="t.x + 12" :y="t.y + 7" width="11" height="11" rx="3" :fill="brandColor(t.app)"/>
+                    <text :x="t.x + 30" :y="t.y + 17" class="dg-tile-name">{{ t.app }}</text>
+                    <rect :x="t.x + 12" :y="t.y + 38" :width="t.w * 0.55" height="5" rx="2.5" class="dg-bar"/>
+                    <rect :x="t.x + 12" :y="t.y + 50" :width="t.w * 0.34" height="5" rx="2.5" class="dg-bar dg-bar-faint"
+                          v-if="t.h > 80"/>
+                  </g>
+                </g>
+
+                <g :class="['dg-ready', dgStep >= 6 ? 'dg-ready-on' : '']">
+                  <circle :cx="dgGeom.W - 96" cy="30" r="4" class="dg-ok-dot"/>
+                  <text :x="dgGeom.W - 86" y="34" class="dg-ok-text">ready</text>
+                </g>
+
+                <text :x="dgGeom.W / 2" :y="dgGeom.H - 18" text-anchor="middle" class="dg-cap">
+                  {{ currentMode.svgTiles.length }} apps · layout {{ currentMode.layout }} · DND {{ currentMode.dnd ? 'on' : 'off' }}
+                </text>
+              </g>
+            </svg>
+
+            <!-- step scrubber -->
+            <div class="mt-5 flex items-center justify-center gap-3">
+              <button @click="runDiagram()" class="inline-flex items-center gap-2 text-xs text-violet-300 hover:text-violet-200 transition"
+                      aria-label="Replay the switch animation">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5"/></svg>
+                Replay
+              </button>
+              <span class="flex items-center gap-1.5" role="presentation">
+                <span v-for="s in 7" :key="'dg-pip-'+s"
+                      class="h-1.5 rounded-full transition-all duration-300"
+                      :class="dgStep >= s - 1 ? 'w-4 bg-violet-400' : 'w-1.5 bg-white/20'"></span>
+              </span>
             </div>
           </div>
         </div>
@@ -1644,6 +1793,7 @@ createApp({
       { id:'work',    label:'Deep Work 🧠',    hotkey:'W', dot:'#a78bfa',
         gradient:'linear-gradient(180deg,#8b5cf6,#6d28d9)', shadow:'rgba(124,58,237,.55)', glow:'rgba(139,92,246,.18)',
         cols:'2fr 1.4fr 1fr', rows:'1.6fr 1fr', layout:'three-pane', dnd:true,
+        svgTiles:[{app:'VS Code',x:0,y:0,w:.46,h:1},{app:'Linear',x:.48,y:0,w:.52,h:.46},{app:'Slack',x:.48,y:.48,w:.26,h:.52},{app:'Arc',x:.76,y:.48,w:.24,h:.52}],
         tiles:[
           { app:'VS Code',  kind:'code',    note:'src/modes.ts',           c:'1', r:'1 / span 2', tag:'IDE',  bg:'linear-gradient(180deg,#1c1a30,#13111f)' },
           { app:'Linear',   kind:'linear',  note:'SUK-204 · in progress',  c:'2', r:'1',          tag:'PM',   bg:'linear-gradient(180deg,#1d1b2e,#15131f)' },
@@ -1654,6 +1804,7 @@ createApp({
       { id:'focus',   label:'Focus ⚡',   hotkey:'F', dot:'#22d3ee',
         gradient:'linear-gradient(180deg,#22d3ee,#0891b2)', shadow:'rgba(8,145,178,.55)', glow:'rgba(34,211,238,.16)',
         cols:'1fr 1fr', rows:'1fr', layout:'split', dnd:true,
+        svgTiles:[{app:'Obsidian',x:0,y:0,w:.5,h:1},{app:'Brain.fm',x:.5,y:0,w:.5,h:1}],
         tiles:[
           { app:'Obsidian',  kind:'notes', note:'Vault · daily.md',   c:'1', r:'1', tag:'NOTES', bg:'linear-gradient(180deg,#16243a,#0e1828)' },
           { app:'Brain.fm',  kind:'audio', note:'Deep Focus · 50min', c:'2', r:'1', tag:'AUDIO', bg:'linear-gradient(180deg,#0f2a30,#0a1c22)' },
@@ -1662,6 +1813,7 @@ createApp({
       { id:'gaming',  label:'Gaming 🎮',  hotkey:'G', dot:'#fb7185',
         gradient:'linear-gradient(180deg,#fb7185,#db2777)', shadow:'rgba(219,39,119,.55)', glow:'rgba(251,113,133,.18)',
         cols:'2fr 1fr', rows:'1fr 1fr', layout:'fullscreen', dnd:false,
+        svgTiles:[{app:'Steam',x:0,y:0,w:1,h:.6},{app:'Discord',x:0,y:.6,w:.5,h:.4},{app:'Spotify',x:.5,y:.6,w:.5,h:.4}],
         tiles:[
           { app:'Steam',     kind:'game',    note:'Hades II · 2025',     c:'1', r:'1 / span 2', tag:'GAME',  bg:'linear-gradient(180deg,#2a1820,#1c1018)' },
           { app:'Discord',   kind:'voice',   note:'#voice-friday-night', c:'2', r:'1',          tag:'VC',    bg:'linear-gradient(180deg,#1d1a2e,#15131f)' },
@@ -1671,6 +1823,7 @@ createApp({
       { id:'study',   label:'Study 📚',   hotkey:'S', dot:'#fbbf24',
         gradient:'linear-gradient(180deg,#fbbf24,#d97706)', shadow:'rgba(217,119,6,.45)',  glow:'rgba(251,191,36,.16)',
         cols:'1.4fr 1fr 1fr', rows:'1.2fr 1fr', layout:'reference', dnd:true,
+        svgTiles:[{app:'Notion',x:0,y:0,w:.44,h:1},{app:'Anki',x:.44,y:0,w:.56,h:.32},{app:'YouTube',x:.44,y:.32,w:.56,h:.32},{app:'Zotero',x:.44,y:.64,w:.56,h:.36}],
         tiles:[
           { app:'Notion',  kind:'doc',     note:'CS244 · Distributed',    c:'1', r:'1 / span 2', tag:'NOTES', bg:'linear-gradient(180deg,#2a2516,#1c1810)' },
           { app:'Anki',    kind:'card',    note:'Due today · 84 cards',   c:'2', r:'1',          tag:'CARDS', bg:'linear-gradient(180deg,#1e1b2e,#15131f)' },
@@ -1680,265 +1833,113 @@ createApp({
       },
     ];
     const currentMode = computed(() => modes[active.value]);
-    const setMode = (i) => { active.value = i; };
 
-    /* ───── tile UI mocks ───── */
-    const tileUI = (kind, note) => {
-      const bar = (w, opacity=0.7, color='rgba(255,255,255,') => `<div class="h-1.5 rounded-sm" style="width:${w}%; background:${color}${opacity})"></div>`;
-      switch (kind) {
-        case 'code':
-          return `
-            <div class="h-full flex text-[9px] font-mono">
-              <div class="w-1/4 border-r hairline p-2 space-y-1 bg-black/20">
-                <div class="text-white/40">EXPLORER</div>
-                <div class="text-white/70">▾ src</div>
-                <div class="pl-2 text-violet-300">modes.ts</div>
-                <div class="pl-2 text-white/45">layout.ts</div>
-                <div class="pl-2 text-white/45">hotkeys.ts</div>
-                <div class="text-white/70 pt-1">▾ lib</div>
-                <div class="pl-2 text-white/45">paddle.ts</div>
-              </div>
-              <div class="flex-1 p-2 space-y-1">
-                <div><span class="text-pink-300">export</span> <span class="text-violet-300">async</span> <span class="text-cyan-300">function</span> <span class="text-amber-300">switchMode</span><span class="text-white/60">(</span></div>
-                <div class="pl-3"><span class="text-white/70">id</span><span class="text-white/40">:</span> <span class="text-emerald-300">ModeId</span></div>
-                <div><span class="text-white/60">) {</span></div>
-                <div class="pl-3"><span class="text-violet-300">const</span> <span class="text-white/80">prev</span> <span class="text-white/40">=</span> <span class="text-violet-300">await</span> <span class="text-amber-300">snapshot</span><span class="text-white/60">()</span></div>
-                <div class="pl-3"><span class="text-violet-300">await</span> <span class="text-amber-300">closeAll</span><span class="text-white/60">(prev)</span></div>
-                <div class="pl-3"><span class="text-violet-300">await</span> <span class="text-amber-300">launch</span><span class="text-white/60">(id)</span></div>
-                <div class="pl-3"><span class="text-violet-300">await</span> <span class="text-amber-300">applyLayout</span><span class="text-white/60">(id)</span></div>
-                <div><span class="text-white/60">}</span></div>
-              </div>
-            </div>`;
-        case 'linear':
-          return `
-            <div class="h-full p-2.5 space-y-1.5 text-[10px] font-mono">
-              <div class="flex items-center justify-between text-white/40">
-                <span>SUK · In Progress</span><span>5</span>
-              </div>
-              ${['Wire Polar webhook','Mode preview animation','CLI: mode stats','License grace timer','Discord update.exe hook'].map((t,i)=>`
-                <div class="flex items-center gap-2 py-1 px-1.5 rounded ${i===0?'bg-violet-500/10 border border-violet-400/20':''}">
-                  <span class="h-2.5 w-2.5 rounded-full ${i===0?'border-2 border-violet-400':'border border-white/30'} shrink-0"></span>
-                  <span class="text-white/40">SUK-${204-i}</span>
-                  <span class="text-white/80 truncate">${t}</span>
-                </div>`).join('')}
-            </div>`;
-        case 'chat':
-          return `
-            <div class="h-full flex text-[9px]">
-              <div class="w-1/3 border-r hairline p-2 bg-black/20 space-y-1.5">
-                <div class="text-white/40 font-mono">CHANNELS</div>
-                <div class="px-1.5 py-1 rounded bg-violet-500/15 text-white/90"># suko-team</div>
-                <div class="px-1.5 text-white/55"># general</div>
-                <div class="px-1.5 text-white/55"># releases</div>
-                <div class="px-1.5 text-white/55 flex justify-between"><span># bugs</span><span class="text-rose-300">3</span></div>
-              </div>
-              <div class="flex-1 p-2 space-y-2">
-                <div class="flex items-start gap-1.5">
-                  <span class="h-4 w-4 rounded-full bg-gradient-to-br from-violet-400 to-pink-400 shrink-0"></span>
-                  <div class="flex-1">
-                    <div class="text-white/85">v1.0.1 just shipped 🚀</div>
-                    <div class="text-white/40 mt-0.5">CLI got history flag</div>
-                  </div>
-                </div>
-                <div class="flex items-start gap-1.5">
-                  <span class="h-4 w-4 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 shrink-0"></span>
-                  <div class="flex-1">
-                    <div class="text-white/85">nice, testing now</div>
-                  </div>
-                </div>
-              </div>
-            </div>`;
-        case 'browser':
-          return `
-            <div class="h-full flex flex-col text-[10px]">
-              <div class="flex items-center gap-1 px-2 py-1.5 border-b hairline bg-black/20">
-                <div class="flex gap-1">
-                  <span class="px-2 py-0.5 rounded-md text-[9px] bg-white/10 text-white/85 font-mono">docs</span>
-                  <span class="px-2 py-0.5 rounded-md text-[9px] text-white/45 font-mono">github</span>
-                  <span class="px-2 py-0.5 rounded-md text-[9px] text-white/45 font-mono">linear</span>
-                </div>
-                <div class="ml-2 flex-1 px-2 py-0.5 rounded text-[9px] font-mono text-white/50 bg-white/5 truncate">docs.suko.pro/cli</div>
-              </div>
-              <div class="flex-1 p-3">
-                <div class="text-[14px] font-semibold text-white/90 mb-2">CLI Reference</div>
-                <div class="space-y-1.5">
-                  ${bar(70)}${bar(85,0.5)}${bar(60,0.5)}${bar(80,0.4)}${bar(45,0.4)}
-                </div>
-                <div class="mt-3 p-2 rounded bg-black/40 font-mono text-[9px] text-violet-300">$ mode switch &lt;id&gt;</div>
-              </div>
-            </div>`;
-        case 'notes':
-          return `
-            <div class="h-full flex text-[10px] font-mono">
-              <div class="w-[38%] border-r hairline p-2 bg-black/20 space-y-1">
-                <div class="text-white/40">DAILY</div>
-                <div class="text-cyan-300">2026-05-26.md</div>
-                <div class="text-white/55">2026-05-25.md</div>
-                <div class="text-white/55">2026-05-24.md</div>
-                <div class="text-white/40 pt-2">PROJECTS</div>
-                <div class="text-white/55">writing.md</div>
-              </div>
-              <div class="flex-1 p-3 space-y-2">
-                <div class="text-[12px] text-white/90"># Tuesday</div>
-                <div class="text-white/65"><span class="text-cyan-300">- [ ]</span> ship landing</div>
-                <div class="text-white/65"><span class="text-cyan-300">- [x]</span> draft pricing copy</div>
-                <div class="text-white/65"><span class="text-cyan-300">- [ ]</span> reply to <span class="text-cyan-200">@jay</span></div>
-                <div class="text-white/45">> deep work block · 90 min</div>
-              </div>
-            </div>`;
-        case 'audio':
-          return `
-            <div class="h-full flex flex-col items-center justify-center p-4 gap-3">
-              <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-emerald-500 shadow-[0_0_30px_rgba(34,211,238,.5)] relative overflow-hidden">
-                <div class="absolute inset-0 grid place-items-center">
-                  <div class="h-2 w-2 rounded-full bg-white/90"></div>
-                </div>
-              </div>
-              <div class="text-center">
-                <div class="text-[11px] text-white/90">Deep Focus</div>
-                <div class="text-[9px] text-white/45 font-mono mt-0.5">50 min · neural phase</div>
-              </div>
-              <div class="flex items-end gap-0.5 h-6">
-                ${[3,7,11,8,14,18,12,15,9,13,6,4].map(h=>`<span class="w-1 rounded-sm bg-cyan-400/70" style="height:${h*3}%"></span>`).join('')}
-              </div>
-              <div class="flex items-center gap-2 text-white/80">
-                <span class="text-[9px] font-mono">12:34</span>
-                <span class="h-6 w-6 rounded-full bg-cyan-400/20 border border-cyan-300/40 flex items-center justify-center">▶</span>
-                <span class="text-[9px] font-mono text-white/40">37:26</span>
-              </div>
-            </div>`;
-        case 'game':
-          return `
-            <div class="h-full relative overflow-hidden">
-              <div class="absolute inset-0" style="background:
-                radial-gradient(circle at 30% 40%, rgba(251,113,133,.45), transparent 50%),
-                radial-gradient(circle at 75% 70%, rgba(219,39,119,.55), transparent 55%),
-                linear-gradient(180deg, #2a0f1a, #1a0510);"></div>
-              <div class="absolute inset-0 grid-noise opacity-40"></div>
-              <div class="absolute inset-3 flex flex-col justify-between">
-                <div class="flex items-center gap-2">
-                  <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-rose-400 to-pink-600 ring-1 ring-white/20 flex items-center justify-center">
-                    <span class="text-[16px]">⚔</span>
-                  </div>
-                  <div>
-                    <div class="text-[12px] font-semibold text-white/95">HADES II</div>
-                    <div class="text-[9px] font-mono text-white/55">Supergiant · roguelike</div>
-                  </div>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button class="px-3 py-1.5 rounded-md bg-emerald-500 text-emerald-950 text-[10px] font-semibold">▶ PLAY</button>
-                  <span class="text-[9px] font-mono text-white/55">28h played</span>
-                </div>
-              </div>
-            </div>`;
-        case 'voice':
-          return `
-            <div class="h-full p-2.5 text-[10px]">
-              <div class="text-white/40 font-mono mb-2">🔊 friday-night</div>
-              <div class="space-y-1.5">
-                ${[
-                  {n:'jay',  c:'from-violet-400 to-pink-400',  on:true},
-                  {n:'mira', c:'from-cyan-400 to-emerald-400', on:true},
-                  {n:'sam',  c:'from-amber-400 to-rose-400',   on:false},
-                  {n:'kai',  c:'from-indigo-400 to-violet-400', on:true},
-                ].map(p=>`
-                  <div class="flex items-center gap-2">
-                    <span class="h-5 w-5 rounded-full bg-gradient-to-br ${p.c} ring-2 ${p.on?'ring-emerald-400/70':'ring-white/10'} shrink-0"></span>
-                    <span class="text-white/85">${p.n}</span>
-                    ${p.on?'<span class="ml-auto text-emerald-300">●</span>':'<span class="ml-auto text-white/30">muted</span>'}
-                  </div>`).join('')}
-              </div>
-            </div>`;
-        case 'spotify':
-          return `
-            <div class="h-full flex items-center gap-2.5 p-3">
-              <div class="h-12 w-12 rounded shrink-0" style="background:linear-gradient(135deg,#ec4899,#a855f7,#3b82f6);box-shadow:0 6px 20px -4px rgba(168,85,247,.6)"></div>
-              <div class="flex-1 min-w-0">
-                <div class="text-[11px] text-white/95 truncate">Midnight City</div>
-                <div class="text-[9px] text-white/45 font-mono truncate">M83 · Synthwave</div>
-                <div class="mt-1.5 h-0.5 bg-white/10 rounded-full overflow-hidden">
-                  <div class="h-full bg-emerald-400" style="width:42%"></div>
-                </div>
-              </div>
-              <span class="h-7 w-7 rounded-full bg-white text-black text-[10px] flex items-center justify-center shrink-0">▶</span>
-            </div>`;
-        case 'doc':
-          return `
-            <div class="h-full p-3 text-[10px] space-y-1.5">
-              <div class="text-[13px] font-semibold text-white/95">CS244 · Lecture 7</div>
-              <div class="text-[9px] text-white/40 font-mono">Distributed Consensus</div>
-              <div class="pt-1.5 space-y-1">
-                <div class="text-white/85">## Paxos vs Raft</div>
-                ${bar(85, 0.5)}${bar(72, 0.45)}${bar(90, 0.4)}
-                <div class="text-white/85 pt-1">## Leader election</div>
-                ${bar(80, 0.4)}${bar(60, 0.4)}
-              </div>
-              <div class="mt-2 p-1.5 rounded bg-amber-500/10 border border-amber-400/20 text-[9px] text-amber-200 font-mono">💡 quorum = (n/2)+1</div>
-            </div>`;
-        case 'card':
-          return `
-            <div class="h-full flex flex-col p-3">
-              <div class="text-[9px] font-mono text-white/40 mb-1">CARD 12 / 84</div>
-              <div class="flex-1 rounded-lg border hairline bg-white/[.03] flex items-center justify-center p-2 text-center">
-                <div>
-                  <div class="text-[14px] text-white/95">Raft term</div>
-                  <div class="text-[9px] font-mono text-white/40 mt-1">tap to flip</div>
-                </div>
-              </div>
-              <div class="mt-2 grid grid-cols-4 gap-1 text-[9px] font-mono">
-                <div class="text-center py-1 rounded bg-rose-500/15 text-rose-200">Again</div>
-                <div class="text-center py-1 rounded bg-amber-500/15 text-amber-200">Hard</div>
-                <div class="text-center py-1 rounded bg-emerald-500/15 text-emerald-200">Good</div>
-                <div class="text-center py-1 rounded bg-cyan-500/15 text-cyan-200">Easy</div>
-              </div>
-            </div>`;
-        case 'video':
-          return `
-            <div class="h-full flex flex-col">
-              <div class="relative flex-1 m-2 rounded-md overflow-hidden" style="background:linear-gradient(135deg,#7f1d1d,#450a0a)">
-                <div class="absolute inset-0 grid-noise opacity-30"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="h-9 w-9 rounded-full bg-white/95 text-black flex items-center justify-center text-[12px]">▶</span>
-                </div>
-                <div class="absolute bottom-1 right-1 px-1 rounded text-[8px] font-mono bg-black/70">23:11</div>
-              </div>
-              <div class="px-3 pb-2">
-                <div class="text-[10px] text-white/90 leading-tight">Raft Consensus, Explained</div>
-                <div class="text-[9px] text-white/40 font-mono mt-0.5">Stanford · 412K views</div>
-              </div>
-            </div>`;
-        case 'pdf':
-          return `
-            <div class="h-full flex p-2 gap-2">
-              <div class="w-10 space-y-1 shrink-0">
-                <div class="aspect-[3/4] rounded-sm bg-white/8 border border-violet-400/30"></div>
-                <div class="aspect-[3/4] rounded-sm bg-white/5"></div>
-                <div class="aspect-[3/4] rounded-sm bg-white/5"></div>
-              </div>
-              <div class="flex-1 rounded-md p-3 text-[9px] space-y-1" style="background:linear-gradient(180deg, #ece8d8, #d9d3bd); color:#222">
-                <div class="text-[11px] font-semibold">Paxos Made Simple</div>
-                <div class="text-[8px] opacity-70">Leslie Lamport · 2001</div>
-                <div class="mt-1 space-y-0.5">
-                  <div class="h-1 bg-black/60 rounded" style="width:90%"></div>
-                  <div class="h-1 bg-black/50 rounded" style="width:80%"></div>
-                  <div class="h-1 bg-black/50 rounded" style="width:85%"></div>
-                  <div class="h-1 bg-black/40 rounded" style="width:60%"></div>
-                  <div class="h-1 bg-black/50 rounded" style="width:70%"></div>
-                  <div class="h-1 bg-black/40 rounded" style="width:50%"></div>
-                </div>
-              </div>
-            </div>`;
-        default:
-          return `<div class="h-full flex items-center justify-center text-[10px] text-white/40 font-mono">${note||''}</div>`;
-      }
-    };
+    /* ───── Hero diagram: how one switch happens, in three panels ─────
+       Panels are drawn in a local 360x440 box and translated into place,
+       so the same markup lays out side-by-side or stacked. */
+    const DG_W = 360, DG_H = 440, DG_TOP = 44;
+    const dgStep = ref(0);            // 0 chaos · 1 keys down · 2-5 tasks · 6 ready
+    const dgNarrow = ref(false);
 
-    /* Auto-cycle hero pill */
-    let cycleT;
-    onMounted(() => {
-      cycleT = setInterval(() => { active.value = (active.value + 1) % modes.length; }, 4200);
+    const dgGeom = computed(() => {
+      const gap = dgNarrow.value ? 74 : 40;
+      const pos = [0, 1, 2].map(i => dgNarrow.value
+        ? { x: 0, y: DG_TOP + i * (DG_H + gap) }
+        : { x: i * (DG_W + gap), y: DG_TOP });
+      const arrows = [0, 1].map(i => dgNarrow.value
+        ? { x1: DG_W / 2, y1: pos[i].y + DG_H + 14, x2: DG_W / 2, y2: pos[i + 1].y - 14 }
+        : { x1: pos[i].x + DG_W + 8, y1: DG_TOP + DG_H / 2, x2: pos[i + 1].x - 8, y2: DG_TOP + DG_H / 2 });
+      const vb = dgNarrow.value
+        ? `0 0 ${DG_W} ${DG_TOP + 3 * DG_H + 2 * gap + 12}`
+        : `0 0 ${3 * DG_W + 2 * gap} ${DG_TOP + DG_H + 12}`;
+      return { W: DG_W, H: DG_H, pos, arrows, vb };
     });
-    onUnmounted(() => clearInterval(cycleT));
+
+    const dgChaos = [
+      { app:'Slack',    x: 16,  y: 62,  w: 206, h: 92, rot: -7, note:'#general · 12 unread' },
+      { app:'Arc',      x: 122, y: 124, w: 214, h: 96, rot:  5, note:'31 tabs open' },
+      { app:'Steam',    x: 22,  y: 196, w: 198, h: 92, rot: -3, note:'library · idle' },
+      { app:'Discord',  x: 134, y: 254, w: 198, h: 88, rot:  8, note:'3 servers pinging' },
+      { app:'Obsidian', x: 34,  y: 314, w: 190, h: 84, rot: -5, note:'yesterday, unsaved' },
+    ];
+
+    const dgKeys = computed(() => [
+      { label:'Ctrl',  x: 46,  w: 84 },
+      { label:'⇧',     x: 140, w: 60 },
+      { label: currentMode.value.hotkey, x: 210, w: 60 },
+    ]);
+
+    const dgTasks = [
+      { label:'close previous apps',      time:'0.61s' },
+      { label:'launch next apps',         time:'1.20s' },
+      { label:'arrange window layout',    time:'1.55s' },
+      { label:'set volume · DND · theme', time:'1.78s' },
+    ];
+    const dgKeyCaption = computed(() => 'Ctrl ⇧ ' + currentMode.value.hotkey +
+      (dgNarrow.value ? ' · from any app' : ' · works from any app, even full screen'));
+    const dgTaskState = (i) => dgStep.value > i + 2 ? 'is-done'
+                             : dgStep.value === i + 2 ? 'is-active' : '';
+    const dgProgress = computed(() => Math.min(1, Math.max(0, (dgStep.value - 1) / 5)));
+
+    // Mode tiles as fractions of the panel's inner area, so each mode shows
+    // the shape of its own saved layout.
+    const dgAfterTiles = computed(() => {
+      const padX = 16, padTop = 56, padBottom = 40, gap = 8;
+      const boxW = DG_W - padX * 2, boxH = DG_H - padTop - padBottom;
+      return currentMode.value.svgTiles.map(t => ({
+        app: t.app,
+        x: padX + t.x * boxW,
+        y: padTop + t.y * boxH,
+        w: t.w * boxW - gap,
+        h: t.h * boxH - gap,
+      }));
+    });
+
+    // In-DOM templates lowercase attribute names, so :viewBox would bind as
+    // "viewbox" and SVG would ignore it. Set it on the element instead.
+    const dgSvg = ref(null);
+    const applyViewBox = () => {
+      if (dgSvg.value) dgSvg.value.setAttribute('viewBox', dgGeom.value.vb);
+    };
+    watch(() => dgGeom.value.vb, () => nextTick(applyViewBox));
+
+    let dgT;
+    const dgReduced = () => {
+      try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+      catch (e) { return false; }
+    };
+    const runDiagram = () => {
+      clearTimeout(dgT);
+      if (dgReduced()) { dgStep.value = 6; return; }
+      dgStep.value = 0;
+      const tick = () => {
+        if (dgStep.value < 6) { dgStep.value++; dgT = setTimeout(tick, 620); }
+        // hold on the finished layout, then tell the same story for the next mode
+        else dgT = setTimeout(() => { active.value = (active.value + 1) % modes.length; runDiagram(); }, 2600);
+      };
+      dgT = setTimeout(tick, 700);
+    };
+    const setMode = (i) => { active.value = i; runDiagram(); };
+
+
+    /* Drive the hero diagram, which also advances the pill to the next mode
+       once a switch has finished playing out. */
+    let dgMq;
+    const dgOnMq = (e) => { dgNarrow.value = e.matches; };
+    onMounted(() => {
+      dgMq = window.matchMedia('(max-width: 900px)');
+      dgNarrow.value = dgMq.matches;
+      if (dgMq.addEventListener) dgMq.addEventListener('change', dgOnMq);
+      else dgMq.addListener(dgOnMq);
+      nextTick(applyViewBox);
+      runDiagram();
+    });
+    onUnmounted(() => {
+      clearTimeout(dgT);
+      if (!dgMq) return;
+      if (dgMq.removeEventListener) dgMq.removeEventListener('change', dgOnMq);
+      else dgMq.removeListener(dgOnMq);
+    });
 
     /* ───── real app brand logos + colors ───── */
     const brandMap = {
@@ -1957,38 +1958,9 @@ createApp({
       'Zotero'   : { color:'#CC2936', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="#CC2936"/><path d="M8 7.8h8L8 16.2h8" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
     };
     const brand = (name) => brandMap[name] || { color:'#94a3b8', logo:'<svg class="h-full w-full" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="#475569"/></svg>' };
-    const brandLogo  = (name) => brand(name).logo;
     const brandColor = (name) => brand(name).color;
 
-    /* ───── taskbar app icons ───── */
-    const appIconMap = {
-      'VS Code'  : { g:'❬❯', bg:'linear-gradient(135deg,#2563eb,#1d4ed8)', fg:'#fff' },
-      'Linear'   : { g:'L',    bg:'linear-gradient(135deg,#6366f1,#4338ca)', fg:'#fff' },
-      'Slack'    : { g:'#',    bg:'linear-gradient(135deg,#ec4899,#a855f7)', fg:'#fff' },
-      'Arc'      : { g:'A',    bg:'linear-gradient(135deg,#f97316,#ec4899)', fg:'#fff' },
-      'Obsidian' : { g:'◇',    bg:'linear-gradient(135deg,#7c3aed,#4c1d95)', fg:'#e9d5ff' },
-      'Brain.fm' : { g:'∿',    bg:'linear-gradient(135deg,#22d3ee,#0891b2)', fg:'#fff' },
-      'Steam'    : { g:'⚙',    bg:'linear-gradient(135deg,#1e3a8a,#0c1936)', fg:'#fff' },
-      'Discord'  : { g:'D',    bg:'linear-gradient(135deg,#6366f1,#4f46e5)', fg:'#fff' },
-      'Spotify'  : { g:'♫',    bg:'linear-gradient(135deg,#10b981,#047857)', fg:'#fff' },
-      'Notion'   : { g:'N',    bg:'linear-gradient(135deg,#f5f5f4,#d6d3d1)', fg:'#0a0a0a' },
-      'Anki'     : { g:'▤',    bg:'linear-gradient(135deg,#0ea5e9,#0369a1)', fg:'#fff' },
-      'YouTube'  : { g:'▶',    bg:'linear-gradient(135deg,#ef4444,#b91c1c)', fg:'#fff' },
-      'Zotero'   : { g:'Z',    bg:'linear-gradient(135deg,#dc2626,#7f1d1d)', fg:'#fff' },
-    };
-    const appIcon = (name) => appIconMap[name] || { g: name?.[0] || '?', bg:'linear-gradient(135deg,#475569,#1e293b)', fg:'#fff' };
 
-    // Live clock for the taskbar tray
-    const clockHM = ref('');
-    const tickClock = () => {
-      const d = new Date();
-      const h = d.getHours() % 12 || 12;
-      const m = String(d.getMinutes()).padStart(2,'0');
-      clockHM.value = `${h}:${m} ${d.getHours() >= 12 ? 'PM' : 'AM'}`;
-    };
-    let clockT;
-    onMounted(() => { tickClock(); clockT = setInterval(tickClock, 30000); });
-    onUnmounted(() => clearInterval(clockT));
 
     /* ───── stats ───── */
     const stats = [
@@ -2548,7 +2520,8 @@ createApp({
     onUnmounted(() => window.removeEventListener('scroll', onScroll));
 
     return {
-      isDark, scrolled, activeSection, mobileOpen, goSection, price, active, nav, modes, currentMode, setMode, tileUI, appIcon, brandLogo, brandColor, clockHM, stats, problems, features, howItWorks, whyCards,
+      isDark, scrolled, activeSection, mobileOpen, goSection, price, active, nav, modes, currentMode, setMode, brandColor, stats, problems, features, howItWorks, whyCards,
+      dgStep, dgGeom, dgSvg, dgChaos, dgKeys, dgTasks, dgTaskState, dgKeyCaption, dgProgress, dgAfterTiles, runDiagram,
       demoMode, demoFrom, demoIdx, demoSteps, doneSteps, elapsed, stepState, runDemo, stepsForPhase, stepStateGlobal, phaseGate,
       cliCmds, cliIdx, cliTyped, cliVisible, setCli,
       bindings, hkActive, hkFrom, phase, phaseLabel, closeStep, openStep, addingBinding, pressed, events, isKeyHot, firePress, keyboard,
