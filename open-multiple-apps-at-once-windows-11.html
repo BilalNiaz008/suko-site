@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Multiple Apps at Once in Windows 11 | suko</title>
+  <meta name="description" content="Learn how to open multiple apps at once in Windows 11 using Startup, a script, PowerToys Workspaces or a suko workspace shortcut.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://suko.pro/open-multiple-apps-at-once-windows-11.html">
+  <link rel="icon" type="image/png" href="assets/suko-mark-512.png">
+  <link rel="apple-touch-icon" href="assets/suko-mark-512.png">
+  <meta property="og:site_name" content="suko"><meta property="og:type" content="article"><meta property="og:url" content="https://suko.pro/open-multiple-apps-at-once-windows-11.html">
+  <meta property="og:title" content="Open Multiple Apps at Once in Windows 11"><meta property="og:description" content="Compare four ways to launch a complete set of Windows apps."><meta property="og:image" content="https://suko.pro/assets/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Open Multiple Apps at Once in Windows 11"><meta name="twitter:description" content="Startup, scripts, PowerToys Workspaces and suko compared."><meta name="twitter:image" content="https://suko.pro/assets/og-cover.png">
+  <link rel="stylesheet" href="assets/guide.css?v=1">
+  <link rel="preconnect" href="https://www.googletagmanager.com"><script async src="https://www.googletagmanager.com/gtag/js?id=G-7MGMBRB9FK"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7MGMBRB9FK');</script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"Article","headline":"How to open multiple apps at once in Windows 11","description":"Compare Startup, scripts, PowerToys Workspaces and suko for launching groups of Windows applications.","datePublished":"2026-09-19","dateModified":"2026-09-19","inLanguage":"en","mainEntityOfPage":"https://suko.pro/open-multiple-apps-at-once-windows-11.html","author":{"@type":"Organization","name":"suko"},"publisher":{"@type":"Organization","name":"suko","logo":{"@type":"ImageObject","url":"https://suko.pro/assets/suko-mark-512.png"}},"image":"https://suko.pro/assets/og-cover.png"},
+    {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://suko.pro/"},{"@type":"ListItem","position":2,"name":"Open multiple apps at once in Windows 11","item":"https://suko.pro/open-multiple-apps-at-once-windows-11.html"}]},
+    {"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can Windows 11 open multiple apps with one shortcut?","acceptedAnswer":{"@type":"Answer","text":"Yes. A batch or PowerShell script can start several applications, and workspace tools can add saved window positions."}},{"@type":"Question","name":"Should I put every work app in Windows Startup?","acceptedAnswer":{"@type":"Answer","text":"Usually no. Startup is useful for apps needed at every sign-in, but task-specific app groups are better launched only when that task begins."}}]}
+  ]}
+  </script>
+</head>
+<body>
+  <header class="site-header"><div class="wrap header-inner"><a class="brand" href="index.html"><img src="assets/suko-mark-512.png" width="34" height="34" alt=""><span>suko</span></a><nav class="site-nav" aria-label="Primary"><a href="index.html#features">Features</a><a href="index.html#guides">Guides</a><a href="index.html#pricing">Pricing</a><a class="button" href="https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe">Download</a></nav></div></header>
+  <main>
+    <div class="wrap breadcrumb"><a href="index.html">Home</a> / Open multiple apps at once in Windows 11</div>
+    <section class="hero"><div class="wrap"><h1>How to open multiple apps at once in Windows 11</h1><p class="dek">You can start a group of apps at sign-in, from a script, or with a saved workspace. The simplest choice depends on when the apps should open and whether their window positions matter.</p><div class="answer"><strong>Short answer</strong>Use Windows Startup for apps needed at every sign-in, a batch or PowerShell script for a fixed launch list, PowerToys Workspaces for apps plus positions, or suko to switch complete task contexts by hotkey, schedule or environment.</div><p class="meta">Updated September 19, 2026 · 6 minute read</p></div></section>
+    <div class="wrap article-grid">
+      <article>
+        <h2 id="methods">Choose how the apps should start</h2>
+        <p>Opening several apps is easy. The important question is whether they should open every time Windows starts or only when you begin a specific task. Loading everything at sign-in can slow startup and leave unrelated apps running all day.</p>
+
+        <h3>Option 1: Windows Startup</h3>
+        <p>Use Startup for software you genuinely need after every sign-in, such as a password manager or accessibility tool. Windows lets you manage supported entries under <strong>Settings → Apps → Startup</strong>. Microsoft’s <a href="https://support.microsoft.com/en-us/windows/configure-startup-applications-in-windows-115a420a-0bff-4a6f-90e0-1934c844e473">Startup applications guide</a> explains the available methods.</p>
+        <p>A project editor, research browser profile and music player usually do not belong there if you only need them for one kind of work.</p>
+
+        <h3>Option 2: a batch or PowerShell script</h3>
+        <p>A script is the smallest built-in solution for a fixed list. A PowerShell file can contain one line per program:</p>
+        <p><code>Start-Process "notepad.exe"</code><br><code>Start-Process "https://calendar.google.com"</code></p>
+        <p>Create a shortcut to the script when you want one-click launching. This works well for technical users, but you must maintain application paths and add your own logic if programs need delays, arguments or specific browser profiles.</p>
+
+        <h3>Option 3: PowerToys Workspaces</h3>
+        <p>Microsoft PowerToys Workspaces captures open applications and their screen positions. Launching the workspace reopens those applications into the recorded layout. Choose this when launching and positioning are the main requirements.</p>
+
+        <h3>Option 4: a suko mode</h3>
+        <p>A suko mode combines desktop apps, URLs, browser profiles and terminal commands. It can close managed apps from the previous mode before opening the next group, restore a multi-monitor layout, and change volume, brightness or Do Not Disturb. The same mode can start through a shortcut, schedule, Wi-Fi network, power state or application launch.</p>
+
+        <table class="compare"><thead><tr><th>Method</th><th>When it runs</th><th>Restores positions</th><th>Closes old task apps</th></tr></thead><tbody>
+          <tr><td>Windows Startup</td><td>Every sign-in</td><td>No</td><td>No</td></tr>
+          <tr><td>Script</td><td>On demand</td><td>Not by itself</td><td>Only if scripted</td></tr>
+          <tr><td>PowerToys Workspaces</td><td>On demand</td><td>Yes</td><td>No</td></tr>
+          <tr><td>suko</td><td>On demand or automatic</td><td>Yes</td><td>Yes</td></tr>
+        </tbody></table>
+
+        <h2 id="mode">Create a one-shortcut app group with suko</h2>
+        <ol class="steps"><li><strong>Create a mode</strong> for the activity, not for the individual apps—for example, Client Work or Study.</li><li><strong>Add every launch target:</strong> desktop programs, web pages, a browser profile and any terminal command.</li><li><strong>Arrange and capture the windows</strong> if the group should return to a consistent layout.</li><li><strong>Add system preferences</strong> such as volume, brightness and Do Not Disturb.</li><li><strong>Bind a shortcut or trigger,</strong> run it, and remove anything that does not help the task.</li></ol>
+
+        <h2 id="tips">Keep the group reliable</h2>
+        <ul><li>Prefer stable executable paths rather than temporary shortcuts.</li><li>Do not launch two copies of an app that already manages its own single instance.</li><li>Give slow applications enough time to create their main window before restoring the layout.</li><li>Use a dedicated browser profile when the workspace needs a separate account or set of bookmarks.</li><li>Keep Startup lean; launch task-specific tools only when the task starts.</li></ul>
+
+        <h2 id="faq">Questions</h2><div class="faq"><details><summary>Can Windows 11 open multiple apps with one shortcut?</summary><p>Yes. A batch or PowerShell script can start several applications. PowerToys Workspaces and suko can also restore window positions.</p></details><details><summary>Should I put every work app in Windows Startup?</summary><p>Usually no. Startup suits apps needed after every sign-in. Launching task-specific groups on demand keeps startup and the desktop cleaner.</p></details></div>
+
+        <section class="cta"><h2>Launch the whole task, not one app</h2><p>Create a suko mode for the applications, sites, layout and settings you use together.</p><a class="button" href="https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe">Download for Windows</a></section>
+      </article>
+      <aside class="aside" aria-label="Related navigation"><div class="aside-box"><h2>On this page</h2><ul><li><a href="#methods">Four methods</a></li><li><a href="#mode">Create a mode</a></li><li><a href="#tips">Reliability tips</a></li><li><a href="#faq">Questions</a></li></ul></div><div class="aside-box"><h2>Related guides</h2><ul><li><a href="save-window-layout-windows-11.html">Save a window layout</a></li><li><a href="windows-workspace-hotkeys.html">Windows workspace hotkeys</a></li><li><a href="windows-virtual-desktop-alternative.html">Virtual desktop alternatives</a></li></ul></div></aside>
+    </div>
+  </main>
+  <footer><div class="wrap footer-inner"><span>© 2026 suko</span><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="refund.html">Refunds</a><a href="mailto:hello@suko.pro">Support</a></div></div></footer>
+  <script defer src="assets/analytics-events.js?v=1"></script><script defer src="assets/smartscreen-notice.js?v=2"></script>
+</body>
+</html>
