@@ -1,9 +1,8 @@
 User-agent: *
 Allow: /
 
-# Older exports of the landing page, kept for old links but not for search.
-Disallow: /share/
-Disallow: /Workspace%20Modes.html
+# Older exports carry noindex directives. They remain crawlable so search
+# engines can see those directives and remove any old copies from results.
 Disallow: /uploads/
 
 Sitemap: https://suko.pro/sitemap.xml
