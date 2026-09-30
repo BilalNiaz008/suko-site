@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Windows 11 Not Remembering Window Positions? Fix It | suko</title>
+  <meta name="description" content="Windows 11 keeps moving your windows? Fix positions after a monitor reconnects, identify app-specific resets, and restore a full layout after restart.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://suko.pro/windows-11-not-remembering-window-positions.html">
+  <link rel="icon" type="image/png" href="assets/suko-mark-512.png">
+  <link rel="apple-touch-icon" href="assets/suko-mark-512.png">
+  <meta property="og:site_name" content="suko">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://suko.pro/windows-11-not-remembering-window-positions.html">
+  <meta property="og:title" content="Windows 11 Not Remembering Window Positions? Here's What to Check">
+  <meta property="og:description" content="Start with Windows' monitor setting, then choose the right way to restore a complete layout after restart.">
+  <meta property="og:image" content="https://suko.pro/assets/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Windows 11 Not Remembering Window Positions?">
+  <meta name="twitter:description" content="A practical fix for moved windows after docking, sleep or restart.">
+  <meta name="twitter:image" content="https://suko.pro/assets/og-cover.png">
+  <link rel="stylesheet" href="assets/guide.css?v=1">
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7MGMBRB9FK"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7MGMBRB9FK');</script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"Article","headline":"Windows 11 not remembering window positions? Here's what to check","description":"Troubleshoot moved windows after a monitor reconnects, an app reopens or Windows restarts, then save a repeatable workspace.","datePublished":"2026-09-30","dateModified":"2026-09-30","inLanguage":"en","mainEntityOfPage":"https://suko.pro/windows-11-not-remembering-window-positions.html","author":{"@type":"Organization","name":"suko"},"publisher":{"@type":"Organization","name":"suko","logo":{"@type":"ImageObject","url":"https://suko.pro/assets/suko-mark-512.png"}},"image":"https://suko.pro/assets/og-cover.png"},
+    {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://suko.pro/"},{"@type":"ListItem","position":2,"name":"Windows 11 not remembering window positions","item":"https://suko.pro/windows-11-not-remembering-window-positions.html"}]}
+  ]}
+  </script>
+</head>
+<body>
+  <header class="site-header"><div class="wrap header-inner">
+    <a class="brand" href="index.html"><img src="assets/suko-mark-512.png" width="34" height="34" alt=""><span>suko</span></a>
+    <nav class="site-nav" aria-label="Primary"><a href="index.html#features">Features</a><a href="index.html#guides">Guides</a><a href="index.html#pricing">Pricing</a><a class="button" href="https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe">Download</a></nav>
+  </div></header>
+  <main>
+    <div class="wrap breadcrumb"><a href="index.html">Home</a> / Windows 11 not remembering window positions</div>
+    <section class="hero"><div class="wrap">
+      <h1>Windows 11 not remembering window positions? Here's what to check</h1>
+      <p class="dek">A window that moves after you unplug a monitor needs a different fix from an app that opens in the wrong place after a restart. Find the cause first, then restore the layout you actually want.</p>
+      <div class="answer"><strong>Short answer</strong>If windows move when you undock or reconnect a monitor, turn on <strong>Remember window locations based on monitor connection</strong> in <strong>Settings → System → Display → Multiple displays</strong>. If you need to reopen apps in chosen positions after a restart, capture a workspace with PowerToys Workspaces or suko. The Windows checkbox is for monitor reconnection, not a saved launcher for every app.</div>
+      <p class="meta">Updated September 30, 2026 · 5 minute read</p>
+    </div></section>
+    <div class="wrap article-grid">
+      <article>
+        <h2 id="diagnose">When do the windows move?</h2>
+        <p>Before changing settings, reproduce the problem once. Keep the affected apps open and unplug your external monitor, then reconnect it. Separately, close and reopen one app without touching the monitor. Those two tests tell you whether Windows is losing a display layout or the app is choosing a new starting position.</p>
+        <table class="compare"><thead><tr><th>What happens</th><th>Start here</th></tr></thead><tbody>
+          <tr><td>Windows shift when a monitor disconnects, the PC sleeps or a laptop is undocked</td><td>Check the Multiple displays options and monitor connection.</td></tr>
+          <tr><td>One app opens at the wrong size or location, even on a single display</td><td>Test that app's own window behavior.</td></tr>
+          <tr><td>You restart Windows and want several apps reopened in a chosen layout</td><td>Save a launchable workspace.</td></tr>
+        </tbody></table>
+        <p>This distinction matters: there is no one checkbox that turns a whole closed desktop session into a reusable set of applications and positions.</p>
+
+        <h2 id="windows-setting">Fix positions after a monitor disconnects</h2>
+        <ol class="steps">
+          <li>Open <strong>Settings → System → Display</strong>.</li>
+          <li>Expand <strong>Multiple displays</strong>.</li>
+          <li>Enable <strong>Remember window locations based on monitor connection</strong>. You can also enable <strong>Minimize windows when a monitor is disconnected</strong> if that matches how you work.</li>
+          <li>Arrange your open windows, disconnect the external display, reconnect it, and check whether they return.</li>
+        </ol>
+        <p>Microsoft documents these controls for Windows 11's docking and display-reconnection behavior in its <a href="https://support.microsoft.com/en-us/windows/hardware/display-graphics/how-to-use-multiple-monitors-in-windows">multiple-monitor guide</a>. The second checkbox controls what happens while a display is absent; it is optional.</p>
+        <p>If the option is already on, check that Windows still recognizes the same monitors. In Display settings, use <strong>Identify</strong> to match each screen number to its physical display and drag the display rectangles into the correct order. If a screen is missing, expand <strong>Multiple displays</strong> and choose <strong>Detect</strong>. Check the cable or dock connection and Windows updates too; Microsoft lists those as the first checks for external displays.</p>
+        <p>Changing between <strong>Extend</strong>, <strong>Duplicate</strong> and a single display also changes the space available for windows. Press <kbd>Win</kbd> + <kbd>P</kbd> to check the current display mode. Once the intended monitors are connected in Extend mode, arrange the windows again and repeat the disconnect test.</p>
+
+        <h2 id="one-app">If only one app forgets its place</h2>
+        <p>Leave the monitor setup unchanged. Move the problem app to a distinctive position, close it normally, and reopen it. If other apps stay put but this one resets, the monitor checkbox is unlikely to help. Applications can choose their own startup size and location, and some open a new window for each file or project.</p>
+        <p>Check that app's preferences for opening a previous window or session. Then test the app with its usual document or project, because a blank launch may behave differently. Avoid random registry edits or “fix all windows” scripts until you know the issue affects more than one app.</p>
+
+        <h2 id="restart">Restore a layout after restarting Windows</h2>
+        <p>A restart closes your running applications. If your goal is “open my editor, browser and notes across two monitors exactly as I use them,” save that setup as a workspace that you can launch again.</p>
+        <h3>Option 1: PowerToys Workspaces</h3>
+        <p>Microsoft's free <a href="https://learn.microsoft.com/en-us/windows/powertoys/workspaces">PowerToys Workspaces</a> can capture the apps and positions on your desktop. Enable Workspaces in PowerToys, open its editor, choose <strong>Create workspace</strong>, arrange the apps, and select <strong>Capture</strong>. Name the workspace and save it with a desktop shortcut. After a restart, use that shortcut to launch the apps and move their windows into the recorded positions.</p>
+        <p>PowerToys may move an existing window or launch another instance depending on the app. Its <strong>Move existing windows</strong> option helps when you want to reuse windows that are already open. Test the saved workspace with your real apps; an app that starts slowly or opens a separate window may need adjustment.</p>
+        <h3>Option 2: a suko mode</h3>
+        <p>If you move between different setups during the day, create one suko mode for each task. A Work mode might open your editor, a project folder and your work browser profile, then arrange those windows across both monitors. A Gaming mode can select the work apps to close before opening the game and changing the volume.</p>
+        <ol class="steps">
+          <li>Create a mode named for the task, such as <strong>Work</strong> or <strong>Study</strong>.</li>
+          <li>Add the applications, files, folders or URLs that belong in it. Set launch delays for apps that need extra time to open.</li>
+          <li>Arrange the windows on the connected displays and save the mode's window layout.</li>
+          <li>Choose the apps to close when switching away, and add a global shortcut if you want to return to the setup with one key combination.</li>
+          <li>Restart the PC, launch the mode, and adjust any app that opens differently before saving the layout again.</li>
+        </ol>
+        <p>The <a href="https://dev.to/bilalniaz15/windows-workspace-manager-4ok0">suko mode walkthrough</a> shows the app selection, launch options, layout and shortcut controls. For a broader comparison of layout tools, see our <a href="save-window-layout-windows-11.html">guide to saving a Windows 11 window layout</a>.</p>
+
+        <h2 id="faq">Common questions</h2>
+        <div class="faq">
+          <details><summary>Why do my windows move when I wake my laptop?</summary><p>If the external monitor temporarily disconnects during sleep or docking, Windows may rearrange open windows for the displays it can see. Check the monitor connection and turn on Remember window locations based on monitor connection under Settings → System → Display → Multiple displays.</p></details>
+          <details><summary>Does “Remember window locations” reopen my apps after a reboot?</summary><p>No. Microsoft describes the setting for windows on a disconnected and reconnected monitor. To reopen a set of apps in saved positions after a reboot, launch a captured workspace.</p></details>
+          <details><summary>Can I save different layouts for work and gaming?</summary><p>Yes. Save each arrangement as its own PowerToys workspace or suko mode. suko modes can also include which apps to close and which system settings to apply when you switch.</p></details>
+        </div>
+
+        <section class="cta"><h2>Make your layout repeatable</h2><p>Create a suko mode for the apps, monitor positions and settings you use together. Launch it whenever your desktop needs a reset.</p><a class="button" href="https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe">Download suko for Windows</a></section>
+      </article>
+      <aside class="aside" aria-label="Related navigation"><div class="aside-box"><h2>On this page</h2><ul><li><a href="#diagnose">Identify the cause</a></li><li><a href="#windows-setting">Monitor setting</a></li><li><a href="#one-app">One app moves</a></li><li><a href="#restart">After a restart</a></li><li><a href="#faq">Questions</a></li></ul></div><div class="aside-box"><h2>Related guides</h2><ul><li><a href="save-window-layout-windows-11.html">Save a window layout</a></li><li><a href="open-multiple-apps-at-once-windows-11.html">Open multiple apps</a></li><li><a href="windows-workspace-hotkeys.html">Workspace hotkeys</a></li></ul></div></aside>
+    </div>
+  </main>
+  <footer><div class="wrap footer-inner"><span>© 2026 suko</span><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="refund.html">Refunds</a><a href="mailto:hello@suko.pro">Support</a></div></div></footer>
+  <script defer src="assets/analytics-events.js?v=1"></script><script defer src="assets/smartscreen-notice.js?v=2"></script>
+</body>
+</html>
