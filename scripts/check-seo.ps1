@@ -7,6 +7,7 @@ $pages = @(
     'windows-virtual-desktop-alternative.html',
     'windows-workspace-hotkeys.html',
     'windows-11-not-remembering-window-positions.html',
+    'open-apps-on-second-monitor-windows-11.html',
     'privacy.html',
     'terms.html',
     'refund.html'
@@ -54,14 +55,14 @@ foreach ($page in $pages) {
     }
 }
 
-foreach ($page in $pages[0..5]) {
+foreach ($page in $pages[0..6]) {
     $html = Get-Content -Raw -LiteralPath (Join-Path $root $page)
     if ($html -notmatch 'assets/analytics-events\.js') { Add-Error "$page is missing conversion tracking" }
 }
 
 try { [xml]$sitemap = Get-Content -Raw -LiteralPath (Join-Path $root 'sitemap.xml') } catch { Add-Error "sitemap.xml is invalid XML: $($_.Exception.Message)" }
 $sitemapUrls = @($sitemap.urlset.url.loc)
-foreach ($page in $pages[0..5]) {
+foreach ($page in $pages[0..6]) {
     $expected = if ($page -eq 'index.html') { 'https://suko.pro/' } else { "https://suko.pro/$page" }
     if ($expected -notin $sitemapUrls) { Add-Error "sitemap.xml is missing $expected" }
 }
