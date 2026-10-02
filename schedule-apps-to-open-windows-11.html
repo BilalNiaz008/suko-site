@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Schedule Apps to Open in Windows 11 | suko</title>
+  <meta name="description" content="Schedule an app to open at a specific time in Windows 11 with Task Scheduler, or start a complete work setup on a schedule with suko.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://suko.pro/schedule-apps-to-open-windows-11.html">
+  <link rel="icon" type="image/png" href="assets/suko-mark-512.png">
+  <link rel="apple-touch-icon" href="assets/suko-mark-512.png">
+  <meta property="og:site_name" content="suko">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://suko.pro/schedule-apps-to-open-windows-11.html">
+  <meta property="og:title" content="How to Schedule Apps to Open in Windows 11">
+  <meta property="og:description" content="Open one app at a set time with Task Scheduler, or launch a complete workspace on schedule.">
+  <meta property="og:image" content="https://suko.pro/assets/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Schedule Apps to Open in Windows 11">
+  <meta name="twitter:description" content="A practical guide to daily app and workspace schedules.">
+  <meta name="twitter:image" content="https://suko.pro/assets/og-cover.png">
+  <link rel="stylesheet" href="assets/guide.css?v=3">
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7MGMBRB9FK"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7MGMBRB9FK');</script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"Article","headline":"How to schedule apps to open at a specific time in Windows 11","description":"Use Task Scheduler to open one application at a set time, or schedule a complete Windows workspace with suko.","datePublished":"2026-10-02","dateModified":"2026-10-02","inLanguage":"en","mainEntityOfPage":"https://suko.pro/schedule-apps-to-open-windows-11.html","author":{"@type":"Organization","name":"suko"},"publisher":{"@type":"Organization","name":"suko","logo":{"@type":"ImageObject","url":"https://suko.pro/assets/suko-mark-512.png"}},"image":"https://suko.pro/assets/og-cover.png"},
+    {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://suko.pro/"},{"@type":"ListItem","position":2,"name":"Schedule apps to open in Windows 11","item":"https://suko.pro/schedule-apps-to-open-windows-11.html"}]}
+  ]}
+  </script>
+</head>
+<body>
+  <header class="site-header"><div class="wrap header-inner">
+    <a class="brand" href="index.html"><img src="assets/suko-mark-512.png" width="34" height="34" alt=""><span>suko</span></a>
+    <nav class="site-nav" aria-label="Primary"><a href="index.html#features">Features</a><a href="index.html#guides">Guides</a><a href="index.html#pricing">Pricing</a><a class="button" href="https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe">Download</a></nav>
+  </div></header>
+  <main>
+    <div class="wrap breadcrumb"><a href="index.html">Home</a> / Schedule apps to open in Windows 11</div>
+    <section class="hero"><div class="wrap">
+      <h1>How to schedule apps to open at a specific time in Windows 11</h1>
+      <p class="dek">Want a program to open at 9:00 each morning instead of every time you sign in? Windows can schedule one app. A workspace mode can prepare the whole set of apps and settings for that part of your day.</p>
+      <div class="answer"><strong>Short answer</strong>Open <strong>Task Scheduler</strong>, create a basic task with a daily or weekly trigger, and choose <strong>Start a program</strong> as its action. Select the app's executable and test the task. If you want several apps, web pages, a window layout and settings to change together, schedule a suko mode instead.</div>
+      <p class="meta">Updated October 2, 2026 · 5 minute read</p>
+    </div></section>
+    <div class="wrap article-grid">
+      <article>
+        <h2 id="choose">Choose the right kind of automatic launch</h2>
+        <p>There are three different triggers people often call “automatic startup.” They solve different problems. <strong>Startup apps</strong> run when you sign in. <strong>Task Scheduler</strong> can run a program at a chosen clock time. <strong>A scheduled workspace</strong> starts the group of apps and settings that belong to an activity, such as Work or Study.</p>
+        <p>If you only need a password manager after every sign-in, use <a href="https://support.microsoft.com/en-us/windows/experience/startup-boot/configure-startup-applications-in-windows">Windows Startup settings</a>. If you want Notepad or another single app at a specific time, Task Scheduler is already built into Windows. If you repeatedly prepare several apps, tabs and monitors together, use a workspace schedule.</p>
+
+        <h2 id="task-scheduler">Schedule one app with Task Scheduler</h2>
+        <ol class="steps">
+          <li>Open Start, search for <strong>Task Scheduler</strong>, and open it.</li>
+          <li>Select <strong>Create Basic Task</strong> in the Actions pane. Give the task a clear name, such as “Open notes at 9 AM.”</li>
+          <li>Choose <strong>Daily</strong> or <strong>Weekly</strong> and set the time and days. For a workday routine, choose Weekly and select Monday through Friday.</li>
+          <li>Choose <strong>Start a program</strong>. Select <strong>Browse</strong> and pick the application executable, for example <code>notepad.exe</code>. Use the actual executable path for another desktop app.</li>
+          <li>Review the summary, select <strong>Finish</strong>, then find the task in <strong>Task Scheduler Library</strong>. Right-click it and select <strong>Run</strong> to check that the correct program opens.</li>
+        </ol>
+        <p>Microsoft describes <a href="https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page">Task Scheduler</a> as a tool that starts applications when a trigger is met, including a specific time or a daily or weekly schedule. The task runs on your Windows computer; it does not turn the computer on from a full shutdown. For a visible desktop app, test while you are signed in. If the task runs in the background without a window, open its properties and check the <strong>Run only when user is logged on</strong> setting on the General tab.</p>
+        <p>For a command-line example, Windows also includes <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks-create"><code>schtasks /create</code></a>. The graphical Task Scheduler is easier when you only need one or two app schedules.</p>
+
+        <h2 id="multiple">Schedule several apps for one task</h2>
+        <p>You can make a separate scheduled task for each application. That works when each app has an independent schedule. For a single work routine, separate tasks quickly become hard to manage: one opens the editor, another opens chat, and a third opens a browser, but none knows where the windows belong or which apps from yesterday's task should close.</p>
+        <p>A suko mode groups those choices. For example, a weekday Work mode can include an editor, a project folder, a browser profile and a team chat, plus the positions of those windows on your monitors. It can also set your preferred volume and Do Not Disturb state. The <a href="https://dev.to/bilalniaz15/windows-workspace-manager-4ok0">suko mode walkthrough</a> shows the scheduling and app controls in the desktop app.</p>
+        <ol class="steps">
+          <li>Create a mode for the activity and add only the apps, URLs, files and folders you need together.</li>
+          <li>Arrange the windows, save the layout, and set any mode-specific Windows controls you want.</li>
+          <li>Set the mode's schedule for the correct time and days. Review the time zone on the computer that will run it.</li>
+          <li>Activate the mode manually once before relying on its schedule. Check slow apps, duplicate windows and any launch delay you need.</li>
+        </ol>
+        <p>Keep an easy manual way to start the same mode, such as its hotkey, for mornings when the computer was off or asleep at the scheduled time. Our <a href="open-multiple-apps-at-once-windows-11.html">multi-app launch guide</a> compares Startup, a script and workspace tools when you prefer to start the group yourself.</p>
+
+        <h2 id="troubleshoot">If the schedule does not open the app</h2>
+        <ul>
+          <li><strong>Check the trigger:</strong> confirm the date, time, selected days and the computer's clock. A daily task does not run at sign-in unless you also configure that trigger.</li>
+          <li><strong>Run it manually:</strong> if the task fails when you select Run, check the executable path and any arguments before troubleshooting the time.</li>
+          <li><strong>Check the session:</strong> a task configured to run without a signed-in user may start a process without showing its window on your desktop. Use the interactive logon option for a visible app.</li>
+          <li><strong>Check sleep and power:</strong> an app cannot appear on a sleeping or powered-off desktop. In the task's Conditions and Settings tabs, review the power and missed-run behavior that matches your setup.</li>
+          <li><strong>Check app-specific behavior:</strong> some apps reuse an existing window, while others open a second one. Test the real app before scheduling a whole set.</li>
+        </ul>
+        <p>If your apps open but land on the wrong screen, follow the <a href="open-apps-on-second-monitor-windows-11.html">second-monitor guide</a> to correct the display layout and save window positions.</p>
+
+        <h2 id="faq">Common questions</h2>
+        <div class="faq">
+          <details><summary>Can Windows 11 open an app at a specific time without extra software?</summary><p>Yes. Task Scheduler can start a desktop program on a daily or weekly trigger. Create a basic task, choose Start a program, and test it from Task Scheduler Library.</p></details>
+          <details><summary>Will Task Scheduler open my apps if the PC is shut down?</summary><p>No. The computer must be running for a scheduled task to execute. If it is asleep, behavior depends on the task's power settings and whether the hardware can wake for the task.</p></details>
+          <details><summary>How do I open multiple apps every weekday morning?</summary><p>Create a scheduled task per app, or schedule one suko mode containing the apps, URLs, layout and settings you use together. Test the mode manually first.</p></details>
+        </div>
+
+        <section class="cta"><h2>Start the whole workspace on time</h2><p>Create a suko mode for your apps, layout and settings, then schedule it for the days you need it.</p><a class="button" href="https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe">Download suko for Windows</a></section>
+      </article>
+      <aside class="aside" aria-label="Related navigation"><div class="aside-box"><h2>On this page</h2><ul><li><a href="#choose">Choose a trigger</a></li><li><a href="#task-scheduler">Schedule one app</a></li><li><a href="#multiple">Schedule a workspace</a></li><li><a href="#troubleshoot">Troubleshooting</a></li><li><a href="#faq">Questions</a></li></ul></div><div class="aside-box"><h2>Related guides</h2><ul><li><a href="open-multiple-apps-at-once-windows-11.html">Open multiple apps</a></li><li><a href="open-apps-on-second-monitor-windows-11.html">Open apps on a second monitor</a></li><li><a href="windows-workspace-hotkeys.html">Workspace hotkeys</a></li></ul></div></aside>
+    </div>
+  </main>
+  <footer><div class="wrap footer-inner"><span>© 2026 suko</span><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="refund.html">Refunds</a><a href="mailto:hello@suko.pro">Support</a></div></div></footer>
+  <script defer src="assets/analytics-events.js?v=1"></script><script defer src="assets/smartscreen-notice.js?v=2"></script>
+</body>
+</html>
