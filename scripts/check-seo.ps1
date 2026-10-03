@@ -10,6 +10,7 @@ $pages = @(
     'open-apps-on-second-monitor-windows-11.html',
     'schedule-apps-to-open-windows-11.html',
     'windows-11-focus-mode-workspace.html',
+    'turn-on-do-not-disturb-automatically-windows-11.html',
     'privacy.html',
     'terms.html',
     'refund.html'
