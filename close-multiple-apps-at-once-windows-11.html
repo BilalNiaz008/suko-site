@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Close Multiple Apps at Once in Windows 11 | suko</title>
+  <meta name="description" content="Close multiple apps in Windows 11 without confusing minimize with quit. Compare Alt+F4, Task Manager and suko modes for repeatable task switches.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://suko.pro/close-multiple-apps-at-once-windows-11.html">
+  <link rel="icon" type="image/png" href="assets/suko-mark-512.png">
+  <link rel="apple-touch-icon" href="assets/suko-mark-512.png">
+  <meta property="og:site_name" content="suko">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://suko.pro/close-multiple-apps-at-once-windows-11.html">
+  <meta property="og:title" content="How to Close Multiple Apps at Once in Windows 11">
+  <meta property="og:description" content="Hide windows, close selected apps, or end a stuck process: choose the right action for your desktop.">
+  <meta property="og:image" content="https://suko.pro/assets/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Close Multiple Apps at Once in Windows 11">
+  <meta name="twitter:description" content="A safer way to clear your desktop when changing tasks.">
+  <meta name="twitter:image" content="https://suko.pro/assets/og-cover.png">
+  <link rel="stylesheet" href="assets/guide.css?v=3">
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7MGMBRB9FK"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-7MGMBRB9FK');</script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"Article","headline":"How to close multiple apps at once in Windows 11 without losing your place","description":"Compare hiding, closing and force-ending Windows apps, then set up a repeatable task switch that closes selected applications.","datePublished":"2026-10-06","dateModified":"2026-10-06","inLanguage":"en","mainEntityOfPage":"https://suko.pro/close-multiple-apps-at-once-windows-11.html","author":{"@type":"Organization","name":"suko"},"publisher":{"@type":"Organization","name":"suko","logo":{"@type":"ImageObject","url":"https://suko.pro/assets/suko-mark-512.png"}},"image":"https://suko.pro/assets/og-cover.png"},
+    {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://suko.pro/"},{"@type":"ListItem","position":2,"name":"Close multiple apps in Windows 11","item":"https://suko.pro/close-multiple-apps-at-once-windows-11.html"}]}
+  ]}
+  </script>
+</head>
+<body>
+  <header class="site-header"><div class="wrap header-inner">
+    <a class="brand" href="index.html"><img src="assets/suko-mark-512.png" width="34" height="34" alt=""><span>suko</span></a>
+    <nav class="site-nav" aria-label="Primary"><a href="index.html#features">Features</a><a href="index.html#guides">Guides</a><a href="index.html#pricing">Pricing</a><a class="button" href="https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe">Download</a></nav>
+  </div></header>
+  <main>
+    <div class="wrap breadcrumb"><a href="index.html">Home</a> / Close multiple apps in Windows 11</div>
+    <section class="hero"><div class="wrap">
+      <h1>How to close multiple apps at once in Windows 11</h1>
+      <p class="dek">A crowded desktop can mean you need to hide windows for a moment, finish several apps, or move into a different task. Those actions behave differently, especially when a document has unsaved work.</p>
+      <div class="answer"><strong>Short answer</strong>To close a few open windows, activate each one and press <kbd>Alt</kbd> + <kbd>F4</kbd>, responding to any save prompt. <kbd>Win</kbd> + <kbd>M</kbd> only minimizes windows. If you repeatedly switch from one known group of apps to another, a suko mode can close the selected apps from the previous mode and open the next group with one shortcut. Reserve force-ending for an app that has stopped responding.</div>
+      <p class="meta">Updated October 6, 2026 · 5 minute read</p>
+    </div></section>
+    <div class="wrap article-grid">
+      <article>
+        <h2 id="choose">First, decide what “close all” means</h2>
+        <p>The fastest action depends on what you want to happen next. If you need privacy for a minute, hide the windows. If a task is finished, close only its apps so the rest of the desktop stays intact. If an app is frozen, end its process. Treating all three as the same action can leave work unsaved or shut down something you still need.</p>
+        <table class="compare"><thead><tr><th>Goal</th><th>Use</th><th>What happens</th></tr></thead><tbody>
+          <tr><td>Clear the screen temporarily</td><td><kbd>Win</kbd> + <kbd>M</kbd> or <kbd>Win</kbd> + <kbd>D</kbd></td><td>Windows stay open and can be restored.</td></tr>
+          <tr><td>Finish a few apps</td><td><kbd>Alt</kbd> + <kbd>F4</kbd> on each active window</td><td>Each app gets its normal chance to close.</td></tr>
+          <tr><td>Leave one task and start another</td><td>A suko mode switch</td><td>Selected managed apps close; the next group opens.</td></tr>
+          <tr><td>Stop an unresponsive process</td><td>Task Manager or <code>taskkill</code></td><td>The process ends; unsaved changes may be lost.</td></tr>
+        </tbody></table>
+        <p>Microsoft's <a href="https://support.microsoft.com/en-us/accessibility/windows/keyboard-shortcuts-in-windows">Windows shortcut list</a> defines <kbd>Alt</kbd> + <kbd>F4</kbd> as closing the <em>active</em> window and <kbd>Win</kbd> + <kbd>M</kbd> as minimizing all windows. It does not describe a universal shortcut that safely closes every running application.</p>
+
+        <h2 id="manual">Close a handful of apps normally</h2>
+        <ol class="steps">
+          <li>Save the files or drafts you are working on.</li>
+          <li>Click the first app window and press <kbd>Alt</kbd> + <kbd>F4</kbd>.</li>
+          <li>Respond to the application's save or confirmation dialog before moving on.</li>
+          <li>Repeat for the other apps you want to leave. Keep unrelated tools open.</li>
+        </ol>
+        <p>This is the smallest built-in solution for a few windows. A browser may close a window while continuing to run in the background, and an app with several documents may need more than one close action. Watch what actually exits instead of assuming the taskbar has become empty. Pressing <kbd>Alt</kbd> + <kbd>F4</kbd> on the desktop when no app window is active can open the Windows shutdown dialog, so check which window has focus.</p>
+        <p>If you only need a clean-looking screen, use <kbd>Win</kbd> + <kbd>D</kbd> to show the desktop or <kbd>Win</kbd> + <kbd>M</kbd> to minimize windows. Neither quits an app or frees its work from memory. That distinction matters if you are about to launch another demanding set of programs.</p>
+
+        <h2 id="modes">Close a repeatable app group when switching tasks</h2>
+        <p>The real time sink is often the transition from Work to Gaming, Study or a meeting. You close chat and project tools, open another group, arrange its windows and change the sound level. A suko <strong>mode</strong> stores the apps, URLs, layout and Windows settings for one context, with choices for which managed apps close when you leave it.</p>
+        <ol class="steps">
+          <li>Create a Work mode with the editor, browser profile, chat and project files you use together.</li>
+          <li>Choose which Work apps should close when you change modes. Leave persistent tools, such as a password manager, outside that close list.</li>
+          <li>Create the next mode, such as Gaming or Study, with its own apps, saved window positions and settings.</li>
+          <li>Assign a hotkey and test the switch while the apps are open. Check any documents with unsaved changes before making the switch part of your routine.</li>
+        </ol>
+        <p>This approach closes a <em>selected task group</em>, not every process on the PC. The <a href="https://dev.to/bilalniaz15/windows-workspace-manager-4ok0">suko mode walkthrough</a> shows its app-selection and close-on-switch controls. Our <a href="open-multiple-apps-at-once-windows-11.html">guide to opening multiple apps</a> covers the other half of the transition; the <a href="windows-workspace-hotkeys.html">hotkey guide</a> shows how to trigger the whole mode.</p>
+
+        <h2 id="force">When an app will not close</h2>
+        <p>If an application does not respond to its normal close button or <kbd>Alt</kbd> + <kbd>F4</kbd>, open Task Manager with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd>, select the stalled process and choose <strong>End task</strong>. This is for a stuck program, not the usual way to finish a group of apps: ending a process can discard work that the app has not saved.</p>
+        <p>Windows also provides the <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/taskkill"><code>taskkill</code> command</a>, which can target one or more process IDs or image names. Microsoft documents <code>/f</code> as the option that forcefully ends a process. Avoid broad wildcard commands and confirm the process name before using them; a command that ends every matching process can also end work you meant to keep.</p>
+
+        <h2 id="faq">Common questions</h2>
+        <div class="faq">
+          <details><summary>Does Win + D close all apps?</summary><p>No. It shows the desktop by hiding open windows. The applications remain running. Win + M minimizes all windows and also leaves the applications open.</p></details>
+          <details><summary>Does Alt + F4 close every app at once?</summary><p>No. It closes the active window. Repeat it for each app you want to finish, responding to any save prompt. When the desktop has focus, Alt + F4 can show the shutdown dialog.</p></details>
+          <details><summary>Can suko close only my Work apps?</summary><p>Yes. A mode can choose managed apps to close when you switch away from Work, while opening the apps and layout for the next mode. Test that selection before relying on it with unsaved documents.</p></details>
+        </div>
+
+        <section class="cta"><h2>Leave the last task in one switch</h2><p>Choose the apps that belong to each suko mode, then use one shortcut to close the old group and open the next workspace.</p><a class="button" href="https://github.com/BilalNiaz008/suko-app-releases/releases/download/V1.0.2/Suko.Setup.1.0.2.exe">Download suko for Windows</a></section>
+      </article>
+      <aside class="aside" aria-label="Related navigation"><div class="aside-box"><h2>On this page</h2><ul><li><a href="#choose">Choose an action</a></li><li><a href="#manual">Close normally</a></li><li><a href="#modes">Switch modes</a></li><li><a href="#force">Stuck apps</a></li><li><a href="#faq">Questions</a></li></ul></div><div class="aside-box"><h2>Related guides</h2><ul><li><a href="open-multiple-apps-at-once-windows-11.html">Open multiple apps</a></li><li><a href="windows-workspace-hotkeys.html">Workspace hotkeys</a></li><li><a href="powertoys-workspaces-alternative.html">Compare workspace tools</a></li></ul></div></aside>
+    </div>
+  </main>
+  <footer><div class="wrap footer-inner"><span>© 2026 suko</span><div class="footer-links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="refund.html">Refunds</a><a href="mailto:hello@suko.pro">Support</a></div></div></footer>
+  <script defer src="assets/analytics-events.js?v=1"></script><script defer src="assets/smartscreen-notice.js?v=2"></script>
+</body>
+</html>
