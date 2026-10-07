@@ -13,6 +13,7 @@ $pages = @(
     'turn-on-do-not-disturb-automatically-windows-11.html',
     'powertoys-workspaces-alternative.html',
     'close-multiple-apps-at-once-windows-11.html',
+    'separate-work-personal-desktops-windows-11.html',
     'privacy.html',
     'terms.html',
     'refund.html'
