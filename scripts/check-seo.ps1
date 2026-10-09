@@ -15,6 +15,7 @@ $pages = @(
     'close-multiple-apps-at-once-windows-11.html',
     'separate-work-personal-desktops-windows-11.html',
     'reopen-apps-after-restart-windows-11.html',
+    'delay-startup-apps-windows-11.html',
     'privacy.html',
     'terms.html',
     'refund.html'
